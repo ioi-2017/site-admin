@@ -25,6 +25,14 @@ celery -A remote_tasks.tasks worker --loglevel=info # Run a celery worker
 ### `TaskRunSet`
  Execution of a single command on a set of nodes, for example "locking the keyboards of all contestants"
 
+### `Desk`
+ A wooden desk! usually with a node attached to it and with locations for visualization purposes.
+
+### `Contestant`
+ Single person participating in the contest, assigned to a desk and node, having information like name and country.
+
+### `Node`
+ A node is a single pc with ip address.
 
 
 ## Development
