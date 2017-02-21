@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Room(models.Model):
-    name = models.CharField()
+    name = models.CharField(max_length=40)
 
 
 class Desk(models.Model):
@@ -12,10 +12,10 @@ class Desk(models.Model):
 
 
 class Contestant(models.Model):
-    name = models.CharField()
+    name = models.CharField(max_length=100)
 
 
 class Node(models.Model):
-    mac_address = models.CharField()
-    ip = models.IPAddressField()
-    property_id = models.CharField()
+    mac_address = models.CharField(max_length=20)
+    ip = models.GenericIPAddressField()
+    property_id = models.CharField(max_length=20)
