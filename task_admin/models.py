@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django_celery_results.models import TaskResult
 
 
 # Create your models here.
@@ -14,7 +13,9 @@ class Task(models.Model):
 
 
 class TaskRun(models.Model):
-    celery_task = models.ForeignKey(TaskResult)
+    celery_task = models.CharField(max_length=255, unique=True)
+    run_set = models.ForeignKey(TaskRunSet)
+    created_at = models.DateTimeField(auto_created=True)
 
     @property
     def is_done(self):
@@ -37,3 +38,14 @@ class TaskRun(models.Model):
         raise NotImplemented()
 
 
+class TaskRunSet(models.Model):
+    task = models.ForeignKey(Task)
+    created_at = models.DateTimeField()
+
+    @property
+    def finished_at(self):
+        # finished_at = 0
+        # for task_run in self.taskrun_set.all():
+        #     finished_at = max(finished_at, task_run.finished_at)
+        # return finished_at
+        raise NotImplemented()
