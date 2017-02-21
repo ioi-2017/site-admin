@@ -1,7 +1,7 @@
 from celery import Celery
 from paramiko import SSHClient, AutoAddPolicy
 
-app = Celery('tasks', broker='redis://192.168.99.100:6379/0', backend='redis://192.168.99.100:6379/0')
+app = Celery('tasks', broker='redis://localhost:6379/0')
 
 
 @app.task
