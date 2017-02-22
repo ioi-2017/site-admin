@@ -17,7 +17,7 @@ class Desk(models.Model):
 
 class Contestant(models.Model):
     name = models.CharField(max_length=100)
-    country = CountryField()
+    country = CountryField(null=True)
     number = models.IntegerField(default=1, unique=True)
 
 
