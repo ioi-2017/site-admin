@@ -1,1 +1,7 @@
 {% extends "netadmin/skeleton.html" %}
+{% load staticfiles %}
+
+{% block script %}
+    {{ block.super }}
+    <script src="{% static 'raphael.min.js' %}"></script>
+{% endblock script %}

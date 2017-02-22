@@ -1,9 +1,29 @@
 {% extends "netadmin/base.html" %}
+{% load staticfiles %}
 
 {% block title %}
     Basic Room
 {% endblock title %}
 
+{% block script %}
+    {{ block.super }}
+    <script src="{% static 'visualization/room.js' %}"></script>
+{% endblock script %}
+
+{% block stylesheet %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'visualization/room.css' %}">
+{% endblock stylesheet %}
+
 {% block content %}
-    salam
+    <div class="room" id="container">
+
+    </div>
+    <script>
+        var room = getRoom($('#container'));
+
+        var circle = room.circle(50, 40, 10);
+        circle.attr("fill", "#f00");
+        circle.attr("stroke", "#fff");
+    </script>
 {% endblock content %}
