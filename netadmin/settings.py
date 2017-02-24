@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'visualization',
     'task_admin',
-    'django_celery_results',
 ]
 
 MIDDLEWARE = [
