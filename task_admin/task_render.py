@@ -1,4 +1,5 @@
-from task_admin.models import Task
+from task_admin.models import Task, TaskRunSet, TaskRun
+from task_admin.tasks import execute_task
 from visualization.models import Contestant, Node, Desk
 
 
@@ -69,3 +70,22 @@ def render_task(code, context):
     :return: rendered code of task
     """
     return code.format(**context)
+
+
+def make_taskrunset(task, desks):
+    run_set = TaskRunSet()
+    run_set.task = task
+    run_set.save()
+    for desk in desks:
+        task_run = TaskRun()
+        task_run.run_set = run_set
+        task_run.is_local = task.is_local
+        task_run.node = desk.active_node
+        task_run.desk = desk
+        task_run.contestant = desk.contestant
+        task_run.rendered_code = render_task(task.code, context={'node': desk.active_node,
+                                                                 'contestant': desk.contestant,
+                                                                 'desk': desk,
+                                                                 })
+        task_run.celery_task = execute_task.delay(**task_run.get_execution_dict()).id
+        task_run.save()
