@@ -24,7 +24,7 @@ class Task(models.Model):
 
 class TaskRunSet(models.Model):
     task = models.ForeignKey(Task)
-    created_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_created=True)
 
     @property
     def finished_at(self):
