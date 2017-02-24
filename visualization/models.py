@@ -18,4 +18,5 @@ class Contestant(models.Model):
 class Node(models.Model):
     mac_address = models.CharField(max_length=20)
     ip = models.GenericIPAddressField()
+    username = models.CharField(max_length=20)
     property_id = models.CharField(max_length=20)
