@@ -2,23 +2,13 @@ from task_admin.models import Task
 from visualization.models import Contestant, Node, Desk
 
 
-class SampleNode(Node):
-    def save(self, *args, **kwargs):
-        raise Exception("Can't save sample model")
-
-
-class SampleDesk(Desk):
-    def save(self, *args, **kwargs):
-        raise Exception("Can't save sample model")
-
-
-class SampleContestant(Contestant):
-    def save(self, *args, **kwargs):
-        raise Exception("Can't save sample model")
+def sample_exception():
+    raise Exception("Can't save sample model")
 
 
 def get_sample_node():
-    node = SampleNode()
+    node = Node()
+    node.save = sample_exception
     node.id = 5
     node.ip = '192.168.100.50'
     node.mac_address = 'e6:67:f4:56:90:fc'
@@ -28,14 +18,16 @@ def get_sample_node():
 
 
 def get_sample_desk():
-    desk = SampleDesk()
+    desk = Desk()
+    desk.save = sample_exception
     desk.room_id = 2
     desk.id = 23
     return desk
 
 
 def get_sample_contestant():
-    contestant = SampleContestant()
+    contestant = Contestant()
+    contestant.save = sample_exception
     contestant.name = 'Kian'
     contestant.id = 64
     return contestant
