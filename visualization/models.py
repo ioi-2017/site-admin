@@ -20,6 +20,13 @@ class Desk(models.Model):
         MaxValueValidator(359), MinValueValidator(0)
     ])
 
+    def position_data(self):
+        return {
+            'x': self.x,
+            'y': self.y,
+            'angle': self.angle,
+        }
+
     def __str__(self):
         return "%s - %s" % (self.contestant.identifier, self.active_node)
 

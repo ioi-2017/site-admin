@@ -21,9 +21,9 @@
     </div>
     <script>
         var room = getRoom($('#container'));
-
-        var circle = room.circle(50, 40, 10);
-        circle.attr("fill", "#f00");
-        circle.attr("stroke", "#fff");
+        var desks = [];
+        {% for desk in desks %}
+            desks.push(createDesk(room, parseFloat({{ desk.x }}), parseFloat({{ desk.y }}), parseInt({{ desk.angle }})));
+        {% endfor %}
     </script>
 {% endblock content %}
