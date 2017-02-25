@@ -36,6 +36,9 @@ class Contestant(models.Model):
     country = CountryField(null=True)
     number = models.IntegerField(default=1, unique=True)
 
+    class Meta:
+        unique_together = ('country', 'number')
+
     @property
     def identifier(self):
         return self.country.alpha3 + str(self.number)
