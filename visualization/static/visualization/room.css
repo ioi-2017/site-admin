@@ -10,7 +10,8 @@
     stroke: #c0ffc0;
 }
 
-.desk-ok:hover {
+.desk-ok:hover,
+.desk-failed:hover {
     stroke: #fff;
     stroke-width: 2px;
 }
