@@ -1,0 +1,36 @@
+{% extends "netadmin/base.html" %}
+{% load staticfiles %}
+
+{% block title %}
+    Task Run Sets
+{% endblock title %}
+
+{% block content %}
+    <div id="taskrunsets"></div>
+    {% verbatim %}
+    <script id="template" type="x-tmpl-mustache">
+        <table>
+            {{#.}}
+              <tr>
+                <td>{{ task_data }}</td>
+                <td>{{ owner_data }}</td>
+                <td>{{ created_at }}</td>
+              </tr>
+            {{/.}}
+        </table>
+    </script>
+    {% endverbatim %}
+
+    <script>
+          var template = $('#template').html();
+          Mustache.parse(template);
+          var data = $.getJSON(
+                  '{% url 'task_admin:api:taskrunsets' %}',
+                  {'format': 'json'},
+                  function(data) {
+                      var rendered = Mustache.render(template, data);
+                      $('#taskrunsets').html(rendered);
+                  }
+          );
+    </script>
+{% endblock content %}

@@ -2,8 +2,6 @@ from django.http import HttpResponse
 from django.views.generic import ListView
 from django.views.generic import TemplateView, View
 from rest_framework import generics
-from rest_framework import routers
-from rest_framework import viewsets
 
 from task_admin.models import TaskRunSet
 from task_admin.serializers import TaskRunSetSerializer
@@ -26,8 +24,13 @@ class CodeRenderView(View):
         return HttpResponse(result)
 
 
-class TaskRunSetsView(generics.ListCreateAPIView):
+class TaskRunSetsAPI(generics.ListCreateAPIView):
     serializer_class = TaskRunSetSerializer
 
     def get_queryset(self):
         return TaskRunSet.objects.all()
+
+
+class TaskRunSetsView(ListView):
+    template_name = "task_admin/taskrunsets.html"
+    queryset = TaskRunSet.objects.all()
