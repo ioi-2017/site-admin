@@ -10,8 +10,8 @@ class Task(models.Model):
     name = models.CharField(max_length=100)
     code = models.TextField()
     author = models.ForeignKey(User)
-    created_at = models.DateTimeField()
-    deleted = models.BooleanField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    deleted = models.BooleanField(default=False)
 
     def __str__(self):
         return '[%s] by %s' % (self.name, self.author)

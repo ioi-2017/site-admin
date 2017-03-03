@@ -21,7 +21,7 @@
     <![endif]-->
 </head>
 <body>
-<h1>Task Render Preview</h1>
+<h1>Create Task</h1>
 <div style="width: 600px;">
     <h3>Help:</h3>
     <table class="table table-striped">
@@ -37,10 +37,56 @@
         {% endfor %}
     </table>
     <br>
-    <textarea id="template_code" onchange="update_render()" onkeyup="update_render()" class="form-control"
-              rows="3"></textarea>
-    <br>
-    <pre id="rendered_code">&lt;p&gt;Sample text here...&lt;/p&gt;</pre>
+    <form action="/tasks" method="POST" enctype="multipart/form-data" class="form-horizontal" novalidate>
+        <fieldset>
+            {% csrf_token %}
+            <div class="form-group ">
+                <label class="col-sm-2 control-label ">
+                    Name
+                </label>
+                <div class="col-sm-10">
+                    <input name="name" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label ">
+                    Author
+                </label>
+                <div class="col-sm-10">
+                    <select class="form-control" name="author">
+                        <option value="1">admin</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group ">
+                <label class="col-sm-2 control-label ">
+                    Code
+                </label>
+                <div class="col-sm-10">
+                    <textarea name="code" id="template_code" onchange="update_render()" onkeyup="update_render()" class="form-control"></textarea>
+                </div>
+            </div>
+            <div class="form-group ">
+                <label class="col-sm-2 control-label ">
+                    Rendered Code
+                </label>
+                <div class="col-sm-10">
+                    <pre id="rendered_code"></pre>
+                </div>
+            </div>
+            <div class="form-group horizontal-checkbox ">
+                <label class="col-sm-2 control-label ">
+                    Is local
+                </label>
+                <div class="col-sm-10">
+                    <input type="checkbox" name="is_local" value="true">
+                </div>
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-primary" title="Make a POST request on the Task resource">POST</button>
+            </div>
+        </fieldset>
+    </form>
 </div>
 <script type="text/javascript">
     function update_render() {
