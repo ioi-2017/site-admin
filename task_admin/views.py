@@ -1,10 +1,9 @@
 from django.http import HttpResponse
-from django.views.generic import ListView
-from django.views.generic import TemplateView, View
+from django.views.generic import ListView, TemplateView, View
 from rest_framework import generics
 
-from task_admin.models import TaskRunSet
-from task_admin.serializers import TaskRunSetSerializer
+from task_admin.models import TaskRunSet, Task
+from task_admin.serializers import TaskRunSetSerializer, TaskSerializer
 from task_admin.task_render import get_all_possible_vars, render_preview
 
 
@@ -22,6 +21,13 @@ class CodeRenderView(View):
         except:
             result = 'Invalid code'
         return HttpResponse(result)
+
+
+class TaskView(generics.ListCreateAPIView):
+    serializer_class = TaskSerializer
+
+    def get_queryset(self):
+        return Task.objects.all()
 
 
 class TaskRunSetsAPI(generics.ListCreateAPIView):

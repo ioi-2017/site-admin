@@ -1,6 +1,11 @@
-from celery import Celery
-from paramiko import SSHClient, AutoAddPolicy
+import datetime
 import subprocess
+
+import pytz
+from dateutil.parser import parser
+
+from celery import Celery, chord
+from paramiko import SSHClient, AutoAddPolicy
 
 RUN_TIMEOUT_SECONDS = 10
 
@@ -8,13 +13,29 @@ app = Celery('tasks', broker='redis://localhost:6379/0', backend='redis://localh
 
 
 @app.task
+def execution_timer_task(previous_result=None, start_time_str=None):
+    start_time = parser().parse(start_time_str)
+    finished_time = datetime.datetime.now(pytz.timezone('Asia/Tehran'))
+    finished_time_str = finished_time.isoformat()
+
+    return {'result': previous_result,
+            'duration_milliseconds': int((finished_time - start_time).total_seconds()*1000),
+            'finished_at': finished_time_str,
+            'started_at': start_time_str,
+            }
+
+def add_time(task):
+    return chord(task, execution_timer_task.s(start_time_str=datetime.datetime.now(pytz.timezone('Asia/Tehran')).isoformat()))
+
+@app.task
 def execute_task(is_local, ip, username, rendered_code):
     if is_local:
         command = subprocess.Popen((rendered_code,), shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-                                   stderr=subprocess.PIPE)
+                                   stderr=subprocess.PIPE, universal_newlines=True)
         stdout, stderr = command.communicate(timeout=RUN_TIMEOUT_SECONDS)
         return {'stdout': str(stdout),
                 'stderr': str(stderr),
+                'return_code': command.returncode,
                 }
     else:
         client = SSHClient()
@@ -24,4 +45,5 @@ def execute_task(is_local, ip, username, rendered_code):
         stdin, stdout, stderr = client.exec_command(rendered_code)
         return {'stdout': stdout.read().decode('utf-8'),
                 'stderr': stderr.read().decode('utf-8'),
+                'return_code': stdout.channel.recv_exit_status(),
                 }

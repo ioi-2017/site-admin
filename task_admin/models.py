@@ -2,6 +2,8 @@ from celery.result import AsyncResult
 from django.contrib.auth.models import User
 from django.db import models
 
+from dateutil.parser import parser
+
 from visualization.models import Desk, Node, Contestant
 
 
@@ -10,8 +12,8 @@ class Task(models.Model):
     name = models.CharField(max_length=100)
     code = models.TextField()
     author = models.ForeignKey(User)
-    created_at = models.DateTimeField()
-    deleted = models.BooleanField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    deleted = models.BooleanField(default=False)
 
     def __str__(self):
         return '[%s] by %s' % (self.name, self.author)
@@ -23,12 +25,16 @@ class TaskRunSet(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     @property
-    def finished_at(self):
-        # finished_at = 0
-        # for task_run in self.taskrun_set.all():
-        #     finished_at = max(finished_at, task_run.finished_at)
-        # return finished_at
-        raise NotImplemented()
+    def last_finished_at(self):
+        return max(task_run.finished_at for task_run in self.taskrun_set.all())
+
+    @property
+    def max_duration_milliseconds(self):
+        return max(task_run.duration_milliseconds for task_run in self.taskrun_set.all())
+
+    @property
+    def results(self):
+        return [task_run.result for task_run in self.taskrun_set.all()]
 
 
 class TaskRun(models.Model):
@@ -63,13 +69,17 @@ class TaskRun(models.Model):
     is_successful.boolean = True
 
     @property
-    def duration(self):
-        raise NotImplemented()
+    def duration_milliseconds(self):
+        return self.get_celery_result().get()['duration_milliseconds']
 
     @property
     def started_at(self):
-        raise NotImplemented()
+        return parser().parse(self.get_celery_result().get()['started_at'])
 
     @property
     def finished_at(self):
-        raise NotImplemented()
+        return parser().parse(self.get_celery_result().get()['finished_at'])
+
+    @property
+    def result(self):
+        return self.get_celery_result().get()['result']
