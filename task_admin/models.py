@@ -25,12 +25,16 @@ class TaskRunSet(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     @property
-    def finished_at(self):
-        # finished_at = 0
-        # for task_run in self.taskrun_set.all():
-        #     finished_at = max(finished_at, task_run.finished_at)
-        # return finished_at
-        raise NotImplemented()
+    def last_finished_at(self):
+        return max(task_run.finished_at for task_run in self.taskrun_set.all())
+
+    @property
+    def max_duration_milliseconds(self):
+        return max(task_run.duration_milliseconds for task_run in self.taskrun_set.all())
+
+    @property
+    def results(self):
+        return [task_run.result for task_run in self.taskrun_set.all()]
 
 
 class TaskRun(models.Model):
