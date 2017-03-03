@@ -10,9 +10,10 @@ class TaskSerializer(serializers.ModelSerializer):
 
 
 class TaskRunSetSerializer(serializers.ModelSerializer):
-    owner = serializers.StringRelatedField()
-    task = serializers.StringRelatedField()
+    owner_data = serializers.StringRelatedField(source='owner')
+    task_data = serializers.StringRelatedField(source='task')
+    taskruns = serializers.StringRelatedField(many=True, read_only=True)
 
     class Meta:
         model = TaskRunSet
-        fields = ('task', 'owner', 'created_at')
+        fields = ('task', 'task_data', 'owner', 'owner_data', 'created_at', 'taskruns')

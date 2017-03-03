@@ -34,7 +34,7 @@ class TaskRunSet(models.Model):
 class TaskRun(models.Model):
     celery_task = models.CharField(max_length=255, unique=True)
     is_local = models.BooleanField()
-    run_set = models.ForeignKey(TaskRunSet)
+    run_set = models.ForeignKey(TaskRunSet, related_name='taskruns')
     created_at = models.DateTimeField(auto_now_add=True)
     started_at = models.DateTimeField()
     finished_at = models.DateTimeField()
