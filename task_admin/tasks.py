@@ -35,6 +35,7 @@ def execute_task(is_local, ip, username, rendered_code):
         stdout, stderr = command.communicate(timeout=RUN_TIMEOUT_SECONDS)
         return {'stdout': str(stdout),
                 'stderr': str(stderr),
+                'return_code': command.returncode,
                 }
     else:
         client = SSHClient()
@@ -44,4 +45,5 @@ def execute_task(is_local, ip, username, rendered_code):
         stdin, stdout, stderr = client.exec_command(rendered_code)
         return {'stdout': stdout.read().decode('utf-8'),
                 'stderr': stderr.read().decode('utf-8'),
+                'return_code': stdout.channel.recv_exit_status(),
                 }

@@ -79,6 +79,7 @@ class TaskRun(models.Model):
     @property
     def finished_at(self):
         return parser().parse(self.get_celery_result().get()['finished_at'])
+
     @property
     def result(self):
         return self.get_celery_result().get()['result']
