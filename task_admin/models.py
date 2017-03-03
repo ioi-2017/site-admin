@@ -12,8 +12,8 @@ class Task(models.Model):
     name = models.CharField(max_length=100)
     code = models.TextField()
     author = models.ForeignKey(User)
-    created_at = models.DateTimeField()
-    deleted = models.BooleanField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    deleted = models.BooleanField(default=False)
 
     def __str__(self):
         return '[%s] by %s' % (self.name, self.author)
@@ -21,6 +21,7 @@ class Task(models.Model):
 
 class TaskRunSet(models.Model):
     task = models.ForeignKey(Task)
+    owner = models.ForeignKey(User, related_name='taskrunset', null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     @property
@@ -35,7 +36,7 @@ class TaskRunSet(models.Model):
 class TaskRun(models.Model):
     celery_task = models.CharField(max_length=255, unique=True)
     is_local = models.BooleanField()
-    run_set = models.ForeignKey(TaskRunSet)
+    run_set = models.ForeignKey(TaskRunSet, related_name='taskruns')
     created_at = models.DateTimeField(auto_now_add=True)
     started_at = models.DateTimeField()
     finished_at = models.DateTimeField()

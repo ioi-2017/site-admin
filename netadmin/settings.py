@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'visualization',
     'task_admin',
+    'rest_framework',
+    'ping',
 ]
 
 MIDDLEWARE = [
