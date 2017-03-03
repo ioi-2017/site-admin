@@ -2,6 +2,8 @@ from celery.result import AsyncResult
 from django.contrib.auth.models import User
 from django.db import models
 
+from dateutil.parser import parser
+
 from visualization.models import Desk, Node, Contestant
 
 
@@ -62,13 +64,16 @@ class TaskRun(models.Model):
     is_successful.boolean = True
 
     @property
-    def duration(self):
-        raise NotImplemented()
+    def duration_milliseconds(self):
+        return self.get_celery_result().get()['duration_milliseconds']
 
     @property
     def started_at(self):
-        raise NotImplemented()
+        return parser().parse(self.get_celery_result().get()['started_at'])
 
     @property
     def finished_at(self):
-        raise NotImplemented()
+        return parser().parse(self.get_celery_result().get()['finished_at'])
+    @property
+    def result(self):
+        return self.get_celery_result().get()['result']
