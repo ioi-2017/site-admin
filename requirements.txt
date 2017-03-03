@@ -8,10 +8,13 @@ decorator==4.0.11
 Django==1.10.5
 django-celery-results==1.0.1
 django-countries==4.1
+django-filter==1.0.1
+djangorestframework==3.5.4
 idna==2.2
 ipython==5.2.2
 ipython-genutils==0.1.0
 kombu==4.0.2
+Markdown==2.6.8
 packaging==16.8
 paramiko==2.1.2
 pexpect==4.2.1

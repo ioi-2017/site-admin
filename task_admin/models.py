@@ -19,6 +19,7 @@ class Task(models.Model):
 
 class TaskRunSet(models.Model):
     task = models.ForeignKey(Task)
+    owner = models.ForeignKey(User, related_name='taskrunset', null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     @property
