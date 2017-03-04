@@ -31,7 +31,7 @@ class Command(BaseCommand):
         from django.utils.termcolors import colorize
         self.stdout.write(colorize('started pinging {0:s}'.format(node.ip), fg="blue"))
         while True:
-            p = subprocess.Popen(['ping', node.ip, '-c', '1', "-W", "1"], stdout=subprocess.PIPE)
+            p = subprocess.Popen(['ping', '-c', '1', "-W", "1", node.ip], stdout=subprocess.PIPE)
             p.wait()
             if p.poll():
                 self.stdout.write(self.style.ERROR('ping {0:s} failed'.format(node.ip)))
