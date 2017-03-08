@@ -7,9 +7,17 @@
 
 {% block content %}
     <div id="taskrunsets"></div>
+{% endblock content %}
+
+{% block customjs %}
     {% verbatim %}
     <script id="template" type="x-tmpl-mustache">
-        <table>
+        <table class="table table-striped">
+            <tr>
+                <th> task </th>
+                <th> owner </th>
+                <th> created at </th>
+            </tr>
             {{#.}}
               <tr>
                 <td>{{ task_data }}</td>
@@ -33,4 +41,4 @@
                   }
           );
     </script>
-{% endblock content %}
+{% endblock customjs %}

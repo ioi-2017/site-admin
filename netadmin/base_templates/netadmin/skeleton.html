@@ -4,19 +4,27 @@
 <html lang="{{ LANGUAGE_CODE }}">
 <head>
     <title>{% block title %}{% endblock title %} - Netadmin</title>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="An awesome net administration system for programming contests.">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
     {% block meta %}
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="description" content="An awesome net administration system for programming contests.">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
     {% endblock meta %}
-    {% block script %}
-        <script src="{% static 'jquery.min.js' %}"></script>
-    {% endblock script %}
     {% block stylesheet %}
     {% endblock stylesheet %}
 </head>
 <body>
-    {% block content %}{% endblock content %}
+    {% block body %}
+        {% block header %}
+        {% endblock header %}
+        {% block content %}
+        {% endblock content %}
+    {% endblock body %}
+
+    {% block script %}
+    {% endblock script %}
+
+    {% block customjs %}
+    {% endblock customjs %}
 </body>
 </html>

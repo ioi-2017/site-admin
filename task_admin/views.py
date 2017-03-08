@@ -23,7 +23,7 @@ class CodeRenderView(View):
         return HttpResponse(result)
 
 
-class TaskView(generics.ListCreateAPIView):
+class TasksAPI(generics.ListCreateAPIView):
     serializer_class = TaskSerializer
 
     def get_queryset(self):

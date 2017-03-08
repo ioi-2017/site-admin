@@ -19,6 +19,9 @@
     <div class="room" id="container">
 
     </div>
+{% endblock content %}
+
+{% block customjs %}
     <script>
         var room = getRoom($('#container'));
         var desks = [];
@@ -26,4 +29,4 @@
             desks.push(createDesk(room, parseFloat({{ desk.x }}), parseFloat({{ desk.y }}), parseInt({{ desk.angle }})));
         {% endfor %}
     </script>
-{% endblock content %}
+{% endblock customjs %}
