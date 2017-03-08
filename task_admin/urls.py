@@ -1,9 +1,10 @@
 from django.conf.urls import url, include
 
-from task_admin.views import RenderPreviewView, CodeRenderView, TaskRunSetsAPI, TaskRunSetsView, TasksAPI
+from task_admin.views import RenderPreviewView, CodeRenderView, TaskRunSetsAPI, TaskRunSetsView, TasksAPI, TaskRunsAPI
 
 api_urlpatterns = [
     url(r'^taskrunsets$', TaskRunSetsAPI.as_view(), name='taskrunsets'),
+    url(r'^taskruns$', TaskRunsAPI.as_view(), name='taskruns'),
     url(r'^tasks$', TasksAPI.as_view(), name='tasks'),
 ]
 

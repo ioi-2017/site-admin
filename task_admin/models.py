@@ -26,15 +26,21 @@ class TaskRunSet(models.Model):
 
     @property
     def last_finished_at(self):
-        return max(task_run.finished_at for task_run in self.taskrun_set.all())
+        return max(task_run.finished_at for task_run in self.taskruns.all())
 
     @property
     def max_duration_milliseconds(self):
-        return max(task_run.duration_milliseconds for task_run in self.taskrun_set.all())
+        return max(task_run.duration_milliseconds for task_run in self.taskruns.all())
 
     @property
     def results(self):
-        return [task_run.result for task_run in self.taskrun_set.all()]
+        return [task_run.result for task_run in self.taskruns.all()]
+
+    def number_of_nodes(self):
+        return self.taskruns.count()
+
+    def __str__(self):
+        return '[%s] on %d nodes' % (self.task.name, self.number_of_nodes())
 
 
 class TaskRun(models.Model):
@@ -83,3 +89,6 @@ class TaskRun(models.Model):
     @property
     def result(self):
         return self.get_celery_result().get()['result']
+
+    def __str__(self):
+        return '[%s] on %s' % (self.run_set.task.name, self.node.ip)

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from task_admin.models import Task, TaskRunSet
+from task_admin.models import Task, TaskRunSet, TaskRun
 
 
 class TaskSerializer(serializers.ModelSerializer):
@@ -17,3 +17,9 @@ class TaskRunSetSerializer(serializers.ModelSerializer):
     class Meta:
         model = TaskRunSet
         fields = ('task', 'task_data', 'owner', 'owner_data', 'created_at', 'taskruns')
+
+
+class TaskRunSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TaskRun
+        fields = ()
