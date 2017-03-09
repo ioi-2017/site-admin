@@ -27,25 +27,33 @@ class StoppableThread(threading.Thread):
 class Command(BaseCommand):
     help = 'Start the monitoring service'
 
-    def ping_node(self, node):
-        from django.utils.termcolors import colorize
-        self.stdout.write(colorize('started pinging {0:s}'.format(node.ip), fg="blue"))
+    @staticmethod
+    def extract_latency(ping_process):
+        if ping_process.poll() == 0:
+            return float(str(ping_process.communicate()[0]).split('/')[4])
+        return 0
+
+    @staticmethod
+    def ping_node(node_ip, limit=100):
+        node_status = Node.objects.get(ip=node_ip).connected
         while True:
-            p = subprocess.Popen(['ping', '-c', '1', "-W", "1", node.ip], stdout=subprocess.PIPE)
-            p.wait()
-            if p.poll():
-                self.stdout.write(self.style.ERROR('ping {0:s} failed'.format(node.ip)))
-                # do some shit
-            if threading.current_thread().stopped():
-                # self.stdout.write(self.style.NOTICE('finished pinging {0:s}'.format(node.ip)))
-                return
+            p = subprocess.Popen(['ping', '-c', '1', '-W', str(limit), '-i', '0.1', node_ip], stdout=subprocess.PIPE)
             time.sleep(1)
+            success = p.poll() == 0
+            p.kill()
+            if node_status != success:
+                node_status = success
+                node = Node.objects.get(ip=node_ip)
+                node.connected = success
+                node.save(update_fields=['connected'])
+            if threading.current_thread().stopped():
+                return
 
     def handle(self, *args, **options):
         while True:
             all_threads = []
             for node in Node.objects.all():
-                thread = StoppableThread(target=self.ping_node, args=(node,))
+                thread = StoppableThread(target=self.ping_node, args=(node.ip,))
                 thread.start()
                 all_threads.append(thread)
             time.sleep(DB_REFRESH_RATE)

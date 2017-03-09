@@ -17,8 +17,5 @@ function createDesk(room, x, y, angle) {
     var desk = room.rect(absX - deskWidth / 2, absY - deskHeight / 2, deskWidth, deskHeight, 2);
     desk.rotate(angle);
     desk.attr("class", "desk-ok");
-    desk.click(function () {
-       this.attr("class", "desk-failed");
-    });
     return desk;
 }

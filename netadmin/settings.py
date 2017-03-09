@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'visualization',
     'task_admin',
     'rest_framework',
+    'simple_history',
     'ping',
 ]
 

@@ -24,9 +24,22 @@
 {% block customjs %}
     <script>
         var room = getRoom($('#container'));
-        var desks = [];
+        var desks = {};
         {% for desk in desks %}
-            desks.push(createDesk(room, parseFloat({{ desk.x }}), parseFloat({{ desk.y }}), parseInt({{ desk.angle }})));
+            desks['{{ desk.node }}'] = createDesk(room, parseFloat({{ desk.x }}), parseFloat({{ desk.y }}), parseInt({{ desk.angle }}));
         {% endfor %}
+
+        function refresh() {
+            $.getJSON('{% url 'visualization:api:nodes' %}', {'format': 'json'}, function(data) {
+                for (var i = 0; i < data.length; i++) {
+                    var node = data[i];
+                    if (node.ip in desks) {
+                        desks[node.ip].attr('class', node.connected ? 'desk-ok' : 'desk-failed');
+                    }
+                }
+            });
+            setTimeout(refresh, 1000);
+        }
+        setTimeout(refresh, 1000);
     </script>
 {% endblock customjs %}

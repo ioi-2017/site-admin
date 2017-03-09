@@ -1,6 +1,7 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django_countries.fields import CountryField
+from simple_history.models import HistoricalRecords
 
 
 class Room(models.Model):
@@ -25,6 +26,7 @@ class Desk(models.Model):
             'x': self.x,
             'y': self.y,
             'angle': self.angle,
+            'node': self.active_node.ip,
         }
 
     def __str__(self):
@@ -52,6 +54,8 @@ class Node(models.Model):
     ip = models.GenericIPAddressField()
     username = models.CharField(max_length=20)
     property_id = models.CharField(max_length=20, unique=True)
+    connected = models.BooleanField(default=False)
+    # history = HistoricalRecords()
 
     def __str__(self):
         return self.ip

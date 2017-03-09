@@ -9,6 +9,7 @@ Django==1.10.5
 django-celery-results==1.0.1
 django-countries==4.1
 django-filter==1.0.1
+django-simple-history==1.8.2
 djangorestframework==3.5.4
 idna==2.2
 ipython==5.2.2
