@@ -9,7 +9,7 @@ from visualization.models import Node
 class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
-        fields = ('name', 'author', 'code', 'is_local')
+        fields = ('id', 'name', 'author', 'code', 'is_local')
 
 
 class TaskRunSetSerializer(serializers.ModelSerializer):

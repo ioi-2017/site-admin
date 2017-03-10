@@ -37,7 +37,7 @@
         {% endfor %}
     </table>
     <br>
-    <form action="/tasks" method="POST" enctype="multipart/form-data" class="form-horizontal" novalidate>
+    <form action="/api/tasks" method="POST" enctype="multipart/form-data" class="form-horizontal" novalidate>
         <fieldset>
             {% csrf_token %}
             <div class="form-group ">
