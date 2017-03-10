@@ -30,20 +30,14 @@ class TaskRunSetsView(ListView):
 
 class TasksAPI(generics.ListCreateAPIView):
     serializer_class = TaskSerializer
-
-    def get_queryset(self):
-        return Task.objects.all()
+    queryset = Task.objects.all()
 
 
 class TaskRunsAPI(generics.ListAPIView):
     serializer_class = TaskRunSerializer
-
-    def get_queryset(self):
-        return TaskRun.objects.all()
+    queryset = TaskRun.objects.all()
 
 
 class TaskRunSetsAPI(generics.ListCreateAPIView):
     serializer_class = TaskRunSetSerializer
-
-    def get_queryset(self):
-        return TaskRunSet.objects.all()
+    queryset = TaskRunSet.objects.all()
