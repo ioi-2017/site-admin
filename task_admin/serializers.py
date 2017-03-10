@@ -19,7 +19,6 @@ class TaskRunSetSerializer(serializers.ModelSerializer):
     ips = serializers.ListField(child=serializers.IPAddressField(), write_only=True)
 
     def create(self, validated_data):
-        print(validated_data)
         task = validated_data['task']
         taskrunset = TaskRunSet(
             task=task,
