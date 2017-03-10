@@ -1,8 +1,8 @@
-import django_filters
 from django.http import HttpResponse
 from django.views.generic import ListView, TemplateView, View
 from rest_framework import generics
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.filters import DjangoFilterBackend
 
 from task_admin.models import TaskRunSet, Task, TaskRun
 from task_admin.serializers import TaskRunSetSerializer, TaskSerializer, TaskRunSerializer
@@ -47,7 +47,7 @@ class TaskRunSetPagination(PageNumberPagination):
 class TaskRunSetsAPI(generics.ListCreateAPIView):
     pagination_class = TaskRunSetPagination
     serializer_class = TaskRunSetSerializer
-    filter_backends = (django_filters.rest_framework.DjangoFilterBackend,)
+    filter_backends = (DjangoFilterBackend,)
     filter_fields = ('task',)
     queryset = TaskRunSet.objects.all()
     max_page_size = 10000
