@@ -1,8 +1,9 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
-from task_admin.models import Task, TaskRunSet, TaskRun
-from task_admin.task_render import render_task
-from task_admin.tasks import execute_task
+from .models import Task, TaskRunSet, TaskRun
+from .task_render import render_task
+from .tasks import execute_task
 from visualization.models import Node
 
 
@@ -26,7 +27,7 @@ class TaskRunSetSerializer(serializers.ModelSerializer):
         )
         taskrunset.save()
         for ip in validated_data['ips']:
-            node = Node.objects.get(ip=ip)
+            node = get_object_or_404(Node, ip=ip)
             rendered_code = render_task(task.code, {
                 'node': node,
                 'desk': node.desk,
