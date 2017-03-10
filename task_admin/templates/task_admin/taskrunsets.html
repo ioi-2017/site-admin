@@ -6,39 +6,134 @@
 {% endblock title %}
 
 {% block content %}
-    <div id="taskrunsets"></div>
+    {% verbatim %}
+    <div ng-app="runsets" ng-controller="RunsetsContoller">
+        <div id="task_filter">
+            <select ng-model="params.task" id="task-filter" style="width:200px">
+                <option value="">All tasks</option>
+                <option ng-repeat="task in tasks" value="{{ task.id }}">{{ task.name }}</option>
+            </select>
+            <select ng-model="params.owner_id" id="owner-filter">
+                <option value="">All owners</option>
+                <option ng-repeat="owner in owners" value="{{ owner.id }}">{{ owner.name }}</option>
+            </select>
+        </div>
+        <div id="taskrunsets">
+            <table class="table table-striped">
+                <tr>
+                    <th> task</th>
+                    <th> owner</th>
+                    <th> created at</th>
+                </tr>
+                <tr ng-repeat="result in results">
+                    <td>{{ result.task_data }}</td>
+                    <td>{{ result.owner_data }}</td>
+                    <td>{{ result.created_at }}</td>
+                </tr>
+            </table>
+
+            <ul class="pagination" style="margin: 5px 0 10px 0">
+                <li ng-show="pagination.previous_url">
+                    <a ng-click="params.page = params.page - 1" href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li ng-hide="pagination.previous_url" class="disabled">
+                    <a href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li ng-repeat="page in pagination.page_links"
+                    class="{{ !page[3]? (page[2]? 'active' : '') : 'disabled' }}">
+                    <a ng-click="setPage(page[1])" href="#">
+                        <span ng-if="page[3]" aria-hidden="true">&hellip;</span>
+                        <span ng-if="!page[3]">{{ page[1] }}</span>
+                    </a>
+                </li>
+                <li ng-show="pagination.next_url">
+                    <a ng-click="params.page = params.page + 1" href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+                <li ng-hide="pagination.next_url" class="disabled">
+                    <a href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    {% endverbatim %}
+
 {% endblock content %}
 
 {% block customjs %}
     {% verbatim %}
-    <script id="template" type="x-tmpl-mustache">
-        <table class="table table-striped">
-            <tr>
-                <th> task </th>
-                <th> owner </th>
-                <th> created at </th>
-            </tr>
-            {{#.}}
-                <tr>
-                    <td>{{ task_data }}</td>
-                    <td>{{ owner_data }}</td>
-                    <td>{{ created_at }}</td>
-                </tr>
-            {{/.}}
-        </table>
-    </script>
+
     {% endverbatim %}
 
     <script>
-          var template = $('#template').html();
-          Mustache.parse(template);
-          var data = $.getJSON(
-                  '{% url 'task_admin:api:taskrunsets' %}',
-                  {'format': 'json'},
-                  function(data) {
-                      var rendered = Mustache.render(template, data);
-                      $('#taskrunsets').html(rendered);
-                  }
-          );
+        var ngApp = angular.module('runsets', []);
+        ngApp.factory("runsets", function () {
+
+        });
+
+        ngApp.controller('RunsetsContoller', function RunSetController($scope, $http, $location) {
+            $scope.params = {
+                task: '',
+                owner_id: '',
+                page: 1
+            };
+            $http.get('{% url 'task_admin:api:tasks' %}', {params: {format: 'json'}}).then(function (response) {
+                $scope.tasks = response.data;
+            });
+            $scope.setPage = function (n) {
+                $scope.params.page = n;
+            };
+            function updatePage() {
+                $http.get('{% url 'task_admin:api:taskrunsets' %}',
+                        {
+                            params: $scope.params
+                        }
+                ).then(function (response) {
+                    $scope.pagination = response.data.pagination;
+                    $scope.results = response.data.results;
+                    $location.search($scope.params);
+                });
+            }
+
+            $scope.$watch("params.task", function (newValue, oldValue) {
+                if (newValue == oldValue)return;
+                $scope.params.page = 1;
+                updatePage();
+            });
+            $scope.$watch("params.page", function (newValue, oldValue) {
+                if (newValue == oldValue)return;
+                updatePage();
+            });
+
+            $scope.owners = [
+                {
+                    id: '1',
+                    name: 'admin'
+                }
+            ];
+            $scope.params = jQuery.extend($scope.params, $location.search());
+            updatePage();
+        });
+        $(document).ready(function () {
+            $("#task-filter").select2();
+        });
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
 {% endblock customjs %}
+
+{% block script %}
+    {{ block.super }}
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.2/angular.min.js"></script>
+{% endblock %}
+
+{% block stylesheet %}
+    {{ block.super }}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet"/>
+{% endblock %}
