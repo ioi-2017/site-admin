@@ -1,8 +1,8 @@
 from django.http import HttpResponse
 from django.views.generic import ListView, TemplateView, View
-from rest_framework import generics
+from rest_framework import mixins
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.filters import DjangoFilterBackend
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet, GenericViewSet
 
 from task_admin.models import TaskRunSet, Task, TaskRun
 from task_admin.serializers import TaskRunSetSerializer, TaskSerializer, TaskRunSerializer
@@ -30,13 +30,15 @@ class TaskRunSetsView(ListView):
     queryset = TaskRunSet.objects.all()
 
 
-class TasksAPI(generics.ListCreateAPIView):
+class TasksAPI(ModelViewSet):
     serializer_class = TaskSerializer
+    filter_fields = ('id', 'name', 'author', 'is_local')
     queryset = Task.objects.all()
 
 
-class TaskRunsAPI(generics.ListAPIView):
+class TaskRunsAPI(ReadOnlyModelViewSet):
     serializer_class = TaskRunSerializer
+    filter_fields = ('desk', 'contestant', 'node')
     queryset = TaskRun.objects.all()
 
 
@@ -44,15 +46,17 @@ class TaskRunSetPagination(PageNumberPagination):
     page_size = 10
 
 
-class TaskRunSetsAPI(generics.ListCreateAPIView):
+class TaskRunSetsAPI(mixins.CreateModelMixin,
+                     mixins.RetrieveModelMixin,
+                     mixins.ListModelMixin,
+                     GenericViewSet):
     pagination_class = TaskRunSetPagination
     serializer_class = TaskRunSetSerializer
-    filter_backends = (DjangoFilterBackend,)
     filter_fields = ('task',)
     queryset = TaskRunSet.objects.all()
     max_page_size = 10000
 
-    def get(self, request, *args, **kwargs):
-        response = super().get(request, *args, **kwargs)
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
         response.data['pagination'] = self.paginator.get_html_context()
         return response

@@ -1,7 +1,9 @@
+from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django_countries.fields import CountryField
 from simple_history.models import HistoricalRecords
+from django.utils.translation import ugettext_lazy as _
 
 
 class Room(models.Model):
@@ -11,12 +13,20 @@ class Room(models.Model):
         return self.name
 
 
+def xy_range_validator(value):
+    if value <= 0 or value >= 1:
+        raise ValidationError(
+            _('%(value)s must be bigger than 0 and less than 1'),
+            params={'value': value},
+        )
+
+
 class Desk(models.Model):
     contestant = models.OneToOneField('Contestant', related_name='desk')
     active_node = models.OneToOneField('Node', related_name='desk')
     room = models.ForeignKey('Room', on_delete=models.CASCADE)
-    x = models.DecimalField(max_digits=5, decimal_places=5, default=0)
-    y = models.DecimalField(max_digits=5, decimal_places=5, default=0)
+    x = models.FloatField(default=0.5, validators=[xy_range_validator])
+    y = models.FloatField(default=0.5, validators=[xy_range_validator])
     angle = models.IntegerField(default=0, validators=[
         MaxValueValidator(359), MinValueValidator(0)
     ])
@@ -55,6 +65,7 @@ class Node(models.Model):
     username = models.CharField(max_length=20)
     property_id = models.CharField(max_length=20, unique=True)
     connected = models.BooleanField(default=False)
+
     # history = HistoricalRecords()
 
     def __str__(self):

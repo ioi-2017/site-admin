@@ -48,8 +48,6 @@ class TaskRun(models.Model):
     is_local = models.BooleanField()
     run_set = models.ForeignKey(TaskRunSet, related_name='taskruns')
     created_at = models.DateTimeField(auto_now_add=True)
-    started_at = models.DateTimeField()
-    finished_at = models.DateTimeField()
     rendered_code = models.TextField()
 
     desk = models.ForeignKey(Desk)
@@ -72,6 +70,7 @@ class TaskRun(models.Model):
 
     def is_successful(self):
         return self.get_celery_result().successful()
+
     is_successful.boolean = True
 
     @property
