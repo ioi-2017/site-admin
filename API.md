@@ -1,11 +1,11 @@
-# Index:
-#### [Task API](#task-api)
-#### [TaskRun API](#taskrun-api)
-#### [TaskRunSet API](#taskrunset-api)
-#### [Node API](#node-api)
-#### [Desk API](#desk-api)
-#### [Room API](#room-api)
-#### [Contestant API](#contestant-api)
+# API Index:
+#### [Task](#task-api)
+#### [TaskRun](#taskrun-api)
+#### [TaskRunSet](#taskrunset-api)
+#### [Node](#node-api)
+#### [Desk](#desk-api)
+#### [Room](#room-api)
+#### [Contestant](#contestant-api)
 
 **Task API**
 ----
