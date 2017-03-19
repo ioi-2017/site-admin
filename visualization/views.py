@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from django.views import View
-from rest_framework import generics
+from rest_framework.viewsets import ModelViewSet
 
-from visualization.models import Room, Node
-from visualization.serializers import NodeSerializer
+from visualization.models import Room, Node, Desk, Contestant
+from visualization.serializers import NodeSerializer, DeskSerializer, ContestantSerializer, RoomSerializer
 
 
 class RoomView(View):
@@ -14,8 +14,24 @@ class RoomView(View):
         })
 
 
-class NodesAPI(generics.ListCreateAPIView):
+class NodesAPI(ModelViewSet):
     serializer_class = NodeSerializer
+    filter_fields = ('id', 'ip', 'mac_address', 'username', 'property_id', 'connected')
+    queryset = Node.objects.all()
 
-    def get_queryset(self):
-        return Node.objects.all()
+
+class DesksAPI(ModelViewSet):
+    serializer_class = DeskSerializer
+    filter_fields = ('contestant', 'active_node', 'room',)
+    queryset = Desk.objects.all()
+
+
+class ContestantsAPI(ModelViewSet):
+    serializer_class = ContestantSerializer
+    filter_fields = ('country', 'number',)
+    queryset = Contestant.objects.all()
+
+
+class RoomsAPI(ModelViewSet):
+    serializer_class = RoomSerializer
+    queryset = Room.objects.all()

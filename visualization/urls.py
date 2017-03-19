@@ -1,12 +1,15 @@
 from django.conf.urls import url, include
 
-from visualization.views import RoomView, NodesAPI
+from visualization.views import RoomView, NodesAPI, DesksAPI, RoomsAPI, ContestantsAPI
+from rest_framework.routers import DefaultRouter
 
-api_urlpatterns = [
-    url(r'^nodes/', NodesAPI.as_view(), name='nodes')
-]
+router = DefaultRouter()
+router.register(r'nodes', NodesAPI)
+router.register(r'desks', DesksAPI)
+router.register(r'rooms', RoomsAPI)
+router.register(r'contestants', ContestantsAPI)
 
 urlpatterns = [
     url(r'^$', RoomView.as_view(), name='room'),
-    url(r'^api/', include(api_urlpatterns, namespace='api')),
+    url(r'^api/', include(router.urls, namespace='api')),
 ]

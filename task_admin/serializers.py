@@ -1,9 +1,9 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
-from .models import Task, TaskRunSet, TaskRun
-from .task_render import render_task
-from .tasks import execute_task
+from task_admin.models import Task, TaskRunSet, TaskRun
+from task_admin.task_render import render_task
+from task_admin.tasks import execute_task, add_time
 from visualization.models import Node
 
 
@@ -17,7 +17,7 @@ class TaskRunSetSerializer(serializers.ModelSerializer):
     owner_data = serializers.StringRelatedField(source='owner')
     task_data = TaskSerializer(source='task', read_only=True)
     taskruns = serializers.StringRelatedField(many=True, read_only=True)
-    ips = serializers.ListField(child=serializers.IPAddressField(), write_only=True)
+    ips = serializers.JSONField(write_only=True)
 
     def create(self, validated_data):
         task = validated_data['task']
@@ -41,16 +41,18 @@ class TaskRunSetSerializer(serializers.ModelSerializer):
                 rendered_code=rendered_code,
                 is_local=task.is_local,
             )
-            taskrun.celery_task = execute_task.delay(**taskrun.get_execution_dict()).id
+            taskrun.celery_task = add_time(execute_task.s(**taskrun.get_execution_dict())).delay().id
             taskrun.save()
         return taskrunset
 
     class Meta:
         model = TaskRunSet
-        fields = ('task', 'task_data', 'owner', 'owner_data', 'created_at', 'taskruns', 'ips')
+        fields = ('id', 'task', 'task_data', 'owner', 'owner_data', 'created_at', 'taskruns', 'ips')
 
 
 class TaskRunSerializer(serializers.ModelSerializer):
     class Meta:
         model = TaskRun
-        fields = ()
+        fields = (
+            'id', 'celery_task', 'is_local', 'run_set', 'created_at', 'started_at', 'finished_at', 'rendered_code',
+            'desk', 'contestant', 'node')
