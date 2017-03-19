@@ -1,0 +1,24 @@
+md-sidenav .nav-header {
+    text-align: center;
+    border-bottom: 1px solid #333;
+}
+
+.logo {
+    font-weight: 300;
+}
+
+.contest-logo {
+    width: 75%;
+}
+
+.contest-title {
+    margin-top: 10px;
+}
+
+md-toolbar {
+    margin-bottom: 30px;
+}
+
+md-content#main {
+    margin: 20px;
+}

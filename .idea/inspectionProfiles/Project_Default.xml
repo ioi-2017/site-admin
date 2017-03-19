@@ -1,6 +1,44 @@
 <component name="InspectionProjectProfileManager">
   <profile version="1.0">
     <option name="myName" value="Project Default" />
+    <inspection_tool class="HtmlUnknownAttribute" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="myValues">
+        <value>
+          <list size="8">
+            <item index="0" class="java.lang.String" itemvalue="layout" />
+            <item index="1" class="java.lang.String" itemvalue="flex" />
+            <item index="2" class="java.lang.String" itemvalue="hide" />
+            <item index="3" class="java.lang.String" itemvalue="show-gt-md" />
+            <item index="4" class="java.lang.String" itemvalue="ng-src" />
+            <item index="5" class="java.lang.String" itemvalue="layout-align" />
+            <item index="6" class="java.lang.String" itemvalue="md-component-id" />
+            <item index="7" class="java.lang.String" itemvalue="md-is-locked-open" />
+          </list>
+        </value>
+      </option>
+      <option name="myCustomValuesEnabled" value="true" />
+    </inspection_tool>
+    <inspection_tool class="HtmlUnknownTag" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="myValues">
+        <value>
+          <list size="12">
+            <item index="0" class="java.lang.String" itemvalue="nobr" />
+            <item index="1" class="java.lang.String" itemvalue="noembed" />
+            <item index="2" class="java.lang.String" itemvalue="comment" />
+            <item index="3" class="java.lang.String" itemvalue="noscript" />
+            <item index="4" class="java.lang.String" itemvalue="embed" />
+            <item index="5" class="java.lang.String" itemvalue="script" />
+            <item index="6" class="java.lang.String" itemvalue="md-toolbar" />
+            <item index="7" class="java.lang.String" itemvalue="md-content" />
+            <item index="8" class="java.lang.String" itemvalue="md-sidenav" />
+            <item index="9" class="java.lang.String" itemvalue="md-button" />
+            <item index="10" class="java.lang.String" itemvalue="md-list" />
+            <item index="11" class="java.lang.String" itemvalue="md-list-item" />
+          </list>
+        </value>
+      </option>
+      <option name="myCustomValuesEnabled" value="true" />
+    </inspection_tool>
     <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="ignoredPackages">
         <value>

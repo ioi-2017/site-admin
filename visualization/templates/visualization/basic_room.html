@@ -5,41 +5,46 @@
     Basic Room
 {% endblock title %}
 
-{% block script %}
-    {{ block.super }}
-    <script src="{% static 'visualization/room.js' %}"></script>
-{% endblock script %}
-
 {% block stylesheet %}
     {{ block.super }}
     <link rel="stylesheet" href="{% static 'visualization/room.css' %}">
 {% endblock stylesheet %}
 
 {% block content %}
-    <div class="room" id="container">
+    <md-card>
+        <div class="room" id="container">
 
-    </div>
+        </div>
+        <md-card-actions layout="row" layout-align="end center">
+            IOI 2017 - Room 1
+        </md-card-actions>
+    </md-card>
 {% endblock content %}
 
-{% block customjs %}
+{% block script %}
+    {{ block.super }}
+    <script src="{% static 'visualization/room.js' %}"></script>
     <script>
-        var room = getRoom($('#container'));
-        var desks = {};
-        {% for desk in desks %}
-            desks['{{ desk.node }}'] = createDesk(room, parseFloat({{ desk.x }}), parseFloat({{ desk.y }}), parseInt({{ desk.angle }}));
-        {% endfor %}
+        var init = function() {
+            var room = getRoom($('#container'));
+            var desks = {};
+            {% for desk in desks %}
+                desks['{{ desk.node }}'] = createDesk(room, parseFloat({{ desk.x }}), parseFloat({{ desk.y }}), parseInt({{ desk.angle }}));
+            {% endfor %}
 
-        function refresh() {
-            $.getJSON('{% url 'visualization:api:nodes' %}', {'format': 'json'}, function(data) {
-                for (var i = 0; i < data.length; i++) {
-                    var node = data[i];
-                    if (node.ip in desks) {
-                        desks[node.ip].attr('class', node.connected ? 'desk-ok' : 'desk-failed');
+            function refresh() {
+                $.getJSON('{% url 'visualization:api:nodes' %}', {'format': 'json'}, function(data) {
+                    for (var i = 0; i < data.length; i++) {
+                        var node = data[i];
+                        if (node.ip in desks) {
+                            desks[node.ip].attr('class', node.connected ? 'desk-ok' : 'desk-failed');
+                        }
                     }
-                }
-            });
-            setTimeout(refresh, 1000);
-        }
-        setTimeout(refresh, 1000);
+                });
+                setTimeout(refresh, 1000);
+            }
+            refresh();
+        };
+        setTimeout(init, 1000);
     </script>
-{% endblock customjs %}
+{% endblock script %}

@@ -7,7 +7,7 @@
 
 {% block content %}
     {% verbatim %}
-    <div ng-app="runsets" ng-controller="RunsetsContoller">
+    <div ng-controller="RunsetsContoller">
         <div id="task_filter">
             <select ng-model="params.task" id="task-filter" style="width:200px">
                 <option value="">All tasks</option>
@@ -26,9 +26,9 @@
                     <th> created at</th>
                 </tr>
                 <tr ng-repeat="result in results">
-                    <td>{{ result.task_data }}</td>
+                    <td>{{ result.task_data.name }}</td>
                     <td>{{ result.owner_data }}</td>
-                    <td>{{ result.created_at }}</td>
+                    <td>{{ result.created_at | date:'M/d/y, HH:mm:ss' }}</td>
                 </tr>
             </table>
 
@@ -67,18 +67,11 @@
 
 {% endblock content %}
 
-{% block customjs %}
-    {% verbatim %}
+{% block script %}
 
-    {% endverbatim %}
-
+    {{ block.super }}
     <script>
-        var ngApp = angular.module('runsets', []);
-        ngApp.factory("runsets", function () {
-
-        });
-
-        ngApp.controller('RunsetsContoller', function RunSetController($scope, $http, $location) {
+        app.controller('RunsetsContoller', function RunSetController($scope, $http, $location) {
             $scope.params = {
                 task: '',
                 owner_id: '',
@@ -126,12 +119,7 @@
         });
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
-{% endblock customjs %}
-
-{% block script %}
-    {{ block.super }}
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.2/angular.min.js"></script>
-{% endblock %}
+{% endblock script %}
 
 {% block stylesheet %}
     {{ block.super }}

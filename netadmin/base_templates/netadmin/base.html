@@ -2,24 +2,83 @@
 {% load staticfiles %}
 
 {% block stylesheet %}
-    <link href="{% static 'css/bootstrap.min.css' %}" rel=stylesheet>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
+    <link rel="stylesheet" href="{% static 'css/angular-material.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/netadmin.css' %}">
 {% endblock stylesheet %}
 
-{% block header %}
-    <header id="top" class="navbar navbar-inverse navbar-static-top">
-        <div class="container-fluid">
-            <header class="navbar-header">
-                <a class="navbar-brand" href="#"> Netadmin </a>
+{% block javascript %}
+    {% block jsinclude %}
+        <script src="{% static 'js/jquery.min.js' %}"></script>
+        <script src="{% static 'js/raphael.min.js' %}"></script>
+        <script src="{% static 'js/angular.min.js' %}"></script>
+        <script src="{% static 'js/angular-animate.min.js' %}"></script>
+        <script src="{% static 'js/angular-aria.min.js' %}"></script>
+        <script src="{% static 'js/angular-messages.min.js' %}"></script>
+        <script src="{% static 'js/angular-resource.min.js' %}"></script>
+        <script src="{% static 'js/angular-material.min.js' %}"></script>
+    {% endblock jsinclude %}
+
+    {% block script %}
+        <script>
+            var STATIC_URL = '{{ STATIC_URL | escapejs }}';
+            var static = function (path) {
+                return STATIC_URL + path;
+            }
+        </script>
+
+        <script src="{% static 'js/app.js' %}"></script>
+    {% endblock script %}
+{% endblock javascript %}
+
+
+{% block bodydirectives %}ng-app="NetAdmin" ng-cloack{% endblock bodydirectives %}
+
+{% block body %}
+    <section layout-fill layout="row" layout-align="start stretch" flex>
+        <md-sidenav class="sidebar"
+                    md-component-id="left"
+                    md-whiteframe="4"
+                    md-is-locked-open="$mdMedia('gt-sm')">
+            <header class="nav-header" layout="column">
+                <h1 class="logo md-display-2">Net Admin</h1>
+                <div>
+                    <img class="contest-logo" src="{% static 'images/ioi2017.png' %}"/>
+                </div>
+                <h4 class="contest-title md-title">IOI 2017</h4>
             </header>
+
+            {% verbatim %}
+            <md-content flex role="navigation">
+                <md-list flex ng-controller="NavController as nav">
+                    <md-list-item ng-repeat="item in nav.items">
+                        <md-button flex>
+                            {{ item.name }}
+                        </md-button>
+                    </md-list-item>
+                </md-list>
+            </md-content>
+            {% endverbatim %}
+        </md-sidenav>
+
+        <div layout="column" tabindex="-1" role="main" flex>
+            <md-toolbar id="top">
+                <div class="md-toolbar-tools">
+                    <md-button class="md-icon-button" aria-label="Settings" hide-gt-sm>
+                        <md-icon md-svg-icon="img/icons/menu.svg"></md-icon>
+                    </md-button>
+
+                    <h2 flex md-truncate>Home</h2>
+                    <md-button class="md-fab md-mini">
+                        H
+                    </md-button>
+                </div>
+            </md-toolbar>
+
+            <md-content id="main" md-scroll-y layout="column" flex>
+                {% block content %}
+                {% endblock content %}
+            </md-content>
         </div>
-    </header>
-{% endblock header %}
-
-{% block content %}
-{% endblock content %}
-
-{% block script %}
-    <script src="{% static 'js/jquery.min.js' %}"></script>
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
-    <script src="{% static 'js/raphael.min.js' %}"></script>
-{% endblock script %}
+    </section>
+{% endblock body %}

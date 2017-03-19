@@ -13,18 +13,10 @@
     {% block stylesheet %}
     {% endblock stylesheet %}
 </head>
-<body>
+<body {% block bodydirectives %}{% endblock bodydirectives %}>
     {% block body %}
-        {% block header %}
-        {% endblock header %}
-        {% block content %}
-        {% endblock content %}
     {% endblock body %}
-
-    {% block script %}
-    {% endblock script %}
-
-    {% block customjs %}
-    {% endblock customjs %}
+    {% block javascript %}
+    {% endblock javascript %}
 </body>
 </html>
