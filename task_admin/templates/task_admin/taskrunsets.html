@@ -77,14 +77,14 @@
                 owner_id: '',
                 page: 1
             };
-            $http.get('{% url 'task_admin:api:tasks' %}', {params: {format: 'json'}}).then(function (response) {
+            $http.get('{% url 'task_admin:api:task-list' %}', {params: {format: 'json'}}).then(function (response) {
                 $scope.tasks = response.data;
             });
             $scope.setPage = function (n) {
                 $scope.params.page = n;
             };
             function updatePage() {
-                $http.get('{% url 'task_admin:api:taskrunsets' %}',
+                $http.get('{% url 'task_admin:api:taskrunset-list' %}',
                         {
                             params: $scope.params
                         }

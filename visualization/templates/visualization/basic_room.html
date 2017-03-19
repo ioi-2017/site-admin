@@ -33,7 +33,7 @@
             {% endfor %}
 
             function refresh() {
-                $.getJSON('{% url 'visualization:api:nodes' %}', {'format': 'json'}, function(data) {
+                $.getJSON('{% url 'visualization:api:node-list' %}', {'format': 'json'}, function(data) {
                     for (var i = 0; i < data.length; i++) {
                         var node = data[i];
                         if (node.ip in desks) {
