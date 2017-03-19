@@ -391,13 +391,18 @@
 
 * **Data Params**
 
-     Values for the new task
+     Values for the new task, either task template or code and is_local should be provided.
 
      **Required:**
 
-     `task=[integer]`  
      `owner=[integer]`  
      `ips=[json]`
+     
+     **Optional:**
+
+     `task=[integer]`  
+     `code=[string]`  
+     `is_local=[boolean]`
 
 * **Success Response:**
 
@@ -424,10 +429,17 @@
          ]
      }
      ```
+     
+     OR
+
+     If some of the ips don't exist or task and code are not provided correctly.
+
+   * **Code:** 400 Bad Request<br />
 
 * **Sample Call:**
        ```
        curl -X POST -F "ips=[\"192.168.200.20\"]" -F "owner=1" -F "task=5" "http://localhost:8000/api/taskrunsets/"
+       curl -X POST -F "ips=[\"192.168.200.20\"]" -F "owner=1" -F "code=ls" -F "is_local=false" "http://localhost:8000/api/taskrunsets/"
        ```
 
 

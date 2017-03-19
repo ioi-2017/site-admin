@@ -1,3 +1,5 @@
+import textwrap
+
 from celery.result import AsyncResult
 from django.contrib.auth.models import User
 from django.db import models
@@ -20,7 +22,8 @@ class Task(models.Model):
 
 
 class TaskRunSet(models.Model):
-    task = models.ForeignKey(Task)
+    is_local = models.BooleanField()
+    code = models.TextField()
     owner = models.ForeignKey(User, related_name='taskrunset', null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -40,7 +43,7 @@ class TaskRunSet(models.Model):
         return self.taskruns.count()
 
     def __str__(self):
-        return '[%s] on %d nodes' % (self.task.name, self.number_of_nodes())
+        return '[%s] on %d nodes' % (textwrap.shorten(self.code, 10), self.number_of_nodes())
 
 
 class TaskRun(models.Model):
@@ -90,4 +93,4 @@ class TaskRun(models.Model):
         return self.get_celery_result().get()['result']
 
     def __str__(self):
-        return '[%s] on %s' % (self.run_set.task.name, self.node.ip)
+        return '[%s] on %s' % (textwrap.shorten(self.run_set.code, 10), self.node.ip)

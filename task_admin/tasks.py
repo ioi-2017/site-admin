@@ -9,7 +9,8 @@ from paramiko import SSHClient, AutoAddPolicy
 
 RUN_TIMEOUT_SECONDS = 10
 
-app = Celery('tasks', broker='redis://localhost:6379/0', backend='redis://localhost:6379/0')
+app = Celery('tasks', )
+app.config_from_object('task_admin.celeryconfig')
 
 
 @app.task
