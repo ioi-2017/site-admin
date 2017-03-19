@@ -24,14 +24,14 @@
 
 *  **URL Params**
 
-       You can filter the returning list using optional arguments in get request.
+     You can filter the returning list using optional arguments in get request.
 
-       **Optional:**
+     **Optional:**
 
-       `id=[integer]`
-       `name=[string]`
-       `author=[integer]`
-       `is_local=[boolean]`
+     `id=[integer]`
+     `name=[string]`
+     `author=[integer]`
+     `is_local=[boolean]`
 
 * **Success Response:**
 
@@ -77,14 +77,14 @@
 
 * **Data Params**
 
-       Values for the new task
+     Values for the new task
 
-       **Required:**
+     **Required:**
 
-       `name=[string]`
-       `author=[integer]`
-       `code=[string]`
-       `is_local=[boolean]`
+     `name=[string]`
+     `author=[integer]`
+     `code=[string]`
+     `is_local=[boolean]`
 
 * **Success Response:**
 
@@ -121,14 +121,14 @@
 
 * **Data Params**
 
-       Params used for updating the task
+     Params used for updating the task
 
-       **Required for `PUT` and Optional for `PATCH`:**
+     **Required for `PUT` and Optional for `PATCH`:**
 
-       `name=[string]`
-       `author=[integer]`
-       `code=[string]`
-       `is_local=[boolean]`
+     `name=[string]`
+     `author=[integer]`
+     `code=[string]`
+     `is_local=[boolean]`
 
 * **Success Response:**
 
@@ -185,13 +185,13 @@
 
 *  **URL Params**
 
-       You can filter the returning list using optional arguments in get request.
+     You can filter the returning list using optional arguments in get request.
 
-       **Optional:**
+     **Optional:**
 
-       `desk=[integer]`
-       `contestant=[string]`
-       `node=[integer]`
+     `desk=[integer]`
+     `contestant=[string]`
+     `node=[integer]`
 
 * **Success Response:**
 
@@ -291,11 +291,11 @@
 
 *  **URL Params**
 
-       You can filter the returning list using optional arguments in get request.
+     You can filter the returning list using optional arguments in get request.
 
-       **Optional:**
+     **Optional:**
 
-       `task=[integer]`
+     `task=[integer]`
 
 * **Success Response:**
 
@@ -391,13 +391,13 @@
 
 * **Data Params**
 
-       Values for the new task
+     Values for the new task
 
-       **Required:**
+     **Required:**
 
-       `task=[integer]`
-       `owner=[integer]`
-       `ips=[json]`
+     `task=[integer]`
+     `owner=[integer]`
+     `ips=[json]`
 
 * **Success Response:**
 
@@ -492,16 +492,16 @@
 
 *  **URL Params**
 
-       You can filter the returning list using optional arguments in get request.
+     You can filter the returning list using optional arguments in get request.
 
-       **Optional:**
+     **Optional:**
 
-       `id=[integer]`
-       `ip=[string]`
-       `mac_address=[string]`
-       `username=[string]`
-       `property_id=[string]`
-       `connected=[boolean]`
+     `id=[integer]`
+     `ip=[string]`
+     `mac_address=[string]`
+     `username=[string]`
+     `property_id=[string]`
+     `connected=[boolean]`
 
 * **Success Response:**
 
@@ -549,15 +549,15 @@
 
 * **Data Params**
 
-       Values for the new task
+     Values for the new task
 
-       **Required:**
+     **Required:**
 
-       `ip=[string]`
-       `mac_address=[string]`
-       `username=[string]`
-       `property_id=[string]`
-       `connected=[boolean]`
+     `ip=[string]`
+     `mac_address=[string]`
+     `username=[string]`
+     `property_id=[string]`
+     `connected=[boolean]`
 
 * **Success Response:**
 
@@ -595,15 +595,15 @@
 
 * **Data Params**
 
-       Params used for updating the node
+     Params used for updating the node
 
-       **Required for `PUT` and Optional for `PATCH`:**
+     **Required for `PUT` and Optional for `PATCH`:**
 
-       `ip=[string]`
-       `mac_address=[string]`
-       `username=[string]`
-       `property_id=[string]`
-       `connected=[boolean]`
+     `ip=[string]`
+     `mac_address=[string]`
+     `username=[string]`
+     `property_id=[string]`
+     `connected=[boolean]`
 
 * **Success Response:**
 
@@ -703,11 +703,11 @@
 
 * **Data Params**
 
-       Values for the new task
+     Values for the new task
 
-       **Required:**
+     **Required:**
 
-       `name=[string]`
+     `name=[string]`
 
 * **Success Response:**
 
@@ -741,11 +741,11 @@
 
 * **Data Params**
 
-       Params used for updating the room
+     Params used for updating the room
 
-       **Required for `PUT` and Optional for `PATCH`:**
+     **Required for `PUT` and Optional for `PATCH`:**
 
-       `name=[string]`
+     `name=[string]`
 
 * **Success Response:**
 
@@ -805,12 +805,12 @@
 
 *  **URL Params**
 
-       You can filter the returning list using optional arguments in get request.
+     You can filter the returning list using optional arguments in get request.
 
-       **Optional:**
+     **Optional:**
 
-       `country=[string]`
-       `number=[integer]`
+     `country=[string]`
+     `number=[integer]`
 
 * **Success Response:**
 
@@ -854,13 +854,13 @@
 
 * **Data Params**
 
-       Values for the new contestant
+     Values for the new contestant
 
-       **Required:**
+     **Required:**
 
-       `name=[string]`
-       `country=[string]`: Two letter code of the country (e.g IR)
-       `number=[integer]`
+     `name=[string]`
+     `country=[string]`: Two letter code of the country (e.g IR)
+     `number=[integer]`
 
 * **Success Response:**
 
@@ -896,13 +896,13 @@
 
 * **Data Params**
 
-       Params used for updating the contestant
+     Params used for updating the contestant
 
-       **Required for `PUT` and Optional for `PATCH`:**
+     **Required for `PUT` and Optional for `PATCH`:**
 
-       `name=[string]`
-       `country=[string]`
-       `number=[integer]`
+     `name=[string]`
+     `country=[string]`
+     `number=[integer]`
 
 * **Success Response:**
 
@@ -965,13 +965,13 @@
 
 *  **URL Params**
 
-       You can filter the returning list using optional arguments in get request.
+     You can filter the returning list using optional arguments in get request.
 
-       **Optional:**
+     **Optional:**
 
-       `contestant=[integer]`
-       `active_node=[integer]`
-       `room=[integer]`
+     `contestant=[integer]`
+     `active_node=[integer]`
+     `room=[integer]`
 
 * **Success Response:**
 
@@ -1021,19 +1021,19 @@
 
 * **Data Params**
 
-       Values for the new desk
+     Values for the new desk
 
-       **Required:**
+     **Required:**
 
-       `contestant=[integer]`
-       `active_node=[string]`
-       `room=[string]`
+     `contestant=[integer]`
+     `active_node=[string]`
+     `room=[string]`
 
-       **Optional:**
+     **Optional:**
 
-       `x=[float]`
-       `y=[float]`
-       `angle=[integer]`
+     `x=[float]`
+     `y=[float]`
+     `angle=[integer]`
 
 * **Success Response:**
 
@@ -1072,19 +1072,19 @@
 
 * **Data Params**
 
-       Params used for updating the node
+     Params used for updating the node
 
-       **Required for `PUT` and Optional for `PATCH`:**
+     **Required for `PUT` and Optional for `PATCH`:**
 
-       `contestant=[integer]`
-       `active_node=[string]`
-       `room=[string]`
+     `contestant=[integer]`
+     `active_node=[string]`
+     `room=[string]`
 
-       **Optional:**
+     **Optional:**
 
-       `x=[float]`
-       `y=[float]`
-       `angle=[integer]`
+     `x=[float]`
+     `y=[float]`
+     `angle=[integer]`
 
 * **Success Response:**
 
