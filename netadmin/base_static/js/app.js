@@ -8,12 +8,12 @@ var app = angular.module('NetAdmin', ['ngMaterial', 'ngResource']);
 app.config(function($mdThemingProvider) {
     $mdThemingProvider.theme('default')
         .primaryPalette('grey', {
-            'default': '700',
+            'default': '800',
             'hue-1': '900'
         })
         .accentPalette('green')
         .backgroundPalette('grey', {
-            'default': '700',
+            'default': '800',
             'hue-1': '900'
         })
         .dark();
