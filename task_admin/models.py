@@ -89,5 +89,9 @@ class TaskRun(models.Model):
     def result(self):
         return self.get_celery_result().get()['result']
 
+    @property
+    def status(self):
+        return self.get_celery_result().status
+
     def __str__(self):
         return '[%s] on %s' % (self.run_set.task.name, self.node.ip)
