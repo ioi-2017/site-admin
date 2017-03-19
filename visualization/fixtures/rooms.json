@@ -1,0 +1,23 @@
+[
+{
+  "model": "visualization.room",
+  "pk": 1,
+  "fields": {
+    "name": "floor1"
+  }
+},
+{
+  "model": "visualization.room",
+  "pk": 2,
+  "fields": {
+    "name": "floor2"
+  }
+},
+{
+  "model": "visualization.room",
+  "pk": 3,
+  "fields": {
+    "name": "floor3"
+  }
+}
+]
