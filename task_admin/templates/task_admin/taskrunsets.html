@@ -50,7 +50,8 @@
                            ng-disabled="page[3]"
                            class="md-icon-button"
                            ng-class="{'md-accent md-raised':page[2]==true}"
-                           ng-click="setPage(page[1])">
+                           ng-click="setPage(page[1])"
+                           aria-label="{{page[1]}}">
                     <span ng-if="page[3]" aria-hidden="true">&hellip;</span>
                     <span ng-if="!page[3]">{{ page[1] }}</span>
                 </md-button>

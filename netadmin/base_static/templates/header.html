@@ -1,0 +1,12 @@
+<md-toolbar id="top">
+    <div class="md-toolbar-tools">
+        <md-button class="md-icon-button" aria-label="Settings" hide-gt-sm>
+            <!--md-icon md-svg-icon="img/icons/menu.svg"></md-icon-->
+        </md-button>
+
+        <h2 class="md-title" flex md-truncate>{{ header.location }}</h2>
+        <md-button class="md-fab md-mini">
+            {{ header.user | limitTo:1 }}
+        </md-button>
+    </div>
+</md-toolbar>
