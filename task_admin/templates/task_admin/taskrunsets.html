@@ -9,14 +9,20 @@
     {% verbatim %}
     <div ng-controller="RunsetsContoller">
         <div id="task_filter">
-            <select ng-model="params.task" id="task-filter" style="width:200px">
-                <option value="">All tasks</option>
-                <option ng-repeat="task in tasks" value="{{ task.id }}">{{ task.name }}</option>
-            </select>
-            <select ng-model="params.owner_id" id="owner-filter">
-                <option value="">All owners</option>
-                <option ng-repeat="owner in owners" value="{{ owner.id }}">{{ owner.name }}</option>
-            </select>
+            <md-input-container>
+                <label>Task</label>
+                <md-select ng-model="params.task" id="task-filter" style="width:200px">
+                    <md-option value="">All tasks</md-option>
+                    <md-option ng-repeat="task in tasks" value="{{ task.id }}">{{ task.name }}</md-option>
+                </md-select>
+            </md-input-container>
+            <md-input-container>
+                <label>Owner</label>
+                <md-select ng-model="params.owner_id" id="owner-filter">
+                    <md-option value="">All owners</md-option>
+                    <md-option ng-repeat="owner in owners" value="{{ owner.id }}">{{ owner.name }}</md-option>
+                </md-select>
+            </md-input-container>
         </div>
         <div id="taskrunsets">
             <table class="table table-striped">
@@ -32,35 +38,29 @@
                 </tr>
             </table>
 
-            <ul class="pagination" style="margin: 5px 0 10px 0">
-                <li ng-show="pagination.previous_url">
-                    <a ng-click="params.page = params.page - 1" href="#" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
-                <li ng-hide="pagination.previous_url" class="disabled">
-                    <a href="#" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
-                <li ng-repeat="page in pagination.page_links"
-                    class="{{ !page[3]? (page[2]? 'active' : '') : 'disabled' }}">
-                    <a ng-click="setPage(page[1])" href="#">
-                        <span ng-if="page[3]" aria-hidden="true">&hellip;</span>
-                        <span ng-if="!page[3]">{{ page[1] }}</span>
-                    </a>
-                </li>
-                <li ng-show="pagination.next_url">
-                    <a ng-click="params.page = params.page + 1" href="#" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-                <li ng-hide="pagination.next_url" class="disabled">
-                    <a href="#" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-            </ul>
+            <br>
+            <div layout="row">
+                <md-button ng-disabled="!pagination.previous_url"
+                           class="md-icon-button md-raised"
+                           ng-click="prevPage()"
+                           aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </md-button>
+                <md-button ng-repeat="page in pagination.page_links"
+                           ng-disabled="page[3]"
+                           class="md-icon-button"
+                           ng-class="{'md-accent md-raised':page[2]==true}"
+                           ng-click="setPage(page[1])">
+                    <span ng-if="page[3]" aria-hidden="true">&hellip;</span>
+                    <span ng-if="!page[3]">{{ page[1] }}</span>
+                </md-button>
+                <md-button ng-disabled="!pagination.next_url"
+                           class="md-icon-button md-raised"
+                           ng-click="nextPage()"
+                           aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </md-button>
+            </div>
         </div>
     </div>
     {% endverbatim %}
@@ -104,6 +104,12 @@
                 if (newValue == oldValue)return;
                 updatePage();
             });
+            $scope.prevPage = function () {
+                $scope.params.page = parseInt($scope.params.page) - 1;
+            };
+            $scope.nextPage = function () {
+                $scope.params.page = parseInt($scope.params.page) + 1;
+            };
 
             $scope.owners = [
                 {
@@ -114,14 +120,9 @@
             $scope.params = jQuery.extend($scope.params, $location.search());
             updatePage();
         });
-        $(document).ready(function () {
-            $("#task-filter").select2();
-        });
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
 {% endblock script %}
 
 {% block stylesheet %}
     {{ block.super }}
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet"/>
 {% endblock %}
