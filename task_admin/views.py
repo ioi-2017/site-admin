@@ -52,7 +52,7 @@ class TaskRunSetsAPI(mixins.CreateModelMixin,
                      GenericViewSet):
     pagination_class = TaskRunSetPagination
     serializer_class = TaskRunSetSerializer
-    filter_fields = ('task',)
+    filter_fields = ('is_local',)
     queryset = TaskRunSet.objects.all()
     max_page_size = 10000
 

@@ -4,13 +4,12 @@ import subprocess
 import pytz
 from dateutil.parser import parser
 
-from celery import Celery, chord
+from celery import chord
 from paramiko import SSHClient, AutoAddPolicy
 
-RUN_TIMEOUT_SECONDS = 10
+from netadmin.settings import app
 
-app = Celery('tasks', )
-app.config_from_object('task_admin.celeryconfig')
+RUN_TIMEOUT_SECONDS = 10
 
 
 @app.task
@@ -25,7 +24,8 @@ def execution_timer_task(previous_result=None, start_time_str=None):
             'started_at': start_time_str,
             }
 
-def add_time(task):
+
+def add_time(task):  # task shouldn't throw exceptions
     return chord(task, execution_timer_task.s(start_time_str=datetime.datetime.now(pytz.timezone('Asia/Tehran')).isoformat()))
 
 @app.task
@@ -39,12 +39,18 @@ def execute_task(is_local, ip, username, rendered_code):
                 'return_code': command.returncode,
                 }
     else:
-        client = SSHClient()
-        client.load_system_host_keys()
-        client.set_missing_host_key_policy(AutoAddPolicy())
-        client.connect(ip, username=username, timeout=RUN_TIMEOUT_SECONDS)
-        stdin, stdout, stderr = client.exec_command(rendered_code)
-        return {'stdout': stdout.read().decode('utf-8'),
-                'stderr': stderr.read().decode('utf-8'),
-                'return_code': stdout.channel.recv_exit_status(),
-                }
+        try:
+            client = SSHClient()
+            client.load_system_host_keys()
+            client.set_missing_host_key_policy(AutoAddPolicy())
+            client.connect(ip, username=username, timeout=RUN_TIMEOUT_SECONDS)
+            stdin, stdout, stderr = client.exec_command(rendered_code)
+            return {'stdout': stdout.read().decode('utf-8'),
+                    'stderr': stderr.read().decode('utf-8'),
+                    'return_code': stdout.channel.recv_exit_status(),
+                    }
+        except Exception as e:
+            return {'stdout': '',
+                    'stderr': str(e),
+                    'return_code': -1,
+                    }

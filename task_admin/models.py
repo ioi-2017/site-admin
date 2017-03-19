@@ -43,7 +43,7 @@ class TaskRunSet(models.Model):
         return self.taskruns.count()
 
     def __str__(self):
-        return '[%s] on %d nodes' % (textwrap.shorten(self.code, 10), self.number_of_nodes())
+        return '[%s] on %d nodes' % (textwrap.shorten(self.code, 20), self.number_of_nodes())
 
 
 class TaskRun(models.Model):
@@ -93,4 +93,4 @@ class TaskRun(models.Model):
         return self.get_celery_result().get()['result']
 
     def __str__(self):
-        return '[%s] on %s' % (textwrap.shorten(self.run_set.code, 10), self.node.ip)
+        return '[%s] on %s' % (textwrap.shorten(self.run_set.code, 20), self.node.ip)

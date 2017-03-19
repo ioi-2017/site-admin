@@ -32,7 +32,7 @@ class TaskRunSetSerializer(serializers.ModelSerializer):
         direct_code_provided = False
         code = validated_data.get('code', None)
         is_local = validated_data.get('is_local', None)
-        if code and is_local:
+        if code and is_local != None:
             direct_code_provided = True
         elif code or is_local:
             raise BadRequest(detail='Provide both code and is_local or none of them')
