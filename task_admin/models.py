@@ -82,7 +82,10 @@ class TaskRun(models.Model):
 
     @property
     def started_at(self):
-        return parser().parse(self.get_celery_result().info['started_at'])
+        task_info = self.get_celery_result().info
+        if type(task_info) is dict and 'started_at' in task_info:
+            return parser().parse(task_info['started_at'])
+        return None
 
     @property
     def finished_at(self):
