@@ -29,13 +29,20 @@ def add_time(f):
 @add_time
 def execute_task(self, is_local, ip, username, rendered_code):
     if is_local:
-        command = subprocess.Popen((rendered_code,), shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-                                   stderr=subprocess.PIPE, universal_newlines=True)
-        stdout, stderr = command.communicate(timeout=RUN_TIMEOUT_SECONDS)
-        return {'stdout': str(stdout),
-                'stderr': str(stderr),
-                'return_code': command.returncode,
-                }
+        try:
+            command = subprocess.Popen((rendered_code,), shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                                       stderr=subprocess.PIPE, universal_newlines=True)
+            stdout, stderr = command.communicate(timeout=RUN_TIMEOUT_SECONDS)
+            return {'stdout': str(stdout),
+                    'stderr': str(stderr),
+                    'return_code': command.returncode,
+                    }
+        except subprocess.TimeoutExpired as e:
+            return {'stdout': '',
+                    'stderr': str(e),
+                    'return_code': -1,
+                    }
+
     else:
         try:
             client = SSHClient()

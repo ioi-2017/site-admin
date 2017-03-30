@@ -1,5 +1,7 @@
+import django_filters
 from django.http import HttpResponse
 from django.views.generic import ListView, TemplateView, View
+from django_filters.rest_framework.backends import DjangoFilterBackend
 from rest_framework import mixins
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet, GenericViewSet
@@ -43,13 +45,23 @@ class TaskRunsAPI(ReadOnlyModelViewSet):
 
 
 class TaskRunSetPagination(PageNumberPagination):
-    page_size = 10
+    page_size = 5
 
+
+class TaskRunSetFilterBackend(DjangoFilterBackend):
+    def filter_queryset(self, request, queryset, view):
+        filter_queryset = super().filter_queryset(request, queryset, view)
+        runset_state = request.query_params.get('state', None)
+        if runset_state == 'finished':
+            return [runset for runset in filter_queryset if runset.is_finished]
+        return filter_queryset
 
 class TaskRunSetsAPI(mixins.CreateModelMixin,
                      mixins.RetrieveModelMixin,
                      mixins.ListModelMixin,
+                     mixins.DestroyModelMixin,
                      GenericViewSet):
+    filter_backends = (TaskRunSetFilterBackend,)
     pagination_class = TaskRunSetPagination
     serializer_class = TaskRunSetSerializer
     filter_fields = ('is_local',)

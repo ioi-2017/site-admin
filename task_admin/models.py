@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.db import models
 
 from dateutil.parser import parser
+from collections import Counter
 
 from visualization.models import Desk, Node, Contestant
 
@@ -36,8 +37,17 @@ class TaskRunSet(models.Model):
         return max(task_run.duration_milliseconds for task_run in self.taskruns.all())
 
     @property
+    def summary(self):
+        counter = Counter([task_run.status for task_run in self.taskruns.all()])
+        return counter
+
+    @property
+    def is_finished(self):
+        return self.summary.get('PENDING', 0) == 0
+
+    @property
     def results(self):
-        return [task_run.result for task_run in self.taskruns.all()]
+        return [task_run.status for task_run in self.taskruns.all()]
 
     def number_of_nodes(self):
         return self.taskruns.count()

@@ -77,13 +77,16 @@ class TaskRunSetSerializer(serializers.ModelSerializer):
                 rendered_code=rendered_code,
                 is_local=is_local,
             )
-            taskrun.celery_task = add_time(execute_task.s(**taskrun.get_execution_dict())).delay().id
+            taskrun.celery_task = execute_task.delay(**taskrun.get_execution_dict()).id
             taskrun.save()
         return taskrunset
 
     class Meta:
         model = TaskRunSet
-        fields = ('id', 'code', 'is_local', 'owner', 'owner_data', 'created_at', 'taskruns', 'ips', 'task')
+        fields = (
+            'id', 'code', 'is_local', 'owner', 'owner_data', 'created_at', 'taskruns', 'ips', 'task', 'results',
+            'summary',
+            'is_finished')
 
 
 class TaskRunSerializer(serializers.ModelSerializer):
