@@ -2,9 +2,7 @@ import datetime
 import subprocess
 
 import pytz
-from dateutil.parser import parser
 
-from celery import chord
 from paramiko import SSHClient, AutoAddPolicy
 
 from netadmin.settings import app
@@ -12,24 +10,25 @@ from netadmin.settings import app
 RUN_TIMEOUT_SECONDS = 10
 
 
-@app.task
-def execution_timer_task(previous_result=None, start_time_str=None):
-    start_time = parser().parse(start_time_str)
-    finished_time = datetime.datetime.now(pytz.timezone('Asia/Tehran'))
-    finished_time_str = finished_time.isoformat()
+def add_time(f):
+    def decorator(self, *args, **kwargs):
+        start_time = datetime.datetime.now(pytz.timezone('Asia/Tehran'))
+        self.update_state(state='PROGRESS', meta={'started_at': start_time.isoformat()})
+        result = f(self, *args, **kwargs)
+        finished_time = datetime.datetime.now(pytz.timezone('Asia/Tehran'))
+        return {'result': result,
+                'duration_milliseconds': int((finished_time - start_time).total_seconds() * 1000),
+                'finished_at': finished_time.isoformat(),
+                'started_at': start_time.isoformat(),
+                }
 
-    return {'result': previous_result,
-            'duration_milliseconds': int((finished_time - start_time).total_seconds()*1000),
-            'finished_at': finished_time_str,
-            'started_at': start_time_str,
-            }
+    return decorator
 
 
-def add_time(task):  # task shouldn't throw exceptions
-    return chord(task, execution_timer_task.s(start_time_str=datetime.datetime.now(pytz.timezone('Asia/Tehran')).isoformat()))
-
-@app.task
-def execute_task(is_local, ip, username, rendered_code):
+@app.task(bind=True)
+@add_time
+def execute_task(self, is_local, ip, username, rendered_code):
+    self.track_started = True
     if is_local:
         command = subprocess.Popen((rendered_code,), shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                                    stderr=subprocess.PIPE, universal_newlines=True)

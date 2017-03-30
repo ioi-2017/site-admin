@@ -82,7 +82,7 @@ class TaskRun(models.Model):
 
     @property
     def started_at(self):
-        return parser().parse(self.get_celery_result().get()['started_at'])
+        return parser().parse(self.get_celery_result().info['started_at'])
 
     @property
     def finished_at(self):
