@@ -28,7 +28,6 @@ def add_time(f):
 @app.task(bind=True)
 @add_time
 def execute_task(self, is_local, ip, username, rendered_code):
-    self.track_started = True
     if is_local:
         command = subprocess.Popen((rendered_code,), shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                                    stderr=subprocess.PIPE, universal_newlines=True)
