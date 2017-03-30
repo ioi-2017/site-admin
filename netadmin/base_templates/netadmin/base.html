@@ -1,22 +1,28 @@
 {% extends "netadmin/skeleton.html" %}
 {% load staticfiles %}
 
+{% block meta %}
+    {{ block.super }}
+    <base href="/">
+{% endblock meta %}
+
 {% block stylesheet %}
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
-    <link rel="stylesheet" href="{% static 'css/angular-material.min.css' %}">
+    <link rel="stylesheet" href="{% static 'bower_components/angular-material/angular-material.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/netadmin.css' %}">
 {% endblock stylesheet %}
 
 {% block javascript %}
     {% block jsinclude %}
-        <script src="{% static 'js/jquery.min.js' %}"></script>
-        <script src="{% static 'js/raphael.min.js' %}"></script>
-        <script src="{% static 'js/angular.min.js' %}"></script>
-        <script src="{% static 'js/angular-animate.min.js' %}"></script>
-        <script src="{% static 'js/angular-aria.min.js' %}"></script>
-        <script src="{% static 'js/angular-messages.min.js' %}"></script>
-        <script src="{% static 'js/angular-resource.min.js' %}"></script>
-        <script src="{% static 'js/angular-material.min.js' %}"></script>
+        <script src="{% static 'bower_components/jquery/dist/jquery.min.js' %}"></script>
+        <script src="{% static 'bower_components/raphael/raphael.min.js' %}"></script>
+        <script src="{% static 'bower_components/angular/angular.js' %}"></script>
+        <script src="{% static 'bower_components/angular-route/angular-route.js' %}"></script>
+        <script src="{% static 'bower_components/angular-animate/angular-animate.js' %}"></script>
+        <script src="{% static 'bower_components/angular-aria/angular-aria.js' %}"></script>
+        <script src="{% static 'bower_components/angular-messages/angular-messages.js' %}"></script>
+        <script src="{% static 'bower_components/angular-resource/angular-resource.js' %}"></script>
+        <script src="{% static 'bower_components/angular-material/angular-material.js' %}"></script>
     {% endblock jsinclude %}
 
     {% block script %}
@@ -28,6 +34,8 @@
         </script>
 
         <script src="{% static 'js/app.js' %}"></script>
+        <script src="{% static 'js/layout.js' %}"></script>
+        <script src="{% static 'js/navigation.js' %}"></script>
     {% endblock script %}
 {% endblock javascript %}
 
@@ -42,8 +50,7 @@
             <head-bar></head-bar>
 
             <md-content id="main" md-scroll-y layout="column" flex>
-                {% block content %}
-                {% endblock content %}
+                <ng-view></ng-view>
             </md-content>
         </div>
     </section>

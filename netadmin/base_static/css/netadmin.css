@@ -1,3 +1,7 @@
+[ng-cloak] {
+    display: none;
+}
+
 md-sidenav .nav-header {
     text-align: center;
     border-bottom: 1px solid #333;

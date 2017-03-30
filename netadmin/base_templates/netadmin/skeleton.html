@@ -3,7 +3,7 @@
 <!doctype html>
 <html lang="{{ LANGUAGE_CODE }}">
 <head>
-    <title>{% block title %}{% endblock title %} - Netadmin</title>
+    <title>Netadmin</title>
     {% block meta %}
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,11 +12,11 @@
     {% endblock meta %}
     {% block stylesheet %}
     {% endblock stylesheet %}
+    {% block javascript %}
+    {% endblock javascript %}
 </head>
 <body {% block bodydirectives %}{% endblock bodydirectives %}>
     {% block body %}
     {% endblock body %}
-    {% block javascript %}
-    {% endblock javascript %}
 </body>
 </html>

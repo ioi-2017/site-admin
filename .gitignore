@@ -2,6 +2,8 @@ db.sqlite3
 
 netadmin/staticfiles
 
+netadmin/base_static/bower_components
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

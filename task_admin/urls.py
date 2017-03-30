@@ -10,8 +10,5 @@ router.register(r'taskruns', TaskRunsAPI)
 router.register(r'taskrunsets', TaskRunSetsAPI)
 
 urlpatterns = [
-    url(r'^task_create$', RenderPreviewView.as_view(), name='task_create'),
-    url(r'^code_render$', CodeRenderView.as_view(), name='code_render'),
-    url(r'^taskrunsets$', TaskRunSetsView.as_view(), name='taskrunsets'),
-    url(r'^api/', include(router.urls, namespace='api')),
+    url(r'^', include(router.urls, namespace='api')),
 ]

@@ -10,6 +10,5 @@ router.register(r'rooms', RoomsAPI)
 router.register(r'contestants', ContestantsAPI)
 
 urlpatterns = [
-    url(r'^$', RoomView.as_view(), name='room'),
-    url(r'^api/', include(router.urls, namespace='api')),
+    url(r'^', include(router.urls, namespace='api')),
 ]

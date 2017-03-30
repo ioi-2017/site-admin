@@ -1,0 +1,17 @@
+<md-button class="md-button-toggle">
+    {{ section.name }}
+    <!--div flex layout="row">
+        {{ section.name }}
+        <span flex></span>
+        <span aria-hidden="true" class="md-toggle-icon"
+              ng-class="{'toggled' : isOpen()}">
+        <md-icon md-svg-icon="md-toggle-arrow"></md-icon>
+        </span>
+    </div-->
+</md-button>
+
+<ul class="menu-toggle-list">
+    <li ng-repeat="item in section.items">
+        <menu-link section="item" parent="section"></menu-link>
+    </li>
+</ul>
