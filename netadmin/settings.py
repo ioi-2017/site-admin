@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'simple_history',
     'ping',
     'crispy_forms',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
