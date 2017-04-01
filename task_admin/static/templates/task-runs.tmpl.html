@@ -25,6 +25,11 @@
             </div>
             <div class="md-toolbar-tools">
                 <span>{{selected.length}} {{selected.length > 1 ? 'Task Runs' : 'Task Run'}} selected</span>
+                <md-button class="md-fab md-mini" aria-label="Create TaskRunSet" ng-click="showTaskRunSetCreate($event)">
+                                <md-icon aria-label="Create"
+                                         class="material-icons step">add
+                                </md-icon>
+                </md-button>
             </div>
             <md-table-container>
                 <table md-table md-row-select="true" multiple ng-model="selected" md-progress="promise">

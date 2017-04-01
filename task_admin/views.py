@@ -1,4 +1,5 @@
 from django.http import HttpResponse
+from django.http.response import JsonResponse
 from django.views.generic import TemplateView, View
 from django_filters.rest_framework.backends import DjangoFilterBackend
 from rest_framework import mixins
@@ -10,11 +11,12 @@ from task_admin.serializers import TaskRunSetSerializer, TaskSerializer, TaskRun
 from task_admin.task_render import get_all_possible_vars, render_preview
 
 
-class RenderPreviewView(TemplateView):
-    template_name = "task_admin/render_preview.html"
-
-    def get_context_data(self, **kwargs):
-        return super().get_context_data(help_table=sorted(get_all_possible_vars().items()), **kwargs)
+class RenderPreviewView(View):
+    def get(self, request):
+        response = []
+        for template, rendered in get_all_possible_vars().items():
+            response.append({'template': template, 'rendered': rendered})
+        return JsonResponse(response, safe=False)
 
 
 class CodeRenderView(View):

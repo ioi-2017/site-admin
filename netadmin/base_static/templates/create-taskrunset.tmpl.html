@@ -1,0 +1,76 @@
+<md-dialog aria-label="Create TaskRunSet" class="flex-65">
+    <form ng-cloak>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Create TaskRunSet</h2>
+                <span flex></span>
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <div layout="row">
+                    <div flex>
+                        <md-autocomplete
+                                md-selected-item="selectedItem"
+                                md-search-text-change="searchTextChange(searchText)"
+                                md-search-text="searchText"
+                                md-selected-item-change="selectedItemChange(item)"
+                                md-items="item in querySearch(searchText)"
+                                md-item-text="item.display"
+                                md-min-length="0"
+                                placeholder="Select Task Template">
+                            <md-item-template>
+                                <span md-highlight-text="searchText"
+                                      md-highlight-flags="^i">{{ item.display }}</span>
+                            </md-item-template>
+                            <md-not-found>
+                                No task matching "{{ searchText }}" were found.
+                            </md-not-found>
+                        </md-autocomplete>
+                        <md-input-container class="md-block">
+                            <md-checkbox name="tos" ng-model="is_local">
+                                Local Task
+                            </md-checkbox>
+                        </md-input-container>
+                        <md-input-container class="md-block">
+                            <label>Template Code</label>
+                            <textarea ng-model="template_code" rows="5" md-select-on-focus></textarea>
+                        </md-input-container>
+                        <p>
+                        <h3> Rendered Code:</h3></p>
+                    <span>
+                    <code>{{ rendered_code }}</code>
+                        </span>
+                    </div>
+                    <md-table-container>
+                        <table md-table ng-model="selected" md-progress="promise">
+                            <thead md-head>
+                            <tr md-row>
+                                <th md-column>Variable</th>
+                                <th md-column>Value</th>
+                            </tr>
+                            </thead>
+                            <tbody md-body>
+                            <tr class="na-tr" md-row ng-repeat="var_help in var_helps">
+                                <td md-cell><code>{{ var_help.template }}</code></td>
+                                <td md-cell><code>{{ var_help.rendered }}</code></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </md-table-container>
+                </div>
+            </div>
+        </md-dialog-content>
+
+        <md-dialog-actions layout="row">
+            <span flex></span>
+            <md-button ng-click="hide()">
+                Cancel
+            </md-button>
+            <md-button ng-click="create()">
+                Create
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>
