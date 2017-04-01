@@ -5,7 +5,7 @@
 app.directive('room', function () {
     return {
         'controllerAs': 'room',
-        'controller': function ($http, $timeout) {
+        'controller': function ($http, $interval, $scope) {
             var room = getRoom($('#container'));
 
             var forEachItem = function(api, callback) {
@@ -30,9 +30,14 @@ app.directive('room', function () {
                         desks[node.ip].attr('class', node.connected ? 'desk-ok' : 'desk-failed');
                     }
                 });
-                $timeout(refresh, 1000);
             };
-            $timeout(refresh, 1000);
+            var refreshPromise = $interval(refresh, 1000);
+
+            $scope.$on('$destroy', function () {
+                if (refreshPromise) {
+                    $interval.cancel(refreshPromise);
+                }
+            });
         },
         'templateUrl': _static('templates/room.tmpl.html'),
         'replace': true
