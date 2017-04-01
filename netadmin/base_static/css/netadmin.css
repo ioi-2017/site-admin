@@ -26,3 +26,7 @@ md-toolbar {
 md-content#main {
     margin: 20px;
 }
+
+table.md-table th.md-column {
+    font-size:16px;
+}

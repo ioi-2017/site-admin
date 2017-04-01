@@ -1,8 +1,11 @@
+import textwrap
+
 from celery.result import AsyncResult
 from django.contrib.auth.models import User
 from django.db import models
 
 from dateutil.parser import parser
+from collections import Counter
 
 from visualization.models import Desk, Node, Contestant
 
@@ -20,9 +23,12 @@ class Task(models.Model):
 
 
 class TaskRunSet(models.Model):
-    task = models.ForeignKey(Task)
+    is_local = models.BooleanField()
+    code = models.TextField()
     owner = models.ForeignKey(User, related_name='taskrunset', null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    deleted = models.BooleanField(default=False)
+
 
     @property
     def last_finished_at(self):
@@ -33,14 +39,23 @@ class TaskRunSet(models.Model):
         return max(task_run.duration_milliseconds for task_run in self.taskruns.all())
 
     @property
+    def summary(self):
+        counter = Counter([task_run.status for task_run in self.taskruns.all()])
+        return counter
+
+    @property
+    def is_finished(self):
+        return self.summary.get('PENDING', 0) == 0
+
+    @property
     def results(self):
-        return [task_run.result for task_run in self.taskruns.all()]
+        return [task_run.status for task_run in self.taskruns.all()]
 
     def number_of_nodes(self):
         return self.taskruns.count()
 
     def __str__(self):
-        return '[%s] on %d nodes' % (self.task.name, self.number_of_nodes())
+        return '[%s] on %d nodes' % (textwrap.shorten(self.code, 20), self.number_of_nodes())
 
 
 class TaskRun(models.Model):
@@ -79,7 +94,10 @@ class TaskRun(models.Model):
 
     @property
     def started_at(self):
-        return parser().parse(self.get_celery_result().get()['started_at'])
+        task_info = self.get_celery_result().info
+        if type(task_info) is dict and 'started_at' in task_info:
+            return parser().parse(task_info['started_at'])
+        return None
 
     @property
     def finished_at(self):
@@ -89,5 +107,9 @@ class TaskRun(models.Model):
     def result(self):
         return self.get_celery_result().get()['result']
 
+    @property
+    def status(self):
+        return self.get_celery_result().status
+
     def __str__(self):
-        return '[%s] on %s' % (self.run_set.task.name, self.node.ip)
+        return '[%s] on %s' % (textwrap.shorten(self.run_set.code, 20), self.node.ip)

@@ -1,0 +1,122 @@
+[
+{
+  "model": "visualization.desk",
+  "pk": 1,
+  "fields": {
+    "contestant": 1,
+    "active_node": 1,
+    "room": 1,
+    "x": 0.5,
+    "y": 0.5,
+    "angle": 0
+  }
+},
+{
+  "model": "visualization.desk",
+  "pk": 2,
+  "fields": {
+    "contestant": 2,
+    "active_node": 2,
+    "room": 1,
+    "x": 0.5,
+    "y": 0.5,
+    "angle": 0
+  }
+},
+{
+  "model": "visualization.desk",
+  "pk": 3,
+  "fields": {
+    "contestant": 3,
+    "active_node": 3,
+    "room": 1,
+    "x": 0.5,
+    "y": 0.5,
+    "angle": 0
+  }
+},
+{
+  "model": "visualization.desk",
+  "pk": 4,
+  "fields": {
+    "contestant": 4,
+    "active_node": 4,
+    "room": 1,
+    "x": 0.5,
+    "y": 0.5,
+    "angle": 0
+  }
+},
+{
+  "model": "visualization.desk",
+  "pk": 5,
+  "fields": {
+    "contestant": 5,
+    "active_node": 5,
+    "room": 2,
+    "x": 0.5,
+    "y": 0.5,
+    "angle": 0
+  }
+},
+{
+  "model": "visualization.desk",
+  "pk": 6,
+  "fields": {
+    "contestant": 6,
+    "active_node": 6,
+    "room": 2,
+    "x": 0.5,
+    "y": 0.5,
+    "angle": 0
+  }
+},
+{
+  "model": "visualization.desk",
+  "pk": 7,
+  "fields": {
+    "contestant": 7,
+    "active_node": 7,
+    "room": 2,
+    "x": 0.5,
+    "y": 0.5,
+    "angle": 0
+  }
+},
+{
+  "model": "visualization.desk",
+  "pk": 8,
+  "fields": {
+    "contestant": 8,
+    "active_node": 8,
+    "room": 2,
+    "x": 0.5,
+    "y": 0.5,
+    "angle": 0
+  }
+},
+{
+  "model": "visualization.desk",
+  "pk": 9,
+  "fields": {
+    "contestant": 9,
+    "active_node": 9,
+    "room": 2,
+    "x": 0.5,
+    "y": 0.5,
+    "angle": 0
+  }
+},
+{
+  "model": "visualization.desk",
+  "pk": 10,
+  "fields": {
+    "contestant": 10,
+    "active_node": 10,
+    "room": 3,
+    "x": 0.5,
+    "y": 0.5,
+    "angle": 0
+  }
+}
+]

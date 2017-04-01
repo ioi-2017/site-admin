@@ -7,7 +7,7 @@ class TaskRunAdmin(admin.ModelAdmin):
 
 
 class TaskRunSetAdmin(admin.ModelAdmin):
-    list_display = ('__str__', 'id', 'created_at', 'task', 'number_of_nodes', 'owner')
+    list_display = ('__str__', 'id', 'created_at', 'number_of_nodes', 'owner')
 
 
 class TaskAdmin(admin.ModelAdmin):
