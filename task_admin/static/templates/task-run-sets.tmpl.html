@@ -22,7 +22,7 @@
             <span>{{selected.length}} {{selected.length > 1 ? 'Task Run Sets' : 'Task Run Set'}} selected</span>
 
             <md-button class="md-fab md-mini" aria-label="Delete" md-colors="::{backgroundColor: 'red-700'}"
-                       ng-click="deleteSelected()">
+                       ng-click="deleteSelected($event)" ng-disabled="selected.length<1">
                 <md-icon aria-label="backup"
                          class="material-icons step">delete
                 </md-icon>
@@ -40,7 +40,7 @@
                 </tr>
                 </thead>
                 <tbody md-body>
-                <tr md-row md-select="result" md-auto-select ng-repeat="result in results">
+                <tr md-row md-select="result" md-select-id="id" ng-repeat="result in results">
                     <td md-cell>{{ result.code }}</td>
                     <td md-cell>{{ result.owner_data }}</td>
                     <td md-cell>{{ result.created_at | date:'M/d/y, HH:mm:ss' }}</td>
@@ -85,7 +85,8 @@
                                      class="material-icons step">pause
                             </md-icon>
                         </md-button>
-                        <md-button class="md-fab md-mini" aria-label="Stop">
+                        <md-button class="md-fab md-mini" aria-label="Stop"
+                                   ng-href="/taskruns#!?run_set={{ result.id }}">
                             <md-icon aria-label="backup"
                                      class="material-icons step">more_horiz
                             </md-icon>
@@ -111,8 +112,7 @@
                        ng-disabled="page[3]"
                        class="md-icon-button"
                        ng-class="{'md-accent md-raised':page[2]==true}"
-                       ng-click="setPage(page[1])"
-                       aria-label="{{page[1]}}">
+                       ng-click="setPage(page[1])">
                 <span ng-if="page[3]" aria-hidden="true">&hellip;</span>
                 <span ng-if="!page[3]">{{ page[1] }}</span>
             </md-button>

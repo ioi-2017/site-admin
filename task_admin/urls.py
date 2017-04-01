@@ -1,6 +1,6 @@
 from django.conf.urls import url, include
 
-from task_admin.views import RenderPreviewView, CodeRenderView, TaskRunSetsAPI, TaskRunSetsView, TasksAPI, TaskRunsAPI
+from task_admin.views import TaskRunSetsAPI, TasksAPI, TaskRunsAPI
 
 from rest_framework.routers import DefaultRouter
 

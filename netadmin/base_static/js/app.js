@@ -22,7 +22,7 @@ app.config(function ($mdThemingProvider, $httpProvider) {
 });
 
 
-app.controller('RunsetsContoller', function($scope, $http, $location) {
+app.controller('RunsetsContoller', function($scope, $http, $location, $mdDialog) {
     $scope.params = {
         state: 'all',
         owner_id: '',
@@ -68,11 +68,22 @@ app.controller('RunsetsContoller', function($scope, $http, $location) {
         $scope.params.page = parseInt($scope.params.page) + 1;
     };
 
-    $scope.deleteSelected = function () {
-        angular.forEach($scope.selected, function (item) {
+    $scope.deleteSelected = function (ev) {
+        var confirm = $mdDialog.confirm()
+                .title('Are you sure you want to delete ' + $scope.selected.length + ' task run sets?')
+                .textContent('All pending and running task runs will be stopped')
+                .ariaLabel('TaskRunDelete confirm')
+                .targetEvent(ev)
+                .ok('Delete')
+                .cancel('Cancel');
+
+        $mdDialog.show(confirm).then(function () {
+            angular.forEach($scope.selected, function (item) {
             $http.delete('/api/taskrunsets/' + item.id + '/', {}).then(function () {
                 update_with_page_reset(0, 1)
             });
+            });
+        }, function () {
         });
     };
 
