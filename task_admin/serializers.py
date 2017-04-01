@@ -85,8 +85,7 @@ class TaskRunSetSerializer(serializers.ModelSerializer):
         model = TaskRunSet
         fields = (
             'id', 'code', 'is_local', 'owner', 'owner_data', 'created_at', 'taskruns', 'ips', 'task', 'results',
-            'summary',
-            'is_finished')
+            'summary', 'is_finished')
 
 
 class TaskRunSerializer(serializers.ModelSerializer):

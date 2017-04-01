@@ -1,6 +1,5 @@
-import django_filters
 from django.http import HttpResponse
-from django.views.generic import ListView, TemplateView, View
+from django.views.generic import TemplateView, View
 from django_filters.rest_framework.backends import DjangoFilterBackend
 from rest_framework import mixins
 from rest_framework.pagination import PageNumberPagination
@@ -27,9 +26,8 @@ class CodeRenderView(View):
         return HttpResponse(result)
 
 
-class TaskRunSetsView(ListView):
+class TaskRunSetsView(TemplateView):
     template_name = "task_admin/taskrunsets.html"
-    queryset = TaskRunSet.objects.all()
 
 
 class TasksAPI(ModelViewSet):
@@ -41,7 +39,7 @@ class TasksAPI(ModelViewSet):
 class TaskRunsAPI(ReadOnlyModelViewSet):
     serializer_class = TaskRunSerializer
     filter_fields = ('desk', 'contestant', 'node')
-    queryset = TaskRun.objects.all()
+    queryset = TaskRun.objects.filter(run_set__deleted=False)
 
 
 class TaskRunSetPagination(PageNumberPagination):
@@ -65,10 +63,15 @@ class TaskRunSetsAPI(mixins.CreateModelMixin,
     pagination_class = TaskRunSetPagination
     serializer_class = TaskRunSetSerializer
     filter_fields = ('is_local',)
-    queryset = TaskRunSet.objects.all()
+    queryset = TaskRunSet.objects.filter(deleted=False)
     max_page_size = 10000
 
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
         response.data['pagination'] = self.paginator.get_html_context()
         return response
+
+    def perform_destroy(self, instance):
+        instance.deleted = True
+        # TODO: stop all remaining tasks
+        instance.save()

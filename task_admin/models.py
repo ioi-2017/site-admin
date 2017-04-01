@@ -27,6 +27,8 @@ class TaskRunSet(models.Model):
     code = models.TextField()
     owner = models.ForeignKey(User, related_name='taskrunset', null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    deleted = models.BooleanField(default=False)
+
 
     @property
     def last_finished_at(self):

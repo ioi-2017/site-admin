@@ -486,6 +486,29 @@
        curl "http://localhost:8000/api/taskrunsets/13/"
        ```
 
+***Single TaskRunSet delete***
+
+   Delete a single taskrun set
+
+* **URL**
+
+    /api/taskrunsets/<?taskrunset_id>/
+
+* **Method:**
+
+    `DELETE`
+
+* **Success Response:**
+
+   Returns nothing, all running taskruns for this taskrun set will be stopped and no longer visible in the api.
+
+   * **Code:** 204 No Content <br />
+
+* **Sample Call:**
+       ```
+       curl -X DELETE "http://localhost:8000/api/taskrunsets/13/"
+       ```
+
 
 **Node API**
 ----
