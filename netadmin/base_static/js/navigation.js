@@ -27,6 +27,9 @@ app.constant("NAV", [
                 name: 'TaskRunSets'
             },
             {
+                name: 'TaskRuns'
+            },
+            {
                 name: 'Services'
             }
         ]

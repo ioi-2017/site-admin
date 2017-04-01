@@ -30,3 +30,19 @@ md-content#main {
 table.md-table th.md-column {
     font-size:16px;
 }
+
+table.md-table th.md-column {
+    color: inherit !important;
+}
+
+table.md-table td.md-cell {
+    color: inherit !important;
+}
+
+table.md-table.md-row-select tbody.md-body>tr.na-tr.md-row.md-selected {
+    background-color: inherit !important;
+}
+
+table.md-table.md-row-select tbody.md-body>tr.na-tr.md-row:not([disabled]):hover {
+    background-color: inherit !important;
+}
