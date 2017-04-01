@@ -8,7 +8,7 @@
 {% block content %}
     {% csrf_token %}
     {% verbatim %}
-    <div ng-controller="RunsetsContoller">
+    <div ng-controller="TaskRunsContoller">
         <div id="task_filter">
             <md-input-container>
                 <label>Owner</label>
@@ -32,7 +32,7 @@
                 <span>{{selected.length}} {{selected.length > 1 ? 'Task Run Sets' : 'Task Run Set'}} selected</span>
 
                 <md-button class="md-fab md-mini" aria-label="Delete" md-colors="::{backgroundColor: 'red-700'}"
-                           ng-click="deleteSelected($event)" ng-disabled="selected.length<1">
+                           ng-click="deleteSelected()">
                     <md-icon aria-label="backup"
                              class="material-icons step">delete
                     </md-icon>
@@ -50,7 +50,7 @@
                     </tr>
                     </thead>
                     <tbody md-body>
-                    <tr md-row md-select="result" md-select-id="id" ng-repeat="result in results">
+                    <tr md-row md-select="result" md-auto-select ng-repeat="result in results">
                         <td md-cell>{{ result.code }}</td>
                         <td md-cell>{{ result.owner_data }}</td>
                         <td md-cell>{{ result.created_at | date:'M/d/y, HH:mm:ss' }}</td>
@@ -95,8 +95,7 @@
                                          class="material-icons step">pause
                                 </md-icon>
                             </md-button>
-                            <md-button class="md-fab md-mini" aria-label="Stop"
-                                       ng-href="/taskruns#!?run_set={{ result.id }}">
+                            <md-button class="md-fab md-mini" aria-label="Stop">
                                 <md-icon aria-label="backup"
                                          class="material-icons step">more_horiz
                                 </md-icon>
@@ -144,7 +143,7 @@
 
     {{ block.super }}
     <script>
-        app.controller('RunsetsContoller', function RunSetController($scope, $http, $location, $mdDialog) {
+        app.controller('TaskRunsContoller', function TaskRunsContoller($scope, $http, $location) {
             $scope.params = {
                 state: 'all',
                 owner_id: '',
@@ -190,22 +189,11 @@
                 $scope.params.page = parseInt($scope.params.page) + 1;
             };
 
-            $scope.deleteSelected = function (ev) {
-                var confirm = $mdDialog.confirm()
-                        .title('Are you sure you want to delete ' + $scope.selected.length + ' task run sets?')
-                        .textContent('All pending and running task runs will be stopped')
-                        .ariaLabel('TaskRunDelete confirm')
-                        .targetEvent(ev)
-                        .ok('Delete')
-                        .cancel('Cancel');
-
-                $mdDialog.show(confirm).then(function () {
-                    angular.forEach($scope.selected, function (item) {
+            $scope.deleteSelected = function () {
+                angular.forEach($scope.selected, function (item) {
                     $http.delete('/api/taskrunsets/' + item.id + '/', {}).then(function () {
                         update_with_page_reset(0, 1)
                     });
-                    });
-                }, function () {
                 });
             };
 
