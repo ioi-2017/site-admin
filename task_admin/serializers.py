@@ -8,6 +8,8 @@ from task_admin.tasks import execute_task, add_time
 from visualization.models import Node
 from rest_framework.exceptions import APIException
 
+from visualization.serializers import NodeSerializer, DeskSerializer, ContestantSerializer
+
 
 class BadRequest(APIException):
     status_code = 400
@@ -89,6 +91,10 @@ class TaskRunSetSerializer(serializers.ModelSerializer):
 
 
 class TaskRunSerializer(serializers.ModelSerializer):
+    node = NodeSerializer(read_only=True)
+    desk = DeskSerializer(read_only=True)
+    contestant = ContestantSerializer(read_only=True)
+
     class Meta:
         model = TaskRun
         fields = (

@@ -40,14 +40,20 @@ class TasksAPI(ModelViewSet):
     queryset = Task.objects.all()
 
 
-class TaskRunsAPI(ReadOnlyModelViewSet):
+class Pagination(PageNumberPagination):
+    page_size = 10
+
+
+class TaskRunsAPI(ReadOnlyModelViewSet, mixins.ListModelMixin):
     serializer_class = TaskRunSerializer
-    filter_fields = ('desk', 'contestant', 'node')
+    filter_fields = ('desk', 'contestant', 'node', 'run_set')
     queryset = TaskRun.objects.filter(run_set__deleted=False)
+    pagination_class = Pagination
 
-
-class TaskRunSetPagination(PageNumberPagination):
-    page_size = 5
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        response.data['pagination'] = self.paginator.get_html_context()
+        return response
 
 
 class TaskRunSetFilterBackend(DjangoFilterBackend):
@@ -64,7 +70,7 @@ class TaskRunSetsAPI(mixins.CreateModelMixin,
                      mixins.DestroyModelMixin,
                      GenericViewSet):
     filter_backends = (TaskRunSetFilterBackend,)
-    pagination_class = TaskRunSetPagination
+    pagination_class = Pagination
     serializer_class = TaskRunSetSerializer
     filter_fields = ('is_local',)
     queryset = TaskRunSet.objects.filter(deleted=False)

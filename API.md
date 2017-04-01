@@ -192,6 +192,7 @@
      `desk=[integer]`  
      `contestant=[string]`  
      `node=[integer]`  
+     `run_set=[integer]`
 
 * **Success Response:**
 
@@ -200,39 +201,63 @@
    * **Code:** 200 <br />
      **Content:**
      ```
-     [
-         {
-             "id": 7,
-             "celery_task": "6d007e1f-0841-4b55-8501-80a06e503023",
-             "is_local": true,
-             "run_set": 11,
-             "created_at": "2017-03-18T17:17:29.117358Z",
-             "started_at": "2017-03-18T20:47:29.116026+03:30",
-             "finished_at": "2017-03-18T20:47:29.154596+03:30",
-             "rendered_code": "test",
-             "desk": 1,
-             "contestant": 1,
-             "node": 1
-         },
-         {
-             "id": 9,
-             "celery_task": "2c8250dd-31c4-48c8-ac97-aeffb2fc404a",
-             "is_local": true,
-             "run_set": 12,
-             "created_at": "2017-03-18T17:20:02.505968Z",
-             "started_at": "2017-03-18T20:50:02.503324+03:30",
-             "finished_at": "2017-03-18T20:50:02.531218+03:30",
-             "rendered_code": "test",
-             "desk": 1,
-             "contestant": 1,
-             "node": 1
-         }
-     ]
+     {
+        "count": 1,
+        "next": null,
+        "previous": null,
+        "results": [
+            {
+                "id": 243,
+                "celery_task": "1730d853-4e28-4ae3-a623-0af0db91fd65",
+                "is_local": true,
+                "run_set": 76,
+                "created_at": "2017-04-01T08:39:14.256723Z",
+                "started_at": "2017-04-01T13:09:30.187051+04:30",
+                "finished_at": "2017-04-01T13:09:34.195144+04:30",
+                "rendered_code": "sleep 4",
+                "desk": {
+                    "id": 4,
+                    "contestant": 4,
+                    "active_node": 4,
+                    "room": 1,
+                    "x": 0.5,
+                    "y": 0.5,
+                    "angle": 0
+                },
+                "contestant": {
+                    "id": 4,
+                    "name": "TurkishContestant-4",
+                    "country": "TR",
+                    "number": 4
+                },
+                "node": {
+                    "id": 4,
+                    "ip": "172.17.0.3",
+                    "mac_address": "42:42:42:42:42:03",
+                    "username": "user3",
+                    "property_id": "YSC-3",
+                    "connected": true
+                }
+            }
+        ],
+        "pagination": {
+            "next_url": null,
+            "page_links": [
+                [
+                    "http://localhost:8000/api/taskruns/?contestant=&desk=&node=4&run_set=76",
+                    1,
+                    true,
+                    false
+                ]
+            ],
+            "previous_url": null
+        }
+    }
      ```
 
 * **Sample Call:**
        ```
-       curl 'http://localhost:8000/api/taskruns/?node=1'
+       curl 'http://localhost:8000/api/taskruns/?node=4'
        ```
 
 ***Single TaskRun fetch***
@@ -295,7 +320,8 @@
 
      **Optional:**
 
-     `task=[integer]`
+     `task=[integer]`  
+     `page=[integer]`
 
 * **Success Response:**
 
