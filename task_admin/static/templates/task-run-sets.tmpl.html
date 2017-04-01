@@ -2,14 +2,14 @@
     <div id="task_filter">
         <md-input-container>
             <label>Owner</label>
-            <md-select ng-model="params.owner_id" id="owner-filter">
+            <md-select ng-model="params.owner_id">
                 <md-option value="">All owners</md-option>
                 <md-option ng-repeat="owner in owners" value="{{ owner.id }}">{{ owner.name }}</md-option>
             </md-select>
         </md-input-container>
         <md-input-container>
             <label>State</label>
-            <md-select ng-model="params.state" id="state-filter">
+            <md-select ng-model="params.state">
                 <md-option value="all">All</md-option>
                 <md-option value="finished">Finished</md-option>
                 <md-option value="running">Running</md-option>
