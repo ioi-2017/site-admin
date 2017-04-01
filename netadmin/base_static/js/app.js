@@ -3,9 +3,9 @@
  */
 
 
-var app = angular.module('NetAdmin', ['ngMaterial', 'ngResource']);
+var app = angular.module('NetAdmin', ['ngMaterial', 'ngResource', 'md.data.table']);
 
-app.config(function($mdThemingProvider) {
+app.config(function ($mdThemingProvider, $httpProvider) {
     $mdThemingProvider.theme('default')
         .primaryPalette('grey', {
             'default': '800',
@@ -17,6 +17,8 @@ app.config(function($mdThemingProvider) {
             'hue-1': '900'
         })
         .dark();
+    $httpProvider.defaults.xsrfCookieName = 'csrftoken';
+    $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
 });
 
 app.controller('NavController', function () {
