@@ -22,64 +22,66 @@ app.config(function ($mdThemingProvider, $httpProvider) {
 });
 
 app.service('taskRunSetCreator', function ($mdDialog) {
-    this.showTaskRunSetCreate = function (ev, ips) {
+    this.showTaskRunSetCreate = function (ev, ips, create_callback) {
         $mdDialog.show({
                 controller: function DialogController($scope, $http, $mdDialog, $mdToast) {
-                    $scope.ips = ips;
+                    $scope.ips = Array.from(new Set(ips)).sort();
                     $scope.var_helps = [];
                     $http.get('/api/task_create/').then(function (response) {
                         $scope.var_helps = response.data;
                     });
 
 
-                    // list of `state` value/display objects
-                    $scope.states = [];
-                    $scope.querySearch = querySearch;
-                    $scope.selectedItemChange = selectedItemChange;
-                    $scope.searchTextChange = searchTextChange;
-
-                    $scope.newState = newState;
-
-                    function newState(state) {
-                        alert("Sorry! You'll need to create a Constitution for " + state + " first!");
-                    }
-
-                    // ******************************
-                    // Internal methods
-                    // ******************************
-
-                    /**
-                     * Search for states... use $timeout to simulate
-                     * remote dataservice call.
-                     */
-                    function querySearch(query) {
-                        var results = query ? $scope.states.filter(createFilterFor(query)) : $scope.states;
-                        return results;
-                    }
-
-                    function searchTextChange(text) {
-                        // $log.info('Text changed to ' + text);
-                    }
-
-                    function selectedItemChange(item) {
-                        if (item) {
-                            $scope.template_code = item.code;
-                            $scope.is_local = item.is_local;
+                    $scope.task_templates = [];
+                    $scope.all_nodes = [];
+                    $scope.queryTaskSearch = function (query) {
+                        return query ? $scope.task_templates.filter(createFilterFor(query)) : $scope.task_templates;
+                    };
+                    $scope.queryNodeSearch = function (query) {
+                        var available_nodes = [];
+                        console.log($scope.ips);
+                        $scope.all_nodes.forEach(function (node) {
+                            if ($scope.ips.indexOf(node.value) == -1)
+                                available_nodes.push(node)
+                            console.log(node.value);
+                        });
+                        return query ? available_nodes.filter(createFilterFor(query)) : available_nodes;
+                    };
+                    $scope.selectedTaskItemChange = function (task) {
+                        if (task) {
+                            $scope.template_code = task.code;
+                            $scope.is_local = task.is_local;
                         }
-
-                    }
-
-                    /**
-                     * Build `states` list of key/value pairs
-                     */
+                    };
+                    $scope.selectedNodeItemChange = function (node) {
+                        if (node) {
+                            $scope.ips = Array.from(new Set($scope.ips.concat(node.value))).sort();
+                            $scope.searchNodeText = '';
+                        }
+                    };
+                    $scope.removeNode = function (node) {
+                        var ips_set = new Set($scope.ips);
+                        ips_set.delete(node);
+                        $scope.ips = Array.from(ips_set).sort();
+                    };
                     $http.get('/api/tasks/').then(function (response) {
                         var tasks = response.data;
-                        $scope.states = tasks.map(function (task) {
+                        $scope.task_templates = tasks.map(function (task) {
                             return {
                                 value: task.name.toLowerCase(),
                                 display: task.name,
                                 code: task.code,
                                 is_local: task.is_local
+                            };
+                        });
+                    });
+
+                    $http.get('/api/nodes/').then(function (response) {
+                        var tasks = response.data;
+                        $scope.all_nodes = tasks.map(function (node) {
+                            return {
+                                value: node.ip,
+                                display: node.ip,
                             };
                         });
                     });
@@ -90,8 +92,8 @@ app.service('taskRunSetCreator', function ($mdDialog) {
                     function createFilterFor(query) {
                         var lowercaseQuery = angular.lowercase(query);
 
-                        return function filterFn(state) {
-                            return (state.value.indexOf(lowercaseQuery) === 0);
+                        return function filterFn(task_template) {
+                            return (task_template.value.indexOf(lowercaseQuery) === 0);
                         };
 
                     }
@@ -106,7 +108,7 @@ app.service('taskRunSetCreator', function ($mdDialog) {
                         });
                     });
                     $scope.hide = function () {
-                        $mdDialog.close();
+                        $mdDialog.cancel();
                     };
 
                     $scope.create = function () {
@@ -118,7 +120,7 @@ app.service('taskRunSetCreator', function ($mdDialog) {
                             ips: $scope.ips
                         }).then(function (response) {
                             console.log(response);
-                            $mdDialog.close();
+                            $mdDialog.hide();
                             $mdToast.show(
                                 $mdToast.simple()
                                     .textContent('TaskRunSet Created')
@@ -134,8 +136,8 @@ app.service('taskRunSetCreator', function ($mdDialog) {
                 targetEvent: ev,
                 clickOutsideToClose: true,
             })
-            .then(function (answer) {
-
+            .then(function () {
+                create_callback();
             }, function () {
 
             });
@@ -156,7 +158,7 @@ app.controller('RunsetsContoller', function ($scope, $http, $location, $mdDialog
     $scope.setPage = function (n) {
         $scope.params.page = n;
     };
-    function updatePage() {
+    function updatePage(replace_state) {
         $http.get('/api/taskrunsets/',
             {
                 params: $scope.params
@@ -164,7 +166,10 @@ app.controller('RunsetsContoller', function ($scope, $http, $location, $mdDialog
         ).then(function (response) {
             $scope.pagination = response.data.pagination;
             $scope.results = response.data.results;
-            $location.search($scope.params);
+            if (replace_state)
+                $location.search($scope.params).replace();
+            else
+                $location.search($scope.params);
         });
     }
 
@@ -215,7 +220,7 @@ app.controller('RunsetsContoller', function ($scope, $http, $location, $mdDialog
         }
     ];
     $scope.params = angular.extend($scope.params, $location.search());
-    updatePage();
+    updatePage(true);
 });
 
 app.controller('TaskRunsContoller', function ($scope, $http, $location, taskRunSetCreator) {
@@ -223,6 +228,7 @@ app.controller('TaskRunsContoller', function ($scope, $http, $location, taskRunS
         desk: '',
         contestant: '',
         node: '',
+        state: 'ALL',
         run_set: '',
         page: 1
     };
@@ -231,7 +237,9 @@ app.controller('TaskRunsContoller', function ($scope, $http, $location, taskRunS
     $scope.showTaskRunSetCreate = function (ev) {
         taskRunSetCreator.showTaskRunSetCreate(ev, $scope.selected.map(function (taskrun) {
             return taskrun.node.ip
-        }));
+        }), function () {
+            update_with_page_reset(0, 1);
+        });
     };
 
     $scope.hovered = null;
@@ -246,7 +254,7 @@ app.controller('TaskRunsContoller', function ($scope, $http, $location, taskRunS
         $scope.hovered = item
     };
 
-    function updatePage() {
+    function updatePage(replace_state) {
         $http.get('/api/taskruns/',
             {
                 params: $scope.params
@@ -254,7 +262,10 @@ app.controller('TaskRunsContoller', function ($scope, $http, $location, taskRunS
         ).then(function (response) {
             $scope.pagination = response.data.pagination;
             $scope.results = response.data.results;
-            $location.search($scope.params);
+            if (replace_state)
+                $location.search($scope.params).replace();
+            else
+                $location.search($scope.params);
         });
     }
 
@@ -267,6 +278,7 @@ app.controller('TaskRunsContoller', function ($scope, $http, $location, taskRunS
     }
 
     $scope.$watch("params.run_set", update_with_page_reset);
+    $scope.$watch("params.state", update_with_page_reset);
     $scope.$watch("params.page", function (newValue, oldValue) {
         if (newValue == oldValue)return;
         updatePage();
@@ -285,5 +297,5 @@ app.controller('TaskRunsContoller', function ($scope, $http, $location, taskRunS
         }
     ];
     $scope.params = angular.extend($scope.params, $location.search());
-    updatePage();
+    updatePage(true);
 });

@@ -10,11 +10,12 @@
                 </md-input-container>
                 <md-input-container flex-gt-sm>
                     <label>State</label>
-                    <md-select ng-model="params.node">
-                        <md-option value="all">All</md-option>
-                        <md-option value="finished">Finished</md-option>
-                        <md-option value="running">Running</md-option>
-                        <md-option value="waiting">Waiting</md-option>
+                    <md-select ng-model="params.state">
+                        <md-option value="ALL">All</md-option>
+                        <md-option value="SUCCESS">Success</md-option>
+                        <md-option value="PENDING">Pending</md-option>
+                        <md-option value="PROGRESS">Progress</md-option>
+                        <md-option value="FAILURE">Failure</md-option>
                     </md-select>
                 </md-input-container>
                 <md-input-container flex-gt-sm>
@@ -24,11 +25,12 @@
                 </md-input-container>
             </div>
             <div class="md-toolbar-tools">
-                <span>{{selected.length}} {{selected.length > 1 ? 'Task Runs' : 'Task Run'}} selected</span>
-                <md-button class="md-fab md-mini" aria-label="Create TaskRunSet" ng-click="showTaskRunSetCreate($event)">
-                                <md-icon aria-label="Create"
-                                         class="material-icons step">add
-                                </md-icon>
+                <span>{{ selected.length }} {{ selected.length > 1 ? 'Task Runs' : 'Task Run'}} selected</span>
+                <md-button class="md-fab md-mini" aria-label="Create TaskRunSet"
+                           ng-click="showTaskRunSetCreate($event)">
+                    <md-icon aria-label="Create"
+                             class="material-icons step">add
+                    </md-icon>
                 </md-button>
             </div>
             <md-table-container>
@@ -37,6 +39,7 @@
                     <tr md-row>
                         <th md-column>Rendered Code</th>
                         <th md-column>Is Local?</th>
+                        <th md-column>Status</th>
                         <th md-column>IP</th>
                         <th md-column>Created at</th>
                         <th md-column>Actions</th>
@@ -45,11 +48,14 @@
                     <tbody md-body>
                     <tr class="na-tr" md-row md-select="result" md-select-id="id" ng-repeat="result in results">
                         <td md-cell><code>{{ result.rendered_code.length>10 ? result.rendered_code.substr(0, 10) +
-                            '...' : result.rendered_code }}</code></td>
+                                '...' : result.rendered_code }}</code></td>
                         <td md-cell>
                             <md-icon aria-label="backup"
                                      class="material-icons step">{{ result.is_local ? 'done' : 'clear'}}
                             </md-icon>
+                        </td>
+                        <td md-cell>
+                            {{ result.status }}
                         </td>
                         <td md-cell><code>{{ result.node.ip }}</code></td>
                         <td md-cell>{{ result.created_at | date:'M/d/y, HH:mm:ss' }}</td>
@@ -104,22 +110,60 @@
             </div>
         </div>
         <div flex class="flex-35" id="details">
-            <md-card>
-                <md-card-title>
-                    <md-card-title-text>
-                        <span class="md-headline">Rendered Code</span>
+            <div ng-if="hovered">
+                <md-card>
+                    <md-card-title>
+                        <md-card-title-text>
+                            <span class="md-headline">Result</span>
                         <span class="md-subhead">
                             <code>
+                                Rendered Code: <br/>
                                 {{ hovered.rendered_code }}
                             </code>
                         </span>
-                    </md-card-title-text>
-                </md-card-title>
-            </md-card>
-            <md-card>
-                <md-card-title>
-                    <md-card-title-text>
-                        <span class="md-headline">Node</span>
+                        <span class="md-subhead">
+                            <code>
+                                Return Code: <br/>
+                                {{ hovered.result.return_code }}
+                            </code>
+                        </span>
+                        <span class="md-subhead">
+                            <code>
+                                stdout: <br/>
+                                {{ hovered.result.stdout }}
+                            </code>
+                        </span>
+                        <span class="md-subhead">
+                            <code>
+                                stderr: <br/>
+                                {{ hovered.result.stderr }}
+                            </code>
+                        </span>
+                        <span class="md-subhead">
+                            <code>
+                                Started at:
+                                {{ hovered.started_at }}
+                            </code>
+                        </span>
+                        <span class="md-subhead">
+                            <code>
+                                Finished at:
+                                {{ hovered.finished_at }}
+                            </code>
+                        </span>
+                        <span class="md-subhead">
+                            <code>
+                                Duration:
+                                {{ hovered.duration_milliseconds }}ms
+                            </code>
+                        </span>
+                        </md-card-title-text>
+                    </md-card-title>
+                </md-card>
+                <md-card>
+                    <md-card-title>
+                        <md-card-title-text>
+                            <span class="md-headline">Node</span>
                         <span class="md-subhead">
                             <code>
                                 IP address :
@@ -146,13 +190,13 @@
                                 </md-icon>
                             </code>
                         </span>
-                    </md-card-title-text>
-                </md-card-title>
-            </md-card>
-            <md-card>
-                <md-card-title>
-                    <md-card-title-text>
-                        <span class="md-headline">Contestant</span>
+                        </md-card-title-text>
+                    </md-card-title>
+                </md-card>
+                <md-card>
+                    <md-card-title>
+                        <md-card-title-text>
+                            <span class="md-headline">Contestant</span>
                         <span class="md-subhead">
                             <code>
                                 Name:
@@ -171,9 +215,24 @@
                                 {{ hovered.contestant.number }}
                             </code>
                         </span>
-                    </md-card-title-text>
-                </md-card-title>
-            </md-card>
+                        </md-card-title-text>
+                    </md-card-title>
+                </md-card>
+            </div>
+            <div ng-if="hovered == null">
+                <md-card>
+                    <md-card-title>
+                        <md-card-title-text>
+                            <span class="md-headline">Click on <md-button class="md-fab md-mini"
+                                                                          aria-label="help_details">
+                                <md-icon aria-label="backup"
+                                         class="material-icons step">visibility
+                                </md-icon>
+                            </md-button> to see task details</span>
+                        </md-card-title-text>
+                    </md-card-title>
+                </md-card>
+            </div>
         </div>
     </div>
 </div>
