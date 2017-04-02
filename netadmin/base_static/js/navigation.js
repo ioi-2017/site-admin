@@ -146,7 +146,9 @@ app.config(function ($locationProvider, $routeProvider, navigationProvider, NAV)
     navigationProvider.fillMenu(NAV);
     angular.forEach(navigationProvider.getRoutingInfo(), function (route) {
         $routeProvider.when(route.url, {
-            templateUrl: _static('templates/' + route.template)
+            templateUrl: _static('templates/' + route.template),
+            reloadOnSearch: false
+
         });
     });
 

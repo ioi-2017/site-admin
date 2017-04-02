@@ -2,14 +2,14 @@
     <div id="task_filter">
         <md-input-container>
             <label>Owner</label>
-            <md-select ng-model="params.owner_id" id="owner-filter">
+            <md-select ng-model="params.owner_id">
                 <md-option value="">All owners</md-option>
                 <md-option ng-repeat="owner in owners" value="{{ owner.id }}">{{ owner.name }}</md-option>
             </md-select>
         </md-input-container>
         <md-input-container>
             <label>State</label>
-            <md-select ng-model="params.state" id="state-filter">
+            <md-select ng-model="params.state">
                 <md-option value="all">All</md-option>
                 <md-option value="finished">Finished</md-option>
                 <md-option value="running">Running</md-option>
@@ -19,7 +19,7 @@
     </div>
     <div id="taskrunsets">
         <div class="md-toolbar-tools">
-            <span>{{selected.length}} {{selected.length > 1 ? 'Task Run Sets' : 'Task Run Set'}} selected</span>
+            <span>{{ selected.length }} {{ selected.length > 1 ? 'Task Run Sets' : 'Task Run Set'}} selected</span>
 
             <md-button class="md-fab md-mini" aria-label="Delete" md-colors="::{backgroundColor: 'red-700'}"
                        ng-click="deleteSelected($event)" ng-disabled="selected.length<1">
@@ -45,28 +45,32 @@
                     <td md-cell>{{ result.owner_data }}</td>
                     <td md-cell>{{ result.created_at | date:'M/d/y, HH:mm:ss' }}</td>
                     <td md-cell>
-                        <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'blueGrey-700'}">
+                        <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'blueGrey-700'}"
+                                   ng-href="/admin/task-runs/?run_set={{ result.id }}&state=PENDING">
                             {{ result.summary.PENDING }}
                             <md-tooltip
                                     md-direction="left">
                                 Pending Tasks
                             </md-tooltip>
                         </md-button>
-                        <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'yellow-700'}">
+                        <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'yellow-700'}"
+                                   ng-href="/admin/task-runs/?run_set={{ result.id }}&state=PROGRESS">
                             {{ result.summary.PROGRESS }}
                             <md-tooltip
                                     md-direction="top">
                                 Started Tasks
                             </md-tooltip>
                         </md-button>
-                        <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'green-700'}">
+                        <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'green-700'}"
+                                   ng-href="/admin/task-runs/?run_set={{ result.id }}&state=SUCCESS">
                             {{ result.summary.SUCCESS }}
                             <md-tooltip
                                     md-direction="top">
                                 Succeeded Tasks
                             </md-tooltip>
                         </md-button>
-                        <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'red-700'}">
+                        <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'red-700'}"
+                                   ng-href="/admin/task-runs/?run_set={{ result.id }}&state=FAILURE">
                             {{ result.summary.FAILURE }}
                             <md-tooltip
                                     md-direction="right">

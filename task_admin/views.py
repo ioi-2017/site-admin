@@ -1,4 +1,5 @@
 from django.http import HttpResponse
+from django.http.response import JsonResponse
 from django.views.generic import TemplateView, View
 from django_filters.rest_framework.backends import DjangoFilterBackend
 from rest_framework import mixins
@@ -10,11 +11,12 @@ from task_admin.serializers import TaskRunSetSerializer, TaskSerializer, TaskRun
 from task_admin.task_render import get_all_possible_vars, render_preview
 
 
-class RenderPreviewView(TemplateView):
-    template_name = "task_admin/render_preview.html"
-
-    def get_context_data(self, **kwargs):
-        return super().get_context_data(help_table=sorted(get_all_possible_vars().items()), **kwargs)
+class RenderPreviewView(View):
+    def get(self, request):
+        response = []
+        for template, rendered in get_all_possible_vars().items():
+            response.append({'template': template, 'rendered': rendered})
+        return JsonResponse(response, safe=False)
 
 
 class CodeRenderView(View):
@@ -44,11 +46,21 @@ class Pagination(PageNumberPagination):
     page_size = 10
 
 
+class TaskRunFilterBackend(DjangoFilterBackend):
+    def filter_queryset(self, request, queryset, view):
+        filter_queryset = super().filter_queryset(request, queryset, view)
+        run_state = request.query_params.get('state', None)
+        if run_state and run_state != 'ALL':
+            return [taskrun for taskrun in filter_queryset if taskrun.status == run_state]
+        return filter_queryset
+
+
 class TaskRunsAPI(ReadOnlyModelViewSet, mixins.ListModelMixin):
     serializer_class = TaskRunSerializer
     filter_fields = ('desk', 'contestant', 'node', 'run_set')
-    queryset = TaskRun.objects.filter(run_set__deleted=False)
+    queryset = TaskRun.objects.filter(run_set__deleted=False).order_by('-created_at')
     pagination_class = Pagination
+    filter_backends = (TaskRunFilterBackend,)
 
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
@@ -64,6 +76,7 @@ class TaskRunSetFilterBackend(DjangoFilterBackend):
             return [runset for runset in filter_queryset if runset.is_finished]
         return filter_queryset
 
+
 class TaskRunSetsAPI(mixins.CreateModelMixin,
                      mixins.RetrieveModelMixin,
                      mixins.ListModelMixin,
@@ -73,7 +86,7 @@ class TaskRunSetsAPI(mixins.CreateModelMixin,
     pagination_class = Pagination
     serializer_class = TaskRunSetSerializer
     filter_fields = ('is_local',)
-    queryset = TaskRunSet.objects.filter(deleted=False)
+    queryset = TaskRunSet.objects.filter(deleted=False).order_by('-created_at')
     max_page_size = 10000
 
     def list(self, request, *args, **kwargs):

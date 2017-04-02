@@ -29,7 +29,6 @@ class TaskRunSet(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     deleted = models.BooleanField(default=False)
 
-
     @property
     def last_finished_at(self):
         return max(task_run.finished_at for task_run in self.taskruns.all())
@@ -90,7 +89,10 @@ class TaskRun(models.Model):
 
     @property
     def duration_milliseconds(self):
-        return self.get_celery_result().get()['duration_milliseconds']
+        task_info = self.get_celery_result().info
+        if type(task_info) is dict and 'duration_milliseconds' in task_info:
+            return task_info['duration_milliseconds']
+        return None
 
     @property
     def started_at(self):
@@ -101,11 +103,17 @@ class TaskRun(models.Model):
 
     @property
     def finished_at(self):
-        return parser().parse(self.get_celery_result().get()['finished_at'])
+        task_info = self.get_celery_result().info
+        if type(task_info) is dict and 'finished_at' in task_info:
+            return parser().parse(task_info['finished_at'])
+        return None
 
     @property
     def result(self):
-        return self.get_celery_result().get()['result']
+        task_info = self.get_celery_result().info
+        if type(task_info) is dict and 'result' in task_info:
+            return task_info['result']
+        return None
 
     @property
     def status(self):

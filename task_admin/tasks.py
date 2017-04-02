@@ -16,6 +16,8 @@ def add_time(f):
         self.update_state(state='PROGRESS', meta={'started_at': start_time.isoformat()})
         result = f(self, *args, **kwargs)
         finished_time = datetime.datetime.now(pytz.timezone('Asia/Tehran'))
+        if result['return_code'] != 0:
+            self.update_state(state='FAILURE')
         return {'result': result,
                 'duration_milliseconds': int((finished_time - start_time).total_seconds() * 1000),
                 'finished_at': finished_time.isoformat(),
