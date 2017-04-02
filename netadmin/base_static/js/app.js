@@ -45,7 +45,10 @@ app.service('taskRunSetCreator', function ($mdDialog) {
                                 available_nodes.push(node)
                             console.log(node.value);
                         });
-                        return query ? available_nodes.filter(createFilterFor(query)) : available_nodes;
+                        if (available_nodes.length > 0)
+                            available_nodes.unshift({value: 'all', display: 'All nodes'});
+                        var result = query ? available_nodes.filter(createFilterForNode(query)) : available_nodes;
+                        return result;
                     };
                     $scope.selectedTaskItemChange = function (task) {
                         if (task) {
@@ -55,7 +58,13 @@ app.service('taskRunSetCreator', function ($mdDialog) {
                     };
                     $scope.selectedNodeItemChange = function (node) {
                         if (node) {
-                            $scope.ips = Array.from(new Set($scope.ips.concat(node.value))).sort();
+                            var items = node.value;
+                            if (node.value == 'all') {
+                                items = $scope.all_nodes.map(function (x) {
+                                    return x.value;
+                                });
+                            }
+                            $scope.ips = Array.from(new Set($scope.ips.concat(items))).sort();
                             $scope.searchNodeText = '';
                         }
                     };
@@ -94,6 +103,15 @@ app.service('taskRunSetCreator', function ($mdDialog) {
 
                         return function filterFn(task_template) {
                             return (task_template.value.indexOf(lowercaseQuery) === 0);
+                        };
+
+                    }
+
+                    function createFilterForNode(query) {
+                        var lowercaseQuery = angular.lowercase(query);
+
+                        return function filterFn(task_template) {
+                            return task_template.value == 'all' || (task_template.value.indexOf(lowercaseQuery) != -1);
                         };
 
                     }
