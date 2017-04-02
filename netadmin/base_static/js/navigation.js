@@ -2,7 +2,7 @@
  * Created by hamed on 3/30/17.
  */
 
-app.constant("NAV", [
+app.constant('NAV', [
     {
         name: 'Home'
     },
