@@ -5,39 +5,23 @@
 app.directive('room', function () {
     return {
         'controllerAs': 'room',
-        'controller': function ($http, $interval, $scope) {
+        'controller': function ($http, $interval, $scope, API) {
             var room = getRoom($('#container'));
 
-            var forEachItem = function(api, callback) {
-                $http.get(api, {'format': 'json'}).then(function (response) {
-                    angular.forEach(response.data, function (item) {
-                        callback(item);
-                    });
-                });
-            };
-
             var desks = {};
-            forEachItem('/api/desks/', function (desk) {
-                $http.get('/api/nodes/' + desk.active_node).then(function (response) {
-                    desk.ip = response.data.ip;
-                    desks[desk.ip] = createDesk(room, desk.x, desk.y, desk.angle);
+            API.Desk.forEach(function (desk) {
+                API.Node.for({id: desk.active_node}, function (node) {
+                    desks[node.ip] = createDesk(room, desk.x, desk.y, desk.angle);
                 });
             });
 
-            var refresh = function() {
-                forEachItem('/api/nodes', function (node) {
+            API.poll(function () {
+                API.Node.forEach(function (node) {
                     if (node.ip in desks) {
                         desks[node.ip].attr('class', node.connected ? 'desk-ok' : 'desk-failed');
                     }
                 });
-            };
-            var refreshPromise = $interval(refresh, 1000);
-
-            $scope.$on('$destroy', function () {
-                if (refreshPromise) {
-                    $interval.cancel(refreshPromise);
-                }
-            });
+            }, 1000, $scope);
         },
         'templateUrl': _static('templates/room.tmpl.html'),
         'replace': true

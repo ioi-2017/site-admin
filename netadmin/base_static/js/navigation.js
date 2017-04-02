@@ -79,6 +79,7 @@ app.provider('navigation', function () {
         item.url = item.url || defaultURL([section.name, item.name]);
         item.template = item.template || defaultTemplateName([item.name]);
         item.type = 'link';
+        return item;
     };
 
     this.fillMenu = function (menuJSON) {
@@ -94,6 +95,7 @@ app.provider('navigation', function () {
             }
             this.push(section);
         }, menu);
+        return menu;
     };
 
     var getSection = function (name) {
@@ -126,13 +128,10 @@ app.provider('navigation', function () {
         return routes;
     };
 
-    this.$get = function ($http) {
-        $http.get('/api/rooms', {'format': 'json'}).then(function (response) {
-            angular.forEach(response.data, function (room) {
-                var item = { name: room.name };
-                fillItem(getSection('Monitor'), item);
-                getSection('Monitor').items.push(item);
-            });
+    this.$get = function (API) {
+        API.Room.forEach(function (room) {
+            var monitor = getSection('Monitor');
+            monitor.items.push(fillItem(monitor, {name: room.name}));
         });
 
         return {
