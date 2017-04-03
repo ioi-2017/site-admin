@@ -1,4 +1,4 @@
-app.controller('TaskRunsContoller', function ($scope, $http, $location, taskRunSetCreator) {
+app.controller('taskRunsController', function ($scope, $http, $location, taskRunSetCreator) {
     $scope.params = {
         desk: '',
         contestant: '',

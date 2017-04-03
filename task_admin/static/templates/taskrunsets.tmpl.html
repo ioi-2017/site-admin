@@ -1,132 +1,130 @@
-<div ng-controller="RunsetsContoller">
-    <div id="task_filter">
-        <md-input-container>
-            <label>Owner</label>
-            <md-select ng-model="params.owner_id">
-                <md-option value="">All owners</md-option>
-                <md-option ng-repeat="owner in owners" value="{{ owner.id }}">{{ owner.name }}</md-option>
-            </md-select>
-        </md-input-container>
-        <md-input-container>
-            <label>State</label>
-            <md-select ng-model="params.state">
-                <md-option value="all">All</md-option>
-                <md-option value="finished">Finished</md-option>
-                <md-option value="running">Running</md-option>
-                <md-option value="waiting">Waiting</md-option>
-            </md-select>
-        </md-input-container>
+<div id="task_filter">
+    <md-input-container>
+        <label>Owner</label>
+        <md-select ng-model="params.owner_id">
+            <md-option value="">All owners</md-option>
+            <md-option ng-repeat="owner in owners" value="{{ owner.id }}">{{ owner.name }}</md-option>
+        </md-select>
+    </md-input-container>
+    <md-input-container>
+        <label>State</label>
+        <md-select ng-model="params.state">
+            <md-option value="all">All</md-option>
+            <md-option value="finished">Finished</md-option>
+            <md-option value="running">Running</md-option>
+            <md-option value="waiting">Waiting</md-option>
+        </md-select>
+    </md-input-container>
+</div>
+<div id="taskrunsets">
+    <div class="md-toolbar-tools">
+        <span>{{ selected.length }} {{ selected.length > 1 ? 'Task Run Sets' : 'Task Run Set'}} selected</span>
+
+        <md-button class="md-fab md-mini" aria-label="Delete" md-colors="::{backgroundColor: 'red-700'}"
+                   ng-click="deleteSelected($event)" ng-disabled="selected.length<1">
+            <md-icon aria-label="backup"
+                     class="material-icons step">delete
+            </md-icon>
+        </md-button>
     </div>
-    <div id="taskrunsets">
-        <div class="md-toolbar-tools">
-            <span>{{ selected.length }} {{ selected.length > 1 ? 'Task Run Sets' : 'Task Run Set'}} selected</span>
+    <md-table-container>
+        <table md-table md-row-select="true" multiple ng-model="selected" md-progress="promise">
+            <thead md-head>
+            <tr md-row>
+                <th md-column>Task</th>
+                <th md-column>Owner</th>
+                <th md-column>Created at</th>
+                <th md-column>Summary</th>
+                <th md-column>Actions</th>
+            </tr>
+            </thead>
+            <tbody md-body>
+            <tr class="na-tr" md-row md-select="result" md-select-id="id" ng-repeat="result in results">
+                <td md-cell>{{ result.code }}</td>
+                <td md-cell>{{ result.owner_data }}</td>
+                <td md-cell>{{ result.created_at | date:'M/d/y, HH:mm:ss' }}</td>
+                <td md-cell>
+                    <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'blueGrey-700'}"
+                               ng-href="/admin/task-runs/?run_set={{ result.id }}&state=PENDING">
+                        {{ result.summary.PENDING }}
+                        <md-tooltip
+                                md-direction="left">
+                            Pending Tasks
+                        </md-tooltip>
+                    </md-button>
+                    <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'yellow-700'}"
+                               ng-href="/admin/task-runs/?run_set={{ result.id }}&state=PROGRESS">
+                        {{ result.summary.PROGRESS }}
+                        <md-tooltip
+                                md-direction="top">
+                            Started Tasks
+                        </md-tooltip>
+                    </md-button>
+                    <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'green-700'}"
+                               ng-href="/admin/task-runs/?run_set={{ result.id }}&state=SUCCESS">
+                        {{ result.summary.SUCCESS }}
+                        <md-tooltip
+                                md-direction="top">
+                            Succeeded Tasks
+                        </md-tooltip>
+                    </md-button>
+                    <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'red-700'}"
+                               ng-href="/admin/task-runs/?run_set={{ result.id }}&state=FAILURE">
+                        {{ result.summary.FAILURE }}
+                        <md-tooltip
+                                md-direction="right">
+                            Failed Tasks
+                        </md-tooltip>
+                    </md-button>
+                </td>
+                <td>
+                    <md-button class="md-fab md-mini" aria-label="Stop">
+                        <md-icon aria-label="backup"
+                                 class="material-icons step">refresh
+                        </md-icon>
+                    </md-button>
+                    <md-button class="md-fab md-mini" aria-label="Stop">
+                        <md-icon aria-label="backup"
+                                 class="material-icons step">pause
+                        </md-icon>
+                    </md-button>
+                    <md-button class="md-fab md-mini" aria-label="Stop"
+                               ng-href="/admin/task-runs/?run_set={{ result.id }}">
+                        <md-icon aria-label="backup"
+                                 class="material-icons step">more_horiz
+                        </md-icon>
+                    </md-button>
 
-            <md-button class="md-fab md-mini" aria-label="Delete" md-colors="::{backgroundColor: 'red-700'}"
-                       ng-click="deleteSelected($event)" ng-disabled="selected.length<1">
-                <md-icon aria-label="backup"
-                         class="material-icons step">delete
-                </md-icon>
-            </md-button>
-        </div>
-        <md-table-container>
-            <table md-table md-row-select="true" multiple ng-model="selected" md-progress="promise">
-                <thead md-head>
-                <tr md-row>
-                    <th md-column>Task</th>
-                    <th md-column>Owner</th>
-                    <th md-column>Created at</th>
-                    <th md-column>Summary</th>
-                    <th md-column>Actions</th>
-                </tr>
-                </thead>
-                <tbody md-body>
-                <tr class="na-tr" md-row md-select="result" md-select-id="id" ng-repeat="result in results">
-                    <td md-cell>{{ result.code }}</td>
-                    <td md-cell>{{ result.owner_data }}</td>
-                    <td md-cell>{{ result.created_at | date:'M/d/y, HH:mm:ss' }}</td>
-                    <td md-cell>
-                        <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'blueGrey-700'}"
-                                   ng-href="/admin/task-runs/?run_set={{ result.id }}&state=PENDING">
-                            {{ result.summary.PENDING }}
-                            <md-tooltip
-                                    md-direction="left">
-                                Pending Tasks
-                            </md-tooltip>
-                        </md-button>
-                        <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'yellow-700'}"
-                                   ng-href="/admin/task-runs/?run_set={{ result.id }}&state=PROGRESS">
-                            {{ result.summary.PROGRESS }}
-                            <md-tooltip
-                                    md-direction="top">
-                                Started Tasks
-                            </md-tooltip>
-                        </md-button>
-                        <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'green-700'}"
-                                   ng-href="/admin/task-runs/?run_set={{ result.id }}&state=SUCCESS">
-                            {{ result.summary.SUCCESS }}
-                            <md-tooltip
-                                    md-direction="top">
-                                Succeeded Tasks
-                            </md-tooltip>
-                        </md-button>
-                        <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'red-700'}"
-                                   ng-href="/admin/task-runs/?run_set={{ result.id }}&state=FAILURE">
-                            {{ result.summary.FAILURE }}
-                            <md-tooltip
-                                    md-direction="right">
-                                Failed Tasks
-                            </md-tooltip>
-                        </md-button>
-                    </td>
-                    <td>
-                        <md-button class="md-fab md-mini" aria-label="Stop">
-                            <md-icon aria-label="backup"
-                                     class="material-icons step">refresh
-                            </md-icon>
-                        </md-button>
-                        <md-button class="md-fab md-mini" aria-label="Stop">
-                            <md-icon aria-label="backup"
-                                     class="material-icons step">pause
-                            </md-icon>
-                        </md-button>
-                        <md-button class="md-fab md-mini" aria-label="Stop"
-                                   ng-href="/admin/task-runs/?run_set={{ result.id }}">
-                            <md-icon aria-label="backup"
-                                     class="material-icons step">more_horiz
-                            </md-icon>
-                        </md-button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </md-table-container>
 
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </md-table-container>
-
-        <br>
-        <div layout="row">
-            <md-button ng-disabled="!pagination.previous_url"
-                       aria-label="previous"
-                       class="md-icon-button md-raised"
-                       ng-click="prevPage()"
-                       aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-            </md-button>
-            <md-button ng-repeat="page in pagination.page_links"
-                       aria-label="page_number"
-                       ng-disabled="page[3]"
-                       class="md-icon-button"
-                       ng-class="{'md-accent md-raised':page[2]==true}"
-                       ng-click="setPage(page[1])">
-                <span ng-if="page[3]" aria-hidden="true">&hellip;</span>
-                <span ng-if="!page[3]">{{ page[1] }}</span>
-            </md-button>
-            <md-button ng-disabled="!pagination.next_url"
-                       aria-label="next"
-                       class="md-icon-button md-raised"
-                       ng-click="nextPage()"
-                       aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-            </md-button>
-        </div>
+    <br>
+    <div layout="row">
+        <md-button ng-disabled="!pagination.previous_url"
+                   aria-label="previous"
+                   class="md-icon-button md-raised"
+                   ng-click="prevPage()"
+                   aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+        </md-button>
+        <md-button ng-repeat="page in pagination.page_links"
+                   aria-label="page_number"
+                   ng-disabled="page[3]"
+                   class="md-icon-button"
+                   ng-class="{'md-accent md-raised':page[2]==true}"
+                   ng-click="setPage(page[1])">
+            <span ng-if="page[3]" aria-hidden="true">&hellip;</span>
+            <span ng-if="!page[3]">{{ page[1] }}</span>
+        </md-button>
+        <md-button ng-disabled="!pagination.next_url"
+                   aria-label="next"
+                   class="md-icon-button md-raised"
+                   ng-click="nextPage()"
+                   aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+        </md-button>
     </div>
 </div>

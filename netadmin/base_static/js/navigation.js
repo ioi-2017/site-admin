@@ -13,6 +13,7 @@ app.constant('NAV', [
             {
                 name: 'All',
                 urlPattern: '/monitor/:name',
+                controller: 'monitorController',
                 template: 'monitor.tmpl.html'
             }
         ]
@@ -26,7 +27,7 @@ app.constant('NAV', [
                 template: 'home.tmpl.html'
             },
             {
-                name: 'TaskRunSets',
+                name: 'TaskRunsets',
                 template: 'taskrunsets.tmpl.html'
             },
             {
@@ -63,7 +64,13 @@ app.provider('navigation', function () {
     var menu, links;
 
     var denormalize = function (normalText) {
-        return normalText.replace( /([a-zA-Z])([A-Z])/g, '$1-$2' ).toLowerCase();
+        return normalText.replace(/([a-zA-Z])([A-Z])/g, '$1-$2').toLowerCase();
+    };
+
+    var normalize = function (text) {
+        return text.replace(/-([a-z])/g, function (all, letter) {
+            return letter.toUpperCase();
+        });
     };
 
     var defaultURL = function (parts) {
@@ -74,11 +81,16 @@ app.provider('navigation', function () {
         return parts.map(denormalize).join('-') + '.tmpl.html';
     };
 
+    var defaultController = function (parts) {
+        return parts.map(denormalize).map(normalize).join('') + 'Controller';
+    };
+
     var fillLink = function (item, trace) {
         trace.push(item.name);
         item.url = item.url || defaultURL(trace);
         item.urlPattern = item.urlPattern || item.url;
         item.template = item.template || defaultTemplateName(trace.slice(-1));
+        item.controller = item.controller || defaultController(trace.slice(-1));
         item.type = 'link';
 
         links.push(item);
@@ -139,9 +151,11 @@ app.provider('navigation', function () {
 
 app.config(function ($locationProvider, $routeProvider, navigationProvider, NAV) {
     navigationProvider.fillMenu(NAV);
-    angular.forEach(navigationProvider.getLinks(), function (route) {
-        $routeProvider.when(route.urlPattern, {
-            templateUrl: _static('templates/' + route.template),
+    angular.forEach(navigationProvider.getLinks(), function (link) {
+        $routeProvider.when(link.urlPattern, {
+            templateUrl: _static('templates/' + link.template),
+            controller: link.controller,
+            controllerAs: 'Ctrl',
             reloadOnSearch: false
         });
     });

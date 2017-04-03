@@ -1,5 +1,4 @@
-
-app.controller('RunsetsContoller', function ($scope, $http, $location, $mdDialog) {
+app.controller('taskRunsetsController', function ($scope, $http, $location, $mdDialog) {
     $scope.params = {
         state: 'all',
         owner_id: '',
