@@ -12,6 +12,7 @@ app.constant('NAV', [
         items: [
             {
                 name: 'All',
+                urlPattern: '/monitor/:name',
                 template: 'monitor.tmpl.html'
             }
         ]
@@ -21,7 +22,8 @@ app.constant('NAV', [
         type: 'toggle',
         items: [
             {
-                name: 'Tasks'
+                name: 'Tasks',
+                template: 'home.tmpl.html'
             },
             {
                 name: 'TaskRunSets'
@@ -30,7 +32,8 @@ app.constant('NAV', [
                 name: 'TaskRuns'
             },
             {
-                name: 'Services'
+                name: 'Services',
+                template: 'home.tmpl.html'
             }
         ]
     },
@@ -39,23 +42,23 @@ app.constant('NAV', [
         type: 'toggle',
         items: [
             {
-                name: 'Nodes'
+                name: 'Nodes',
+                template: 'home.tmpl.html'
             },
             {
-                name: 'People'
+                name: 'People',
+                template: 'home.tmpl.html'
             },
             {
-                name: 'Desks'
+                name: 'Desks',
+                template: 'home.tmpl.html'
             }
         ]
-    },
-    {
-        name: 'About'
     }
 ]);
 
 app.provider('navigation', function () {
-    var menu;
+    var menu, links;
 
     var denormalize = function (normalText) {
         return normalText.replace( /([a-zA-Z])([A-Z])/g, '$1-$2' ).toLowerCase();
@@ -69,33 +72,35 @@ app.provider('navigation', function () {
         return parts.map(denormalize).join('-') + '.tmpl.html';
     };
 
-    var fillSection = function (section) {
-        section.url = section.url || defaultURL([section.name]);
-        section.template = section.template || defaultTemplateName([section.name]);
-        section.type = 'link';
-    };
-
-    var fillItem = function (section, item) {
-        item.url = item.url || defaultURL([section.name, item.name]);
-        item.template = item.template || defaultTemplateName([item.name]);
+    var fillLink = function (item, trace) {
+        trace.push(item.name);
+        item.url = item.url || defaultURL(trace);
+        item.urlPattern = item.urlPattern || item.url;
+        item.template = item.template || defaultTemplateName(trace.slice(-1));
         item.type = 'link';
+
+        links.push(item);
         return item;
     };
 
     this.fillMenu = function (menuJSON) {
         menu = [];
+        links = [];
         angular.forEach(menuJSON, function (section) {
-            if (section.type != 'toggle') {
-                fillSection(section);
-            }
+            if (section.type != 'toggle')
+                fillLink(section, []);
             else {
                 angular.forEach(section.items, function (item) {
-                    fillItem(section, item);
+                    fillLink(item, [section.name]);
                 });
             }
             this.push(section);
         }, menu);
         return menu;
+    };
+
+    this.getLinks = function () {
+        return links;
     };
 
     var getSection = function (name) {
@@ -107,32 +112,20 @@ app.provider('navigation', function () {
         return theSection;
     };
 
-    this.getRoutingInfo = function () {
-        var routes = [];
-        angular.forEach(menu, function (section) {
-            if (section.type == 'toggle') {
-                angular.forEach(section.items, function (item) {
-                    routes.push({
-                        url: item.url,
-                        template: item.template
-                    });
-                })
-            }
-            else {
-                routes.push({
-                    url: section.url,
-                    template: section.template
-                });
-            }
+    var pushRoomsLinks = function(API, section, sample) {
+        API.Room.forEach(function (room) {
+            var item = {
+                name: room.name,
+                urlPattern: sample.urlPattern,
+                template: sample.template
+            };
+            section.items.push(fillLink(item, [section.name]));
         });
-        return routes;
     };
 
     this.$get = function (API) {
-        API.Room.forEach(function (room) {
-            var monitor = getSection('Monitor');
-            monitor.items.push(fillItem(monitor, {name: room.name}));
-        });
+        var monitor = getSection('Monitor');
+        pushRoomsLinks(API, monitor, monitor.items[0]);
 
         return {
             getMenu: function() {
@@ -144,11 +137,10 @@ app.provider('navigation', function () {
 
 app.config(function ($locationProvider, $routeProvider, navigationProvider, NAV) {
     navigationProvider.fillMenu(NAV);
-    angular.forEach(navigationProvider.getRoutingInfo(), function (route) {
-        $routeProvider.when(route.url, {
+    angular.forEach(navigationProvider.getLinks(), function (route) {
+        $routeProvider.when(route.urlPattern, {
             templateUrl: _static('templates/' + route.template),
             reloadOnSearch: false
-
         });
     });
 

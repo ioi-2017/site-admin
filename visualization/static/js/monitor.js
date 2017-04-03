@@ -6,7 +6,8 @@ app.directive('room', function () {
     return {
         'controllerAs': 'room',
         'controller': function ($http, $interval, $scope, API) {
-            var room = getRoom($('#container'));
+            var container = $('#container');
+            var room = getRoom(container);
 
             var desks = {};
             API.Desk.forEach(function (desk) {
@@ -15,13 +16,15 @@ app.directive('room', function () {
                 });
             });
 
-            API.poll(function () {
+            API.poll(1000, $scope, function () {
                 API.Node.forEach(function (node) {
                     if (node.ip in desks) {
                         desks[node.ip].attr('class', node.connected ? 'desk-ok' : 'desk-failed');
                     }
                 });
-            }, 1000, $scope);
+            }, function () {
+                container.remove();
+            });
         },
         'templateUrl': _static('templates/room.tmpl.html'),
         'replace': true

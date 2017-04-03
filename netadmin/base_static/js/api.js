@@ -32,12 +32,15 @@ app.service('API', function ($resource, $interval, MODELS) {
         };
     });
 
-    apiService.poll = function (callback, duration, pollingScope) {
+    apiService.poll = function (duration, pollingScope, callback, destroy) {
         var pollingPromise = $interval(callback, duration);
 
         pollingScope.$on('$destroy', function () {
             if (pollingPromise) {
                 $interval.cancel(pollingPromise);
+            }
+            if (destroy) {
+                destroy();
             }
         });
     };
