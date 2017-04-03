@@ -155,7 +155,7 @@ app.config(function ($locationProvider, $routeProvider, navigationProvider, NAV)
         $routeProvider.when(link.urlPattern, {
             templateUrl: _static('templates/' + link.template),
             controller: link.controller,
-            controllerAs: 'Ctrl',
+            controllerAs: 'ctrl',
             reloadOnSearch: false
         });
     });
