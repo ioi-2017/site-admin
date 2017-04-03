@@ -1,13 +1,10 @@
-from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from rest_framework.exceptions import APIException
 
 from task_admin.models import Task, TaskRunSet, TaskRun
 from task_admin.task_render import render_task
-from task_admin.tasks import execute_task, add_time
-from visualization.models import Node
-from rest_framework.exceptions import APIException
-
+from task_admin.tasks import execute_task
+from visualization.models import Node, Desk, Contestant
 from visualization.serializers import NodeSerializer, DeskSerializer, ContestantSerializer
 
 
@@ -54,9 +51,13 @@ class TaskRunSetSerializer(serializers.ModelSerializer):
 
         for ip in validated_data['ips']:
             try:
-                Node.objects.get(ip=ip)
+                Node.objects.get(ip=ip).desk.contestant
             except Node.DoesNotExist:
                 raise BadRequest(detail=(u"Ip {0:s} doesn't exist".format(ip)), code=400)
+            except Desk.DoesNotExist:
+                raise BadRequest(detail=(u"Ip {0:s} provided is attached to no desks".format(ip)), code=400)
+            except Contestant.DoesNotExist:
+                raise BadRequest(detail=(u"IP {0:s} is not used by anyone".format(ip)), code=400)
 
         taskrunset = TaskRunSet(
             code=code,

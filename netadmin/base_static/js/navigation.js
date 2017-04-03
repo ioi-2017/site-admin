@@ -22,10 +22,10 @@ app.constant('NAV', [
         name: 'Admin',
         type: 'toggle',
         items: [
-            {
+            /*{
                 name: 'Tasks',
                 template: 'home.tmpl.html'
-            },
+            },*/
             {
                 name: 'TaskRunsets',
                 template: 'taskrunsets.tmpl.html'
@@ -33,13 +33,13 @@ app.constant('NAV', [
             {
                 name: 'TaskRuns',
                 template: 'taskruns.tmpl.html'
-            },
+            }/*,
             {
                 name: 'Services',
                 template: 'home.tmpl.html'
-            }
+            }*/
         ]
-    },
+    }/*,
     {
         name: 'Config',
         type: 'toggle',
@@ -57,7 +57,7 @@ app.constant('NAV', [
                 template: 'home.tmpl.html'
             }
         ]
-    }
+    }*/
 ]);
 
 app.provider('navigation', function () {
