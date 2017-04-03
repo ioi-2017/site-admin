@@ -26,10 +26,12 @@ app.constant('NAV', [
                 template: 'home.tmpl.html'
             },
             {
-                name: 'TaskRunSets'
+                name: 'TaskRunSets',
+                template: 'taskrunsets.tmpl.html'
             },
             {
-                name: 'TaskRuns'
+                name: 'TaskRuns',
+                template: 'taskruns.tmpl.html'
             },
             {
                 name: 'Services',

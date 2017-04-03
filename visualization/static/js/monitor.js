@@ -11,7 +11,7 @@ app.directive('room', function () {
 
             var desks = {};
             API.Desk.forEach(function (desk) {
-                API.Node.for({id: desk.active_node}, function (node) {
+                API.Node.get({id: desk.active_node}, function (node) {
                     desks[node.ip] = createDesk(room, desk.x, desk.y, desk.angle);
                 });
             });

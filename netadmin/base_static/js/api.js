@@ -17,17 +17,11 @@ app.service('API', function ($resource, $interval, MODELS) {
     angular.forEach(MODELS, function (api_url, model) {
         apiService[model] = $resource(api_url, {id: '@_id'}, {update: {method: 'PUT'}}, {stripTrailingSlashes: false});
 
-        apiService[model].forEach = function (callback) {
-            var items = apiService[model].query(function() {
+        apiService[model].forEach = function (callback, params) {
+            var items = apiService[model].query(params || {}, function() {
                 angular.forEach(items, function (item) {
                     callback(item);
                 });
-            });
-        };
-
-        apiService[model].for = function (params, callback) {
-            var item = apiService[model].get(params, function () {
-                callback(item);
             });
         };
     });
