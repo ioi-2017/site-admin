@@ -6,6 +6,7 @@ IOI Net administration tasks
 Install docker for starting redis.
 ```
 docker run -d -p 6379:6379 redis
+bower install
 pip install -r requirements.txt # Install required python packages
 celery -A task_admin.tasks worker --loglevel=info # Run a celery worker
 ```
