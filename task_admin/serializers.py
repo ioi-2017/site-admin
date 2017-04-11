@@ -80,7 +80,9 @@ class TaskRunSetSerializer(serializers.ModelSerializer):
                 rendered_code=rendered_code,
                 is_local=is_local,
             )
-            taskrun.celery_task = execute_task.delay(**taskrun.get_execution_dict()).id
+
+            taskrun.celery_task = execute_task.apply_async(queue='local_queue' if is_local else 'remote_queue'
+                                                           , kwargs=taskrun.get_execution_dict()).id
             taskrun.save()
         return taskrunset
 

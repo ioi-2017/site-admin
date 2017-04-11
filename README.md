@@ -8,7 +8,9 @@ Install docker for starting redis.
 docker run -d -p 6379:6379 redis
 bower install
 pip install -r requirements.txt # Install required python packages
-celery -A task_admin.tasks worker --loglevel=info # Run a celery worker
+celery -A task_admin.tasks worker --concurrency=2 -Q local_queue --loglevel=info # Run a celery worker for local tasks
+celery -A task_admin.tasks worker --concurrency=10 -Q remote_queue --loglevel=info # Run a celery worker for remote tasks
+./start-workers.sh # To run both workers
 ```
 
 
