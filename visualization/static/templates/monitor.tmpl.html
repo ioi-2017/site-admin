@@ -10,11 +10,28 @@
                 <md-card-title>
                     <md-card-title-text>
                         <span class="md-headline">Desk Information</span>
-                        <span class="md-subhead">
-                            <code>
-                                {{ select.desk.x }}, {{ select.desk.y }}, {{ select.desk.angle }}
-                            </code>
-                        </span>
+                        <div layout="row" >
+                            <div flex layout="column">
+                                <span class="md-subhead">
+                                    <code>
+                                        Position: {{ select.desk.x }}, {{ select.desk.y }}
+                                    </code>
+                                </span>
+                                <span class="md-subhead">
+                                    <code>
+                                        Angel: {{ select.desk.angle }}
+                                    </code>
+                                </span>
+                            </div>
+                            <div layout-align="end center">
+                                <md-button class="md-fab md-mini" aria-label="Create TaskRunSet"
+                                           ng-click="showTaskRunSetCreateForDesk($event)">
+                                    <md-icon aria-label="Create"
+                                             class="material-icons step">add
+                                    </md-icon>
+                                </md-button>
+                            </div>
+                        </div>
                     </md-card-title-text>
                 </md-card-title>
             </md-card>
