@@ -6,8 +6,16 @@ import pytz
 from paramiko import SSHClient, AutoAddPolicy
 
 from netadmin.settings import app
+from celery import Task
 
 RUN_TIMEOUT_SECONDS = 10
+
+
+class NetAdminTask(Task):
+    def after_return(self, status, retval, task_id, args, kwargs, einfo):
+        super().after_return(status, retval, task_id, args, kwargs, einfo)
+        if retval['result']['return_code'] != 0:
+            self.update_state(state='FAILURE')
 
 
 def add_time(f):
@@ -16,8 +24,6 @@ def add_time(f):
         self.update_state(state='PROGRESS', meta={'started_at': start_time.isoformat()})
         result = f(self, *args, **kwargs)
         finished_time = datetime.datetime.now(pytz.timezone('Asia/Tehran'))
-        if result['return_code'] != 0:
-            self.update_state(state='FAILURE')
         return {'result': result,
                 'duration_milliseconds': int((finished_time - start_time).total_seconds() * 1000),
                 'finished_at': finished_time.isoformat(),
@@ -27,7 +33,7 @@ def add_time(f):
     return decorator
 
 
-@app.task(bind=True)
+@app.task(bind=True, base=NetAdminTask)
 @add_time
 def execute_task(self, is_local, ip, username, rendered_code):
     if is_local:
