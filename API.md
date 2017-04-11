@@ -299,6 +299,30 @@
        curl "http://localhost:8000/api/taskruns/6/"
        ```
 
+***Single TaskRun Stop***
+
+   Stops the single taskrun
+
+* **URL**
+
+    /api/taskruns/<?taskrun_id>/stop/
+
+* **Method:**
+
+    `POST`
+
+* **Success Response:**
+
+   Returns nothing, the task run will not run if it's pending and will stop if it's running, if the state is success nothing happens to the taskrun
+
+   * **Code:** 204 No Content <br />
+
+* **Sample Call:**
+       ```
+       curl -X POST "http://localhost:8000/api/taskruns/6/stop/"
+       ```
+
+
 **TaskRunSet API**
 ----
 
@@ -526,13 +550,36 @@
 
 * **Success Response:**
 
-   Returns nothing, all running taskruns for this taskrun set will be stopped and no longer visible in the api.
+   Returns nothing, all running taskruns for this taskrunset set will be stopped and no longer visible in the api.
 
    * **Code:** 204 No Content <br />
 
 * **Sample Call:**
        ```
        curl -X DELETE "http://localhost:8000/api/taskrunsets/13/"
+       ```
+
+***Single TaskRunSet Stop***
+
+   Stops all taskruns of the taskrunset
+
+* **URL**
+
+    /api/taskrunsets/<?taskrunset_id>/stop/
+
+* **Method:**
+
+    `POST`
+
+* **Success Response:**
+
+   Returns nothing, all pending and running taskruns for this taskrunset set will be stopped
+
+   * **Code:** 204 No Content <br />
+
+* **Sample Call:**
+       ```
+       curl -X POST "http://localhost:8000/api/taskrunsets/13/stop/"
        ```
 
 

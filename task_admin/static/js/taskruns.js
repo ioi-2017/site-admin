@@ -29,6 +29,10 @@ app.controller('taskRunsController', function ($scope, $http, $location, taskRun
         $scope.hovered = item
     };
 
+    $scope.stopTaskrun = function (item) {
+        $http.post('/api/taskruns/' + item.id + "/stop/", {});
+    };
+
     function updatePage(replace_state) {
         $http.get('/api/taskruns/',
             {

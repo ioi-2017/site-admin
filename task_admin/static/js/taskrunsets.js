@@ -54,6 +54,10 @@ app.controller('taskRunsetsController', function ($scope, $http, $location, $mdD
         $scope.params.page = parseInt($scope.params.page) + 1;
     };
 
+    $scope.stopTaskrunset = function (taskrunset) {
+        $http.post('/api/taskrunsets/' + item.id + "/stop/", {});
+    };
+
     $scope.deleteSelected = function (ev) {
         var confirm = $mdDialog.confirm()
             .title('Are you sure you want to delete ' + $scope.selected.length + ' task run sets?')

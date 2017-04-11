@@ -3,6 +3,7 @@ from django.http.response import JsonResponse
 from django.views.generic import TemplateView, View
 from django_filters.rest_framework.backends import DjangoFilterBackend
 from rest_framework import mixins
+from rest_framework.decorators import detail_route
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet, GenericViewSet
 
@@ -67,6 +68,13 @@ class TaskRunsAPI(ReadOnlyModelViewSet, mixins.ListModelMixin):
         response.data['pagination'] = self.paginator.get_html_context()
         return response
 
+    @detail_route(methods=['post'])
+    def stop(self, request, pk):
+        task_run = self.get_object()
+        result = task_run.get_celery_result()
+        result.revoke()
+        return HttpResponse('', status=204)
+
 
 class TaskRunSetFilterBackend(DjangoFilterBackend):
     def filter_queryset(self, request, queryset, view):
@@ -98,3 +106,11 @@ class TaskRunSetsAPI(mixins.CreateModelMixin,
         instance.deleted = True
         # TODO: stop all remaining tasks
         instance.save()
+
+    @detail_route(methods=['post'])
+    def stop(self, request, pk):
+        task_runset = self.get_object()
+        for task_run in task_runset.taskruns.all():
+            result = task_run.get_celery_result()
+            result.revoke()
+        return HttpResponse('', status=204)
