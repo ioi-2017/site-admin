@@ -12,10 +12,9 @@ RUN_TIMEOUT_SECONDS = 10
 
 
 class NetAdminTask(Task):
-    def after_return(self, status, retval, task_id, args, kwargs, einfo):
-        super().after_return(status, retval, task_id, args, kwargs, einfo)
+    def on_success(self, retval, task_id, args, kwargs):
         if retval['result']['return_code'] != 0:
-            self.update_state(state='FAILURE')
+            self.update_state(state='EXFAIL', meta=retval)
 
 
 def add_time(f):
