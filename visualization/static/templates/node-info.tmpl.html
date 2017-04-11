@@ -1,0 +1,33 @@
+<md-card>
+    <md-card-title>
+        <md-card-title-text>
+            <span class="md-headline">Node</span>
+        <span class="md-subhead">
+            <code>
+                IP address:
+                {{ node.ip }}
+            </code>
+        </span>
+        <span class="md-subhead">
+            <code>
+                MAC address:
+                {{ node.ip }}
+            </code>
+        </span>
+        <span class="md-subhead">
+            <code>
+                Username:
+                {{ node.username }}
+            </code>
+        </span>
+        <span class="md-subhead">
+            <code>
+                Connected:
+                <md-icon aria-label="backup"
+                         class="material-icons step">{{ node.connected ? 'done' : 'clear'}}
+                </md-icon>
+            </code>
+        </span>
+        </md-card-title-text>
+    </md-card-title>
+</md-card>

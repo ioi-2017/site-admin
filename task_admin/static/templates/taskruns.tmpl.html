@@ -190,64 +190,10 @@
                     </md-card-title-text>
                 </md-card-title>
             </md-card>
-            <md-card>
-                <md-card-title>
-                    <md-card-title-text>
-                        <span class="md-headline">Node</span>
-                    <span class="md-subhead">
-                        <code>
-                            IP address :
-                            {{ hovered.node.ip }}
-                        </code>
-                    </span>
-                    <span class="md-subhead">
-                        <code>
-                            MAC address :
-                            {{ hovered.node.ip }}
-                        </code>
-                    </span>
-                    <span class="md-subhead">
-                        <code>
-                            Username :
-                            {{ hovered.node.username }}
-                        </code>
-                    </span>
-                    <span class="md-subhead">
-                        <code>
-                            Connected :
-                            <md-icon aria-label="backup"
-                                     class="material-icons step">{{ hovered.node.connected ? 'done' : 'clear'}}
-                            </md-icon>
-                        </code>
-                    </span>
-                    </md-card-title-text>
-                </md-card-title>
-            </md-card>
-            <md-card>
-                <md-card-title>
-                    <md-card-title-text>
-                        <span class="md-headline">Contestant</span>
-                    <span class="md-subhead">
-                        <code>
-                            Name:
-                            {{ hovered.contestant.name }}
-                        </code>
-                    </span>
-                    <span class="md-subhead">
-                        <code>
-                            Country:
-                            {{ hovered.contestant.country }}
-                        </code>
-                    </span>
-                    <span class="md-subhead">
-                        <code>
-                            Number:
-                            {{ hovered.contestant.number }}
-                        </code>
-                    </span>
-                    </md-card-title-text>
-                </md-card-title>
-            </md-card>
+            <node-info node="hovered.node">
+            </node-info>
+            <contestant-info contestant="hovered.contestant">
+            </contestant-info>
         </div>
         <div ng-if="hovered == null">
             <md-card>

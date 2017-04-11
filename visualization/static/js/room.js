@@ -33,10 +33,15 @@ app.directive('room', function () {
 
                 var desks = {};
                 API.Desk.forEach(function (desk) {
+                    var node = API.Node.get({id: desk.active_node});
+                    var contestant = API.Contestant.get({id: desk.contestant});
+
                     var deskElement = createDesk(room, desk.x, desk.y, desk.angle);
                     deskElement.attr("class", "desk unknown");
                     deskElement.node.onclick = function () {
                         $scope.select.desk = desk;
+                        $scope.select.node = node;
+                        $scope.select.contestant = contestant;
                     };
                     API.Node.get({id: desk.active_node}, function (node) {
                         desks[node.ip] = deskElement;

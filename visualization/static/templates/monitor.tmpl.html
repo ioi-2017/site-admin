@@ -5,22 +5,29 @@
         </div>
     </div>
     <div flex class="flex-35" id="details">
-        <md-card ng-show="select.desk">
-            <md-card-title>
-                <md-card-title-text>
-                    <span class="md-headline">Desk Information</span>
-                    <span class="md-subhead">
-                        <code>
-                            {{ select.desk.x }}, {{ select.desk.y }}, {{ select.desk.angle }}
-                        </code>
-                    </span>
-                </md-card-title-text>
-            </md-card-title>
-        </md-card>
+        <div ng-show="select.desk">
+            <md-card ng-show="select.desk">
+                <md-card-title>
+                    <md-card-title-text>
+                        <span class="md-headline">Desk Information</span>
+                        <span class="md-subhead">
+                            <code>
+                                {{ select.desk.x }}, {{ select.desk.y }}, {{ select.desk.angle }}
+                            </code>
+                        </span>
+                    </md-card-title-text>
+                </md-card-title>
+            </md-card>
+            <node-info node="select.node">
+            </node-info>
+            <contestant-info contestant="select.contestant">
+            </contestant-info>
+        </div>
         <md-card ng-show="select.desk == null">
             <md-card-title>
                 <md-card-title-text>
                     <span class="md-headline">Click on desks</span>
+                </md-card-title-text>
             </md-card-title>
         </md-card>
     </div>
