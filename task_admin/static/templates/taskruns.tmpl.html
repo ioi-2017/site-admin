@@ -31,6 +31,13 @@
                          class="material-icons step">add
                 </md-icon>
             </md-button>
+<!--            <md-button class="md-fab md-mini" aria-label="Select All Taskruns"
+                       ng-click="selectAllRuns()">
+                <md-icon aria-label="Select All"
+                         class="material-icons step">select_all
+                </md-icon>
+            </md-button>
+-->
         </div>
         <md-table-container>
             <table md-table md-row-select="true" multiple ng-model="selected" md-progress="promise">
@@ -129,7 +136,7 @@
         </md-table-container>
 
         <br>
-        <div layout="row">
+        <div layout="row" ng-show="pagination.previous_url || pagination.next_url">
             <md-button ng-disabled="!pagination.previous_url"
                        aria-label="previous"
                        class="md-icon-button md-raised"

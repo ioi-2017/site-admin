@@ -44,7 +44,8 @@ class TasksAPI(ModelViewSet):
 
 
 class Pagination(PageNumberPagination):
-    page_size = 10
+    page_size = 500
+    page_size_query_param = 'page_size'
 
 
 class TaskRunFilterBackend(DjangoFilterBackend):

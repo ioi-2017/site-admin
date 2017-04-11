@@ -17,6 +17,20 @@ app.controller('taskRunsController', function ($scope, $http, $location, taskRun
         });
     };
 
+    //$scope.selectAllRuns = function () {
+    //    $http.get('/api/taskruns/',
+    //        {
+    //            params: angular.extend(angular.copy($scope.params), {page_size: 100000, page: 1})
+    //        }
+    //    ).then(function (response) {
+    //        $scope.selected = [];
+    //        angular.forEach(response.data.results, function (value) {
+    //            $scope.selected.push(value)
+    //        });
+    //        updatePage(true);
+    //    });
+    //};
+
     $scope.hovered = null;
     $http.get('/api/tasks/', {params: {format: 'json'}}).then(function (response) {
         $scope.tasks = response.data;
