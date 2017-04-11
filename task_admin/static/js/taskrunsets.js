@@ -1,10 +1,17 @@
-app.controller('taskRunsetsController', function ($scope, $http, $location, $mdDialog) {
+app.controller('taskRunsetsController', function ($scope, $http, $location, $mdDialog, taskRunSetCreator) {
     $scope.params = {
         state: 'all',
         owner_id: '',
         page: 1
     };
     $scope.selected = [];
+
+    $scope.showTaskRunSetCreate = function (ev) {
+        taskRunSetCreator.showTaskRunSetCreate(ev, [], function () {
+            update_with_page_reset(0, 1);
+        });
+    };
+
     $http.get('/api/tasks/', {params: {format: 'json'}}).then(function (response) {
         $scope.tasks = response.data;
     });
