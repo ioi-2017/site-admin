@@ -55,7 +55,7 @@ app.controller('taskRunsetsController', function ($scope, $http, $location, $mdD
     };
 
     $scope.stopTaskrunset = function (taskrunset) {
-        $http.post('/api/taskrunsets/' + item.id + "/stop/", {});
+        $http.post('/api/taskrunsets/' + taskrunset.id + "/stop/", {});
     };
 
     $scope.deleteSelected = function (ev) {
