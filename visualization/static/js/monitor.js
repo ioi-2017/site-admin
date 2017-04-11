@@ -9,4 +9,8 @@ app.controller('monitorController', function ($scope, $routeParams, API) {
             $scope.rooms.push(room);
         }
     });
+
+    $scope.select = {
+        desk: null
+    };
 });

@@ -5,18 +5,22 @@
     background-color: #333;
 }
 
-.desk-ok {
+.desk.ok {
     fill: #00aa00;
     stroke: #c0ffc0;
 }
 
-.desk-ok:hover,
-.desk-failed:hover {
-    stroke: #fff;
-    stroke-width: 2px;
-}
-
-.desk-failed {
+.desk.failed {
     fill: #ff0000;
     stroke: #ffa0a0;
+}
+
+.desk.unknown {
+    fill: #ff9900;
+    stroke: #ffffff;
+}
+
+.desk:hover {
+    stroke: #fff;
+    stroke-width: 2px;
 }

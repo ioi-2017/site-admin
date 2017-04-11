@@ -16,7 +16,6 @@ function createDesk(room, x, y, angle) {
     var deskWidth = 40, deskHeight = 20;
     var desk = room.rect(absX - deskWidth / 2, absY - deskHeight / 2, deskWidth, deskHeight, 2);
     desk.rotate(angle);
-    desk.attr("class", "desk-failed");
     return desk;
 }
 
@@ -24,7 +23,8 @@ app.directive('room', function () {
     return {
         'controllerAs': 'room',
         'scope': {
-            room: '=data'
+            room: '=data',
+            select: '='
         },
         'controller': function ($http, $interval, $timeout, $scope, API) {
             $timeout(function () {
@@ -33,15 +33,20 @@ app.directive('room', function () {
 
                 var desks = {};
                 API.Desk.forEach(function (desk) {
+                    var deskElement = createDesk(room, desk.x, desk.y, desk.angle);
+                    deskElement.attr("class", "desk unknown");
+                    deskElement.node.onclick = function () {
+                        $scope.select.desk = desk;
+                    };
                     API.Node.get({id: desk.active_node}, function (node) {
-                        desks[node.ip] = createDesk(room, desk.x, desk.y, desk.angle);
+                        desks[node.ip] = deskElement;
                     });
                 }, {room: $scope.room.id});
 
                 API.poll(1000, $scope, function () {
                     API.Node.forEach(function (node) {
                         if (node.ip in desks) {
-                            desks[node.ip].attr('class', node.connected ? 'desk-ok' : 'desk-failed');
+                            desks[node.ip].attr('class', node.connected ? 'desk ok' : 'desk failed');
                         }
                     });
                 }, function () {

@@ -1,3 +1,27 @@
-<div layout="column" ng-repeat="room in rooms">
-    <room data="room"></room>
+<div layout="row">
+    <div flex id="rooms_wrapper" layout="column">
+        <div ng-repeat="room in rooms">
+            <room data="room" select="select"></room>
+        </div>
+    </div>
+    <div flex class="flex-35" id="details">
+        <md-card ng-show="select.desk">
+            <md-card-title>
+                <md-card-title-text>
+                    <span class="md-headline">Desk Information</span>
+                    <span class="md-subhead">
+                        <code>
+                            {{ select.desk.x }}, {{ select.desk.y }}, {{ select.desk.angle }}
+                        </code>
+                    </span>
+                </md-card-title-text>
+            </md-card-title>
+        </md-card>
+        <md-card ng-show="select.desk == null">
+            <md-card-title>
+                <md-card-title-text>
+                    <span class="md-headline">Click on desks</span>
+            </md-card-title>
+        </md-card>
+    </div>
 </div>
