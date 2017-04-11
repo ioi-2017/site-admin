@@ -54,7 +54,38 @@
                         </md-icon>
                     </td>
                     <td md-cell>
-                        {{ result.status }}
+                        <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'blueGrey-700'}"
+                                   ng-show="result.status=='PENDING'">
+                            <md-icon class="material-icons step">watch later</md-icon>
+                            <md-tooltip
+                                    md-direction="left">
+                                Pending
+                            </md-tooltip>
+                        </md-button>
+                        <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'yellow-700'}"
+                                   ng-show="result.status=='PROGRESS'">
+                            <md-icon class="material-icons step">sync</md-icon>
+                            <md-tooltip
+                                    md-direction="left">
+                                Running
+                            </md-tooltip>
+                        </md-button>
+                        <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'green-700'}"
+                                   ng-show="result.status=='SUCCESS'">
+                            <md-icon class="material-icons step">done</md-icon>
+                            <md-tooltip
+                                    md-direction="left">
+                                Successful
+                            </md-tooltip>
+                        </md-button>
+                        <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'red-700'}"
+                                   ng-show="result.status=='FAILURE'">
+                            <md-icon class="material-icons step">clear</md-icon>
+                            <md-tooltip
+                                    md-direction="left">
+                                Failed
+                            </md-tooltip>
+                        </md-button>
                     </td>
                     <td md-cell><code>{{ result.node.ip }}</code></td>
                     <td md-cell>{{ result.created_at | date:'M/d/y, HH:mm:ss' }}</td>
