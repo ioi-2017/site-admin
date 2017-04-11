@@ -1,7 +1,7 @@
 app.service('taskRunSetCreator', function ($mdDialog) {
     this.showTaskRunSetCreate = function (ev, ips, create_callback) {
         $mdDialog.show({
-                controller: function DialogController($scope, $http, $mdDialog, $mdToast) {
+                controller: function DialogController($scope, $timeout, $http, $mdDialog, $mdToast) {
                     $scope.ips = Array.from(new Set(ips)).sort();
                     $scope.var_helps = [];
                     $http.get('/api/task_create/').then(function (response) {
@@ -50,17 +50,22 @@ app.service('taskRunSetCreator', function ($mdDialog) {
                         ips_set.delete(node);
                         $scope.ips = Array.from(ips_set).sort();
                     };
-                    $http.get('/api/tasks/').then(function (response) {
-                        var tasks = response.data;
-                        $scope.task_templates = tasks.map(function (task) {
-                            return {
-                                value: task.name.toLowerCase(),
-                                display: task.name,
-                                code: task.code,
-                                is_local: task.is_local
-                            };
+
+                    function updateTasks() {
+                        $http.get('/api/tasks/').then(function (response) {
+                            var tasks = response.data;
+                            $scope.task_templates = tasks.map(function (task) {
+                                return {
+                                    value: task.name.toLowerCase(),
+                                    display: task.name,
+                                    code: task.code,
+                                    is_local: task.is_local
+                                };
+                            });
                         });
-                    });
+                    }
+
+                    updateTasks();
 
                     $http.get('/api/nodes/').then(function (response) {
                         var tasks = response.data;
@@ -122,6 +127,21 @@ app.service('taskRunSetCreator', function ($mdDialog) {
                                     .position('top right')
                                     .hideDelay(6000)
                             );
+                        });
+                    };
+
+                    $scope.createTaskTemplate = function (task_name) {
+                        $scope.searchTaskText = '';
+                        $http.post('/api/tasks/', {
+                            name: task_name,
+                            code: $scope.template_code,
+                            is_local: $scope.is_local,
+                            author: 1
+                        }).then(function () {
+                            updateTasks();
+                            $timeout(function () {
+                                $scope.searchTaskText = task_name;
+                            }, 1000)
                         });
                     };
 
