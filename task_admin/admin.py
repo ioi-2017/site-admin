@@ -3,7 +3,7 @@ from . import models
 
 
 class TaskRunAdmin(admin.ModelAdmin):
-    list_display = ('__str__', 'id', 'created_at', 'is_local', 'node', 'desk', 'contestant', 'is_successful')
+    list_display = ('__str__', 'id', 'created_at', 'is_local', 'node', 'desk', 'contestant', 'status')
 
 
 class TaskRunSetAdmin(admin.ModelAdmin):

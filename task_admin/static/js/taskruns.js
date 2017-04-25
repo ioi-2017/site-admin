@@ -3,7 +3,7 @@ app.controller('taskRunsController', function ($scope, $http, $location, taskRun
         desk: '',
         contestant: '',
         node: '',
-        state: 'ALL',
+        status: '',
         run_set: '',
         page: 1
     };
@@ -16,6 +16,20 @@ app.controller('taskRunsController', function ($scope, $http, $location, taskRun
             update_with_page_reset(0, 1);
         });
     };
+
+    //$scope.selectAllRuns = function () {
+    //    $http.get('/api/taskruns/',
+    //        {
+    //            params: angular.extend(angular.copy($scope.params), {page_size: 100000, page: 1})
+    //        }
+    //    ).then(function (response) {
+    //        $scope.selected = [];
+    //        angular.forEach(response.data.results, function (value) {
+    //            $scope.selected.push(value)
+    //        });
+    //        updatePage(true);
+    //    });
+    //};
 
     $scope.hovered = null;
     $http.get('/api/tasks/', {params: {format: 'json'}}).then(function (response) {
@@ -57,7 +71,7 @@ app.controller('taskRunsController', function ($scope, $http, $location, taskRun
     }
 
     $scope.$watch("params.run_set", update_with_page_reset);
-    $scope.$watch("params.state", update_with_page_reset);
+    $scope.$watch("params.status", update_with_page_reset);
     $scope.$watch("params.page", function (newValue, oldValue) {
         if (newValue == oldValue)return;
         updatePage();

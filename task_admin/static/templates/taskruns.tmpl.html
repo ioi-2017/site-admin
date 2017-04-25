@@ -8,8 +8,8 @@
                 </md-select>
             </md-input-container>
             <md-input-container flex-gt-sm>
-                <label>State</label>
-                <md-select ng-model="params.state">
+                <label>Status</label>
+                <md-select ng-model="params.status">
                     <md-option value="ALL">All</md-option>
                     <md-option value="SUCCESS">Success</md-option>
                     <md-option value="PENDING">Pending</md-option>
@@ -31,6 +31,13 @@
                          class="material-icons step">add
                 </md-icon>
             </md-button>
+<!--            <md-button class="md-fab md-mini" aria-label="Select All Taskruns"
+                       ng-click="selectAllRuns()">
+                <md-icon aria-label="Select All"
+                         class="material-icons step">select_all
+                </md-icon>
+            </md-button>
+-->
         </div>
         <md-table-container>
             <table md-table md-row-select="true" multiple ng-model="selected" md-progress="promise">
@@ -87,16 +94,8 @@
                             </md-tooltip>
                         </md-button>
                         <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'red-700'}"
-                                   ng-show="result.status=='FAILED'">
-                            <md-icon class="material-icons step">clear</md-icon>
-                            <md-tooltip
-                                    md-direction="left">
-                                Failed
-                            </md-tooltip>
-                        </md-button>
-                        <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'red-700'}"
                                    ng-show="result.status=='FAILURE'">
-                            <md-icon class="material-icons step">error_outline</md-icon>
+                            <md-icon class="material-icons step">clear</md-icon>
                             <md-tooltip
                                     md-direction="left">
                                 Internal Error
@@ -129,7 +128,7 @@
         </md-table-container>
 
         <br>
-        <div layout="row">
+        <div layout="row" ng-show="pagination.previous_url || pagination.next_url">
             <md-button ng-disabled="!pagination.previous_url"
                        aria-label="previous"
                        class="md-icon-button md-raised"
@@ -170,19 +169,19 @@
                     <span class="md-subhead">
                         <code>
                             Return Code: <br/>
-                            {{ hovered.result.return_code }}
+                            {{ hovered.return_code }}
                         </code>
                     </span>
                     <span class="md-subhead">
                         <code>
                             stdout: <br/>
-                            {{ hovered.result.stdout }}
+                            {{ hovered.stdout }}
                         </code>
                     </span>
                     <span class="md-subhead">
                         <code>
                             stderr: <br/>
-                            {{ hovered.result.stderr }}
+                            {{ hovered.stderr }}
                         </code>
                     </span>
                     <span class="md-subhead">
