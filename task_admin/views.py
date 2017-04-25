@@ -6,6 +6,7 @@ from rest_framework import mixins
 from rest_framework.decorators import detail_route
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet, GenericViewSet
+from silk.profiling.profiler import silk_profile
 
 from task_admin.models import TaskRunSet, Task, TaskRun
 from task_admin.serializers import TaskRunSetSerializer, TaskSerializer, TaskRunSerializer
@@ -51,9 +52,12 @@ class Pagination(PageNumberPagination):
 class TaskRunsAPI(ReadOnlyModelViewSet, mixins.ListModelMixin):
     serializer_class = TaskRunSerializer
     filter_fields = ('desk', 'contestant', 'node', 'run_set', 'status')
-    queryset = TaskRun.objects.filter(run_set__deleted=False).order_by('-created_at')
+    queryset = TaskRun.objects.select_related('run_set', 'contestant', 'node', 'desk').filter(
+        run_set__deleted=False).order_by(
+        '-created_at')
     pagination_class = Pagination
 
+    @silk_profile(name='View Task Run Lists')
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
         response.data['pagination'] = self.paginator.get_html_context()
@@ -85,7 +89,9 @@ class TaskRunSetsAPI(mixins.CreateModelMixin,
     pagination_class = Pagination
     serializer_class = TaskRunSetSerializer
     filter_fields = ('is_local',)
-    queryset = TaskRunSet.objects.filter(deleted=False).order_by('-created_at')
+    queryset = TaskRunSet.objects.prefetch_related('taskruns', 'taskruns__desk', 'taskruns__node',
+                                                   'taskruns__contestant').select_related('owner').filter(
+        deleted=False).order_by('-created_at')
     max_page_size = 10000
 
     def list(self, request, *args, **kwargs):
