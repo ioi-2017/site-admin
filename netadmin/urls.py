@@ -22,6 +22,7 @@ urlpatterns = [
     url(r'^silk/', include('silk.urls', namespace='silk')),
     url(r'^api/', include('visualization.urls', namespace='visualization')),
     url(r'^api/', include('task_admin.urls', namespace='task_admin')),
+    url(r'^api/', include('ping.urls', namespace='ping')),
     url(r'^admin/', admin.site.urls),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^.*/$', TemplateView.as_view(template_name='netadmin/base.html'), name='home'),

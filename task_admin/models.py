@@ -22,6 +22,7 @@ class Task(models.Model):
 
 
 class TaskRunSet(models.Model):
+    name = models.TextField(blank=True)
     is_local = models.BooleanField()
     code = models.TextField()
     owner = models.ForeignKey(User, related_name='taskrunset', null=True)

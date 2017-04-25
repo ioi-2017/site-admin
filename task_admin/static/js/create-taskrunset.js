@@ -31,6 +31,8 @@ app.service('taskRunSetCreator', function ($mdDialog) {
                         if (task) {
                             $scope.template_code = task.code;
                             $scope.is_local = task.is_local;
+                            if ($scope.run_set_name == '')
+                                $scope.run_set_name = task.display
                         }
                     };
                     $scope.selectedNodeItemChange = function (node) {
@@ -101,6 +103,7 @@ app.service('taskRunSetCreator', function ($mdDialog) {
 
                     $scope.template_code = '';
                     $scope.is_local = true;
+                    $scope.run_set_name = '';
                     $scope.rendered_code = '';
                     $scope.$watch('template_code', function () {
                         $http.get('/api/code_render/', {params: {code: $scope.template_code}}).then(function (response) {
@@ -112,12 +115,12 @@ app.service('taskRunSetCreator', function ($mdDialog) {
                     };
 
                     $scope.create = function () {
-                        console.log(ips);
                         $http.post('/api/taskrunsets/', {
                             code: $scope.template_code,
                             is_local: $scope.is_local,
                             owner: 1,
-                            ips: $scope.ips
+                            ips: $scope.ips,
+                            name: $scope.run_set_name
                         }).then(function (response) {
                             console.log(response);
                             $mdDialog.hide();

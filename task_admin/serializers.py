@@ -25,6 +25,7 @@ class TaskRunSetSerializer(serializers.ModelSerializer):
     task = serializers.IntegerField(required=False, write_only=True)
     code = serializers.CharField(required=False)
     is_local = serializers.BooleanField(required=False)
+    name = serializers.CharField(required=True)
 
     def create(self, validated_data):
         indirect_code_provided = False
@@ -62,7 +63,8 @@ class TaskRunSetSerializer(serializers.ModelSerializer):
         taskrunset = TaskRunSet(
             code=code,
             is_local=is_local,
-            owner=validated_data['owner']
+            owner=validated_data['owner'],
+            name=validated_data['name']
         )
         taskrunset.save()
         for ip in validated_data['ips']:
@@ -90,7 +92,7 @@ class TaskRunSetSerializer(serializers.ModelSerializer):
     class Meta:
         model = TaskRunSet
         fields = (
-            'id', 'code', 'is_local', 'owner', 'owner_data', 'created_at', 'taskruns', 'ips', 'task', 'results',
+            'id', 'code', 'is_local', 'name', 'owner', 'owner_data', 'created_at', 'taskruns', 'ips', 'task', 'results',
             'summary', 'is_finished')
 
 
