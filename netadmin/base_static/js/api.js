@@ -3,19 +3,56 @@
  */
 
 app.constant('MODELS', {
-    'Room': '/api/rooms/:id/',
-    'Node': '/api/nodes/:id/',
-    'Desk': '/api/desks/:id/',
-    'Contestant': '/api/contestants/:id/',
-    'Taskrunset': '/api/taskrunsets/:id/',
-    'Taskrun': '/api/taskruns/:id/',
-    'Task': '/api/tasks/:id/'
+    'Room': {
+        url: '/api/rooms/:id/'
+    },
+    'Node': {
+        url: '/api/nodes/:id/'
+    },
+    'Desk': {
+        url: '/api/desks/:id/'
+    },
+    'Contestant': {
+        url: '/api/contestants/:id/'
+    },
+    'Taskrunset': {
+        url: '/api/taskrunsets/:id/',
+        paginated: true
+    },
+    'Taskrun': {
+        url: '/api/taskruns/:id/',
+        paginated: true
+    },
+    'Task': {
+        url: '/api/tasks/:id/'
+    }
 });
 
-app.service('API', function ($resource, $interval, MODELS) {
+app.service('API', function ($resource, $interval, $http, MODELS) {
     var apiService = this;
-    angular.forEach(MODELS, function (api_url, model) {
-        apiService[model] = $resource(api_url, {id: '@_id'}, {update: {method: 'PUT'}}, {stripTrailingSlashes: false});
+
+    var getMethods = function(api) {
+        var methods = {
+            update: {method: 'PUT'}
+        };
+
+        if (api.paginated) {
+            methods.query = {
+                method: 'GET',
+                isArray: true,
+                transformResponse: function (data, headers) {
+                    var tempData = data.replace(/^\)]\}',?\n/, '').trim();
+                    var jsonData = JSON.parse(tempData);
+                    headers()['pagination'] = jsonData.pagination;
+                    return jsonData.results;
+                }
+            };
+        }
+        return methods;
+    };
+
+    angular.forEach(MODELS, function (api, model) {
+        apiService[model] = $resource(api.url, {id: '@_id'}, getMethods(api), {stripTrailingSlashes: false});
 
         apiService[model].forEach = function (callback, params) {
             var items = apiService[model].query(params || {}, function() {

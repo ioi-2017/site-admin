@@ -1,4 +1,4 @@
-app.controller('taskRunsetsController', function ($scope, $http, $location, $mdDialog, taskRunSetCreator) {
+app.controller('taskRunsetsController', function ($scope, $http, $location, $mdDialog, API, taskRunSetCreator) {
     $scope.params = {
         state: 'all',
         owner_id: '',
@@ -12,12 +12,26 @@ app.controller('taskRunsetsController', function ($scope, $http, $location, $mdD
         });
     };
 
-    $http.get('/api/tasks/', {params: {format: 'json'}}).then(function (response) {
-        $scope.tasks = response.data;
-    });
     $scope.setPage = function (n) {
         $scope.params.page = n;
     };
+
+    var updatePageSoft = function() {
+        API.Taskrunset.query($scope.params, function (taskrunsets) {
+            for (var i = 0; i < taskrunsets.length; i++) {
+                if ($scope.results[i].id != taskrunsets[i].id) {
+                    updatePage();
+                    break;
+                }
+                $scope.results[i].summary = taskrunsets[i].summary;
+            }
+        });
+    };
+
+    API.poll(1000, $scope, function () {
+        //updatePageSoft();
+    });
+
     function updatePage(replace_state) {
         $http.get('/api/taskrunsets/',
             {
