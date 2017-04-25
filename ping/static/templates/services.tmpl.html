@@ -1,0 +1,82 @@
+<div layout="row">
+    <div flex id="services">
+        <div id="task_filter" layout="row">
+            <md-input-container flex-gt-sm>
+                <label>Status</label>
+                <md-select ng-model="params.connected">
+                    <md-option value="all">All</md-option>
+                    <md-option value="true">Connected</md-option>
+                    <md-option value="false">Disconnected</md-option>
+                </md-select>
+            </md-input-container>
+        </div>
+        <div class="md-toolbar-tools">
+        </div>
+        <md-table-container>
+            <table md-table md-progress="promise">
+                <thead md-head>
+                <tr md-row>
+                    <th md-column>Node</th>
+                    <th md-column>Time</th>
+                    <th md-column>Connected</th>
+                </tr>
+                </thead>
+                <tbody md-body>
+                <tr class="na-tr" md-row md-select="result" md-select-id="id" ng-repeat="result in results">
+                    <td md-cell>
+                        {{ result.node }}
+                    </td>
+                    <td md-cell>
+                        {{ result.event_time }}
+                    </td>
+                    <td md-cell>
+                        <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'green-700'}"
+                                   ng-show="result.connected">
+                            <md-icon class="material-icons step">done</md-icon>
+                            <md-tooltip
+                                    md-direction="left">
+                                Successful
+                            </md-tooltip>
+                        </md-button>
+                        <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'red-700'}"
+                                   ng-show="!result.connected">
+                            <md-icon class="material-icons step">clear</md-icon>
+                            <md-tooltip
+                                    md-direction="left">
+                                Internal Error
+                            </md-tooltip>
+                        </md-button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </md-table-container>
+
+        <br>
+        <div layout="row" ng-show="pagination.previous_url || pagination.next_url">
+            <md-button ng-disabled="!pagination.previous_url"
+                       aria-label="previous"
+                       class="md-icon-button md-raised"
+                       ng-click="prevPage()"
+                       aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </md-button>
+            <md-button ng-repeat="page in pagination.page_links"
+                       aria-label="page_number"
+                       ng-disabled="page[3]"
+                       class="md-icon-button"
+                       ng-class="{'md-accent md-raised':page[2]==true}"
+                       ng-click="setPage(page[1])">
+                <span ng-if="page[3]" aria-hidden="true">&hellip;</span>
+                <span ng-if="!page[3]">{{ page[1] }}</span>
+            </md-button>
+            <md-button ng-disabled="!pagination.next_url"
+                       aria-label="next"
+                       class="md-icon-button md-raised"
+                       ng-click="nextPage()"
+                       aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </md-button>
+        </div>
+    </div>
+</div>

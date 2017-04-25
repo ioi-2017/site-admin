@@ -33,6 +33,10 @@ app.constant('NAV', [
             {
                 name: 'TaskRuns',
                 template: 'taskruns.tmpl.html'
+            },
+            {
+                name: 'Services',
+                template: 'services.tmpl.html'
             }/*,
             {
                 name: 'Services',
