@@ -3,9 +3,10 @@ IOI Net administration tasks
 
 ## Setup
 
-Install docker for starting redis.
+Install docker for starting redis and postgres.
 ```
-docker run -d -p 6379:6379 redis
+docker run -d -p 6379:6379 --name netadmin-redis redis
+docker run -d -p 5432:5432 --name netadmin-postgres -e POSTGRES_PASSWORD=mysecretpassword postgres
 bower install
 pip install -r requirements.txt # Install required python packages
 celery -A task_admin.tasks worker --concurrency=2 -Q local_queue --loglevel=info # Run a celery worker for local tasks
