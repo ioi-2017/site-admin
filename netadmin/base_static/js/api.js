@@ -28,7 +28,7 @@ app.constant('MODELS', {
     }
 });
 
-app.service('API', function ($resource, $interval, $http, MODELS) {
+app.service('API', function ($resource, $timeout, $http, MODELS) {
     var apiService = this;
 
     var getMethods = function(api) {
@@ -64,11 +64,20 @@ app.service('API', function ($resource, $interval, $http, MODELS) {
     });
 
     apiService.poll = function (duration, pollingScope, callback, destroy) {
-        var pollingPromise = $interval(callback, duration);
+        var cancelled = false;
+
+        var update = function () {
+            callback();
+            if (!cancelled)
+                pollingPromise = $timeout(update, duration);
+        };
+
+        var pollingPromise = $timeout(update, duration);
 
         pollingScope.$on('$destroy', function () {
+            cancelled = true;
             if (pollingPromise) {
-                $interval.cancel(pollingPromise);
+                $timeout.cancel(pollingPromise);
             }
             if (destroy) {
                 destroy();

@@ -1,14 +1,24 @@
-app.controller('taskRunsetsController', function ($scope, $http, $location, $mdDialog, API, taskRunSetCreator) {
-    $scope.params = {
-        state: 'all',
-        owner_id: '',
-        page: 1
-    };
-    $scope.selected = [];
+app.controller('taskRunsetsController', function ($scope, $rootScope, $http, $location, $mdDialog, API, taskRunSetCreator) {
+    $scope.params = $location.search();
+    $scope.results = [];
 
+    var updateParams = function (newParams) {
+        return angular.extend({
+            state: 'all',
+            owner_id: '',
+            page: 1
+        }, $location.search(), newParams);
+    };
+
+    var reload = function (newParams) {
+        $scope.params = updateParams(newParams);
+        return $location.search($scope.params);
+    };
+
+    $scope.selected = [];
     $scope.showTaskRunSetCreate = function (ev) {
         taskRunSetCreator.showTaskRunSetCreate(ev, [], function () {
-            update_with_page_reset(0, 1);
+            updatePage(true);
         });
     };
 
@@ -18,9 +28,13 @@ app.controller('taskRunsetsController', function ($scope, $http, $location, $mdD
 
     var updatePageSoft = function() {
         API.Taskrunset.query($scope.params, function (taskrunsets) {
+            if (taskrunsets.length != $scope.results.length) {
+                $scope.results = taskrunsets;
+                return;
+            }
             for (var i = 0; i < taskrunsets.length; i++) {
                 if ($scope.results[i].id != taskrunsets[i].id) {
-                    updatePage();
+                    $scope.results = taskrunsets;
                     break;
                 }
                 $scope.results[i].summary = taskrunsets[i].summary;
@@ -29,37 +43,26 @@ app.controller('taskRunsetsController', function ($scope, $http, $location, $mdD
     };
 
     API.poll(1000, $scope, function () {
-        //updatePageSoft();
+        updatePageSoft();
     });
 
-    function updatePage(replace_state) {
-        $http.get('/api/taskrunsets/',
-            {
-                params: $scope.params
-            }
-        ).then(function (response) {
-            $scope.pagination = response.data.pagination;
-            $scope.results = response.data.results;
-            if (replace_state)
-                $location.search($scope.params).replace();
-            else
-                $location.search($scope.params);
+    function updatePage(flush_selected) {
+        if (flush_selected == true)
+            $scope.selected = [];
+        $scope.results = [];
+        API.Taskrunset.query($scope.params, function (taskrunsets) {
+            $scope.results = taskrunsets;
         });
     }
 
-    function update_with_page_reset(newValue, oldValue) {
-        if (newValue == oldValue)return;
-        $scope.params.page = 1;
+    $scope.$watch("params.state", function (newValue, oldValue) {
+        if (newValue == oldValue) return;
         $scope.selected = [];
-
-        updatePage();
-    }
-
-    $scope.$watch("params.task", update_with_page_reset);
-    $scope.$watch("params.state", update_with_page_reset);
+        reload({'page': 1, 'state': newValue});
+    });
     $scope.$watch("params.page", function (newValue, oldValue) {
         if (newValue == oldValue)return;
-        updatePage();
+        reload({'page': newValue});
     });
     $scope.prevPage = function () {
         $scope.params.page = parseInt($scope.params.page) - 1;
@@ -84,7 +87,7 @@ app.controller('taskRunsetsController', function ($scope, $http, $location, $mdD
         $mdDialog.show(confirm).then(function () {
             angular.forEach($scope.selected, function (item) {
                 $http.delete('/api/taskrunsets/' + item.id + '/', {}).then(function () {
-                    update_with_page_reset(0, 1)
+                    updatePage(true);
                 });
             });
         }, function () {
@@ -97,6 +100,24 @@ app.controller('taskRunsetsController', function ($scope, $http, $location, $mdD
             name: 'admin'
         }
     ];
-    $scope.params = angular.extend($scope.params, $location.search());
-    updatePage(true);
+
+    var isParamsRaw = function () {
+        return !angular.equals($scope.params, updateParams());
+    };
+
+    $rootScope.$on('$locationChangeStart', function (event) {
+        if (isParamsRaw()) {
+            event.preventDefault();
+            reload().replace();
+        }
+    });
+
+    $rootScope.$on('$locationChangeSuccess', function () {
+        updatePage();
+    });
+
+    if (isParamsRaw())
+        reload();
+    else
+        updatePage();
 });

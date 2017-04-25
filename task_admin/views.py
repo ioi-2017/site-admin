@@ -6,7 +6,6 @@ from rest_framework import mixins
 from rest_framework.decorators import detail_route
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet, GenericViewSet
-from silk.profiling.profiler import silk_profile
 
 from task_admin.models import TaskRunSet, Task, TaskRun
 from task_admin.serializers import TaskRunSetSerializer, TaskSerializer, TaskRunSerializer
@@ -57,7 +56,6 @@ class TaskRunsAPI(ReadOnlyModelViewSet, mixins.ListModelMixin):
         '-created_at')
     pagination_class = Pagination
 
-    @silk_profile(name='View Task Run Lists')
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
         response.data['pagination'] = self.paginator.get_html_context()

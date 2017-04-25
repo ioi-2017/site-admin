@@ -1,19 +1,29 @@
-app.controller('taskRunsController', function ($scope, $http, $location, taskRunSetCreator) {
-    $scope.params = {
-        desk: '',
-        contestant: '',
-        node: '',
-        status: '',
-        run_set: '',
-        page: 1
-    };
-    $scope.selected = [];
+app.controller('taskRunsController', function ($scope, $rootScope, $http, $location, API, taskRunSetCreator) {
+    $scope.params = $location.search();
 
+    var updateParams = function (newParams) {
+        return angular.extend({
+            desk: '',
+            contestant: '',
+            node: '',
+            state: 'ALL',
+            run_set: '',
+            page: 1
+        }, $location.search(), newParams);
+    };
+
+    var reload = function (newParams) {
+        $scope.params = updateParams(newParams);
+        return $location.search($scope.params);
+    };
+
+    $scope.selected = [];
     $scope.showTaskRunSetCreate = function (ev) {
         taskRunSetCreator.showTaskRunSetCreate(ev, $scope.selected.map(function (taskrun) {
             return taskrun.node.ip
         }), function () {
-            update_with_page_reset(0, 1);
+            $scope.selected = [];
+            updatePage(true);
         });
     };
 
@@ -32,9 +42,6 @@ app.controller('taskRunsController', function ($scope, $http, $location, taskRun
     //};
 
     $scope.hovered = null;
-    $http.get('/api/tasks/', {params: {format: 'json'}}).then(function (response) {
-        $scope.tasks = response.data;
-    });
     $scope.setPage = function (n) {
         $scope.params.page = n;
     };
@@ -47,34 +54,48 @@ app.controller('taskRunsController', function ($scope, $http, $location, taskRun
         $http.post('/api/taskruns/' + item.id + "/stop/", {});
     };
 
-    function updatePage(replace_state) {
-        $http.get('/api/taskruns/',
-            {
-                params: $scope.params
+    var updatePageSoft = function() {
+        API.Taskrun.query($scope.params, function (taskruns) {
+            if (taskruns.length != $scope.results.length) {
+                $scope.results = taskruns;
+                return;
             }
-        ).then(function (response) {
-            $scope.pagination = response.data.pagination;
-            $scope.results = response.data.results;
-            if (replace_state)
-                $location.search($scope.params).replace();
-            else
-                $location.search($scope.params);
+            for (var i = 0; i < taskruns.length; i++) {
+                if ($scope.results[i].id != taskruns[i].id) {
+                    $scope.results = taskruns;
+                    break;
+                }
+                $scope.results[i].status = taskruns[i].status;
+            }
+        });
+    };
+
+    API.poll(1000, $scope, function () {
+        updatePageSoft();
+    });
+
+    function updatePage(flush_selected) {
+        if (flush_selected == true)
+            $scope.selected = [];
+        $scope.results = [];
+        API.Taskrun.query($scope.params, function (taskruns) {
+            $scope.results = taskruns;
         });
     }
 
-    function update_with_page_reset(newValue, oldValue) {
-        if (newValue == oldValue)return;
-        $scope.params.page = 1;
+    $scope.$watch("params.run_set", function (newValue, oldValue) {
+        if (newValue == oldValue) return;
         $scope.selected = [];
-
-        updatePage();
-    }
-
-    $scope.$watch("params.run_set", update_with_page_reset);
-    $scope.$watch("params.status", update_with_page_reset);
+        reload({'page': 1, 'run_set': newValue});
+    });
+    $scope.$watch("params.status", function (newValue, oldValue) {
+        if (newValue == oldValue) return;
+        $scope.selected = [];
+        reload({'page': 1, 'status': newValue});
+    });
     $scope.$watch("params.page", function (newValue, oldValue) {
-        if (newValue == oldValue)return;
-        updatePage();
+        if (newValue == oldValue) return;
+        reload({'page': newValue});
     });
     $scope.prevPage = function () {
         $scope.params.page = parseInt($scope.params.page) - 1;
@@ -89,6 +110,24 @@ app.controller('taskRunsController', function ($scope, $http, $location, taskRun
             name: 'admin'
         }
     ];
-    $scope.params = angular.extend($scope.params, $location.search());
-    updatePage(true);
+
+    var isParamsRaw = function () {
+        return !angular.equals($scope.params, updateParams());
+    };
+
+    $rootScope.$on('$locationChangeStart', function (event) {
+        if (isParamsRaw()) {
+            event.preventDefault();
+            reload().replace();
+        }
+    });
+
+    $rootScope.$on('$locationChangeSuccess', function () {
+        updatePage();
+    });
+
+    if (isParamsRaw())
+        reload();
+    else
+        updatePage();
 });
