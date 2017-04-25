@@ -22,7 +22,7 @@ def execute_task(task_run_id, is_local, ip, username, rendered_code):
     task_run = TaskRun.objects.get(id=task_run_id)
     task_run.status = 'PROGRESS'
     task_run.started_at = datetime.datetime.now()
-    task_run.save()
+    task_run.save(update_fields=['status', 'started_at'])
     if is_local:
         try:
             command = subprocess.Popen((rendered_code,), shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
@@ -62,4 +62,4 @@ def execute_task(task_run_id, is_local, ip, username, rendered_code):
         task_run.status = 'FAILURE'
     else:
         task_run.status = 'SUCCESS'
-    task_run.save()
+    task_run.save(update_fields=['status', 'finished_at', 'stdout', 'stderr', 'return_code'])
