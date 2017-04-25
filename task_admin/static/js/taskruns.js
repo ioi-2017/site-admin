@@ -3,7 +3,7 @@ app.controller('taskRunsController', function ($scope, $http, $location, taskRun
         desk: '',
         contestant: '',
         node: '',
-        state: 'ALL',
+        status: '',
         run_set: '',
         page: 1
     };
@@ -71,7 +71,7 @@ app.controller('taskRunsController', function ($scope, $http, $location, taskRun
     }
 
     $scope.$watch("params.run_set", update_with_page_reset);
-    $scope.$watch("params.state", update_with_page_reset);
+    $scope.$watch("params.status", update_with_page_reset);
     $scope.$watch("params.page", function (newValue, oldValue) {
         if (newValue == oldValue)return;
         updatePage();

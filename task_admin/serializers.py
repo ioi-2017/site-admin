@@ -80,6 +80,7 @@ class TaskRunSetSerializer(serializers.ModelSerializer):
                 rendered_code=rendered_code,
                 is_local=is_local,
             )
+            taskrun.save()
 
             taskrun.celery_task = execute_task.apply_async(queue='local_queue' if is_local else 'remote_queue'
                                                            , kwargs=taskrun.get_execution_dict()).id
@@ -102,5 +103,5 @@ class TaskRunSerializer(serializers.ModelSerializer):
         model = TaskRun
         fields = (
             'id', 'celery_task', 'is_local', 'run_set', 'created_at', 'started_at', 'finished_at',
-            'duration_milliseconds', 'rendered_code', 'result', 'status',
+            'rendered_code', 'duration_milliseconds', 'stdout', 'stderr', 'return_code', 'status',
             'desk', 'contestant', 'node')

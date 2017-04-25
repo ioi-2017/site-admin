@@ -48,21 +48,11 @@ class Pagination(PageNumberPagination):
     page_size_query_param = 'page_size'
 
 
-class TaskRunFilterBackend(DjangoFilterBackend):
-    def filter_queryset(self, request, queryset, view):
-        filter_queryset = super().filter_queryset(request, queryset, view)
-        run_state = request.query_params.get('state', None)
-        if run_state and run_state != 'ALL':
-            return [taskrun for taskrun in filter_queryset if taskrun.status == run_state]
-        return filter_queryset
-
-
 class TaskRunsAPI(ReadOnlyModelViewSet, mixins.ListModelMixin):
     serializer_class = TaskRunSerializer
-    filter_fields = ('desk', 'contestant', 'node', 'run_set')
+    filter_fields = ('desk', 'contestant', 'node', 'run_set', 'status')
     queryset = TaskRun.objects.filter(run_set__deleted=False).order_by('-created_at')
     pagination_class = Pagination
-    filter_backends = (TaskRunFilterBackend,)
 
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
@@ -114,4 +104,7 @@ class TaskRunSetsAPI(mixins.CreateModelMixin,
         for task_run in task_runset.taskruns.all():
             result = task_run.get_celery_result()
             result.revoke()
+            # TODO: check if successful , don't change the state
+            task_run.status = 'REVOKED'
+            task_run.save()
         return HttpResponse('', status=204)
