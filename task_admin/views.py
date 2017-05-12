@@ -31,7 +31,7 @@ class TaskRunsView(TemplateView):
 class TasksAPI(ModelViewSet):
     serializer_class = TaskSerializer
     filter_fields = ('id', 'name', 'author', 'is_local')
-    queryset = Task.objects.all()
+    queryset = Task.objects.order_by('-created_at')
 
 
 class Pagination(PageNumberPagination):
