@@ -20,15 +20,6 @@ class RenderPreviewView(View):
         return JsonResponse(response, safe=False)
 
 
-class CodeRenderView(View):
-    def get(self, request):
-        try:
-            result = render_preview(request.GET['code'])
-        except:
-            result = 'Invalid code'
-        return HttpResponse(result)
-
-
 class TaskRunSetsView(TemplateView):
     template_name = "task_admin/taskrunsets.html"
 

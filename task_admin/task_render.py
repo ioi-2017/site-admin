@@ -1,5 +1,3 @@
-from task_admin.models import Task, TaskRunSet, TaskRun
-from task_admin.tasks import execute_task
 from visualization.models import Contestant, Node, Desk
 
 
@@ -34,8 +32,9 @@ def get_sample_contestant():
     return contestant
 
 
-def get_all_possible_vars():
-    context = get_sample_context()
+def get_all_possible_vars(context=None):
+    if context is None:
+        context = get_sample_context()
     return {
         '{node.ip}': context['node'].ip,
         '{node.id}': context['node'].id,
@@ -69,4 +68,7 @@ def render_task(code, context):
     :param context: context to format code, usually with node, desk and contestant
     :return: rendered code of task
     """
-    return code.format(**context)
+
+    for template, rendered in get_all_possible_vars(context).items():
+        code = code.replace(template, str(rendered))
+    return code

@@ -106,9 +106,12 @@ app.service('taskRunSetCreator', function ($mdDialog) {
                     $scope.run_set_name = '';
                     $scope.rendered_code = '';
                     $scope.$watch('template_code', function () {
-                        $http.get('/api/code_render/', {params: {code: $scope.template_code}}).then(function (response) {
-                            $scope.rendered_code = response.data;
+                        var result = $scope.template_code;
+                        angular.forEach($scope.var_helps, function (item) {
+                            var re = new RegExp(item.template, 'g');
+                            result = result.replace(re, item.rendered);
                         });
+                        $scope.rendered_code = result;
                     });
                     $scope.hide = function () {
                         $mdDialog.cancel();
