@@ -49,7 +49,7 @@
             <tr class="na-tr" md-row md-select="result" md-select-id="id" ng-repeat="result in results">
                 <td md-cell>{{ result.name }}</td>
                 <td md-cell>{{ result.owner_data }}</td>
-                <td md-cell>{{ result.created_at | date:'M/d/y, HH:mm:ss' }}</td>
+                <td md-cell><span am-time-ago="result.created_at"></span></td>
                 <td md-cell>
                     <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'blueGrey-700'}"
                                ng-href="/admin/task-runs/?run_set={{ result.id }}&state=PENDING">

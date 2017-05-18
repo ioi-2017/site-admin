@@ -17,6 +17,7 @@
     "raphael": "^2.2.7",
     "angular-route": "^1.6.3",
     "angular-material-data-table": "^0.10.10",
-    "papaparse": "^4.3.2"
+    "papaparse": "^4.3.2",
+    "angular-moment": "^1.0.1"
   }
 }
