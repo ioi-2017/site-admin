@@ -2,7 +2,6 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django_countries.fields import CountryField
-from simple_history.models import HistoricalRecords
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -40,7 +39,7 @@ class Desk(models.Model):
         }
 
     def __str__(self):
-        return "%s - %s" % (self.contestant.identifier, self.active_node)
+        return "%s - %s" % (self.contestant.identifier if self.contestant else 'No contestant', self.active_node)
 
 
 class Contestant(models.Model):
