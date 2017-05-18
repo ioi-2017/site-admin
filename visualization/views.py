@@ -27,6 +27,7 @@ class RetrieveIPView(View):
             },
             'desk': {
                 'room': desk.room.name,
+                'number': desk.number,
                 'map': reverse('visualization:node-map', kwargs={'ip': ip}),
             },
         }, safe=False)

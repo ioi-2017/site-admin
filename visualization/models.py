@@ -24,11 +24,15 @@ class Desk(models.Model):
     contestant = models.OneToOneField('Contestant', related_name='desk', blank=True, null=True)
     active_node = models.OneToOneField('Node', related_name='desk', blank=True, null=True)
     room = models.ForeignKey('Room', on_delete=models.CASCADE)
+    number = models.IntegerField(null=True)
     x = models.FloatField(default=0.5, validators=[xy_range_validator])
     y = models.FloatField(default=0.5, validators=[xy_range_validator])
     angle = models.IntegerField(default=0, validators=[
         MaxValueValidator(359), MinValueValidator(0)
     ])
+
+    class Meta:
+        unique_together = ('room', 'number')
 
     def position_data(self):
         return {
