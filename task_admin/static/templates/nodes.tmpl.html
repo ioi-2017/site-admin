@@ -15,7 +15,6 @@
                 <th md-column>IP</th>
                 <th md-column>Username</th>
                 <th md-column>Property id</th>
-                <th md-column>Connected</th>
             </tr>
             </thead>
             <tbody md-body>
@@ -29,11 +28,6 @@
                 <td md-cell><code>{{ result.ip }}</code></td>
                 <td md-cell>{{ result.username }}</td>
                 <td md-cell>{{ result.property_id }}</td>
-                <td md-cell>
-                    <md-icon aria-label="backup"
-                             class="material-icons step">{{ result.connected ? 'done' : 'clear'}}
-                    </md-icon>
-                </td
             </tr>
             </tbody>
         </table>

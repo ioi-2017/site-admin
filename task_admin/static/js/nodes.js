@@ -28,7 +28,7 @@ app.controller('nodesController', function ($scope, $rootScope, $http, $location
                 ip: item[1],
                 username: item[2],
                 property_id: item[3],
-                connected: true,
+                connected: false,
                 imported: false
             });
         });
