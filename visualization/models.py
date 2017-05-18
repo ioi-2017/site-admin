@@ -63,7 +63,7 @@ class Node(models.Model):
     mac_address = models.CharField(max_length=20, unique=True)
     ip = models.GenericIPAddressField()
     username = models.CharField(max_length=20)
-    property_id = models.CharField(max_length=20, unique=True, null=True)
+    property_id = models.CharField(max_length=20, unique=True, blank=True)
     connected = models.BooleanField(default=False)
 
     # history = HistoricalRecords()
