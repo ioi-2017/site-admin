@@ -1,4 +1,7 @@
-from django.shortcuts import render
+import svgwrite
+from django.http import HttpResponse
+from django.http import JsonResponse
+from django.urls import reverse
 from django.views import View
 from rest_framework.viewsets import ModelViewSet
 
@@ -6,12 +9,33 @@ from visualization.models import Room, Node, Desk, Contestant
 from visualization.serializers import NodeSerializer, DeskSerializer, ContestantSerializer, RoomSerializer
 
 
-class RoomView(View):
-    def get(self, request):
-        desks = list(Room.objects.get(id=1).desk_set.all())
-        return render(request, 'visualization/basic_room.html', {
-            'desks': [desk.position_data() for desk in desks]
-        })
+class RetrieveIPView(View):
+    def get(self, request, ip):
+        node = Node.objects.get(ip=ip)
+        desk = node.desk
+        contestant = desk.contestant
+        return JsonResponse({
+            'node': {
+                'ip': node.ip,
+                'mac': node.mac_address,
+            },
+            'contestant': {
+                'name': contestant.name,
+                'country': contestant.country.name,
+                'number': contestant.number,
+                'id': contestant.identifier,
+            },
+            'desk': {
+                'room': desk.room.name,
+                'map': reverse('visualization:node-map', kwargs={'ip': ip}),
+            },
+        }, safe=False)
+
+
+class RetrieveDeskMap(View):
+    def get(self, request, ip):
+        image = svgwrite.Drawing(size=("300px", "240px"))
+        return HttpResponse(image.tostring(), content_type="image/svg+xml")
 
 
 class NodesAPI(ModelViewSet):
