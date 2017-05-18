@@ -11,7 +11,8 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="{% static 'bower_components/angular-material/angular-material.min.css' %}">
-    <link rel="stylesheet" href="{% static 'bower_components/angular-material-data-table/dist/md-data-table.min.css' %}">
+    <link rel="stylesheet"
+          href="{% static 'bower_components/angular-material-data-table/dist/md-data-table.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/netadmin.css' %}">
     <link rel="stylesheet" href="{% static 'css/room.css' %}">
 {% endblock stylesheet %}
@@ -28,6 +29,7 @@
         <script src="{% static 'bower_components/angular-resource/angular-resource.js' %}"></script>
         <script src="{% static 'bower_components/angular-material/angular-material.js' %}"></script>
         <script src="{% static 'bower_components/angular-material-data-table/dist/md-data-table.min.js' %}"></script>
+        <script src="{% static 'bower_components/papaparse/papaparse.min.js' %}"></script>
     {% endblock jsinclude %}
 
     {% block script %}
@@ -52,6 +54,8 @@
         <script src="{% static 'js/taskruns.js' %}"></script>
         <script src="{% static 'js/tasks.js' %}"></script>
         <script src="{% static 'js/create-taskrunset.js' %}"></script>
+        <script src="{% static 'js/nodes.js' %}"></script>
+        <script src="{% static 'js/papaparse.min.js' %}"></script>
 
         <script src="{% static 'js/services.js' %}"></script>
     {% endblock script %}

@@ -1,0 +1,41 @@
+<div id="nodes">
+    <input type="file" id="file" onchange="angular.element(this).scope().file_changed(this)">
+    <md-button class="md-fab md-mini" aria-label="Upload"
+               ng-click="addNodes($event)" ng-disabled="results.length<1">
+        <md-icon aria-label="backup"
+                 class="material-icons step">cloud_upload
+        </md-icon>
+    </md-button>
+    <md-table-container>
+        <table md-table md-progress="promise">
+            <thead md-head>
+            <tr md-row>
+                <th md-column>Imported</th>
+                <th md-column>Mac Address</th>
+                <th md-column>IP</th>
+                <th md-column>Username</th>
+                <th md-column>Property id</th>
+                <th md-column>Connected</th>
+            </tr>
+            </thead>
+            <tbody md-body>
+            <tr class="na-tr" md-row ng-repeat="result in results">
+                <td md-cell>
+                    <md-icon aria-label="backup"
+                             class="material-icons step">{{ result.imported ? 'done' : 'clear'}}
+                    </md-icon>
+                </td>
+                <td md-cell><code>{{ result.mac_address }}</code></td>
+                <td md-cell><code>{{ result.ip }}</code></td>
+                <td md-cell>{{ result.username }}</td>
+                <td md-cell>{{ result.property_id }}</td>
+                <td md-cell>
+                    <md-icon aria-label="backup"
+                             class="material-icons step">{{ result.connected ? 'done' : 'clear'}}
+                    </md-icon>
+                </td
+            </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+</div>
