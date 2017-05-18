@@ -1,0 +1,336 @@
+[
+{
+    "model": "visualization.room",
+    "pk": 1,
+    "fields": {
+        "name": "floor1"
+    }
+},
+{
+    "model": "visualization.room",
+    "pk": 2,
+    "fields": {
+        "name": "floor2"
+    }
+},
+{
+    "model": "visualization.desk",
+    "pk": 11,
+    "fields": {
+        "contestant": 1,
+        "active_node": 1,
+        "room": 1,
+        "x": 0.2,
+        "y": 0.2,
+        "angle": 150
+    }
+},
+{
+    "model": "visualization.desk",
+    "pk": 12,
+    "fields": {
+        "contestant": 2,
+        "active_node": 2,
+        "room": 1,
+        "x": 0.2,
+        "y": 0.8,
+        "angle": 30
+    }
+},
+{
+    "model": "visualization.desk",
+    "pk": 13,
+    "fields": {
+        "contestant": 3,
+        "active_node": 3,
+        "room": 2,
+        "x": 0.2,
+        "y": 0.2,
+        "angle": 150
+    }
+},
+{
+    "model": "visualization.desk",
+    "pk": 14,
+    "fields": {
+        "contestant": 4,
+        "active_node": 4,
+        "room": 2,
+        "x": 0.2,
+        "y": 0.8,
+        "angle": 30
+    }
+},
+{
+    "model": "visualization.desk",
+    "pk": 15,
+    "fields": {
+        "contestant": 5,
+        "active_node": 5,
+        "room": 1,
+        "x": 0.8,
+        "y": 0.2,
+        "angle": 30
+    }
+},
+{
+    "model": "visualization.desk",
+    "pk": 16,
+    "fields": {
+        "contestant": 6,
+        "active_node": 6,
+        "room": 1,
+        "x": 0.8,
+        "y": 0.8,
+        "angle": 150
+    }
+},
+{
+    "model": "visualization.desk",
+    "pk": 17,
+    "fields": {
+        "contestant": 7,
+        "active_node": 7,
+        "room": 2,
+        "x": 0.8,
+        "y": 0.2,
+        "angle": 150
+    }
+},
+{
+    "model": "visualization.desk",
+    "pk": 18,
+    "fields": {
+        "contestant": 8,
+        "active_node": 8,
+        "room": 2,
+        "x": 0.8,
+        "y": 0.8,
+        "angle": 30
+    }
+},
+{
+    "model": "visualization.desk",
+    "pk": 19,
+    "fields": {
+        "contestant": 9,
+        "active_node": 9,
+        "room": 1,
+        "x": 0.5,
+        "y": 0.5,
+        "angle": 0
+    }
+},
+{
+    "model": "visualization.desk",
+    "pk": 20,
+    "fields": {
+        "contestant": 10,
+        "active_node": 10,
+        "room": 2,
+        "x": 0.5,
+        "y": 0.5,
+        "angle": 0
+    }
+},
+{
+    "model": "visualization.contestant",
+    "pk": 1,
+    "fields": {
+        "name": "TurkishContestant-1",
+        "country": "TR",
+        "number": 1
+    }
+},
+{
+    "model": "visualization.contestant",
+    "pk": 2,
+    "fields": {
+        "name": "TurkishContestant-2",
+        "country": "TR",
+        "number": 2
+    }
+},
+{
+    "model": "visualization.contestant",
+    "pk": 3,
+    "fields": {
+        "name": "TurkishContestant-3",
+        "country": "TR",
+        "number": 3
+    }
+},
+{
+    "model": "visualization.contestant",
+    "pk": 4,
+    "fields": {
+        "name": "TurkishContestant-4",
+        "country": "TR",
+        "number": 4
+    }
+},
+{
+    "model": "visualization.contestant",
+    "pk": 5,
+    "fields": {
+        "name": "IranianContestant-1",
+        "country": "IR",
+        "number": 1
+    }
+},
+{
+    "model": "visualization.contestant",
+    "pk": 6,
+    "fields": {
+        "name": "IranianContestant-2",
+        "country": "IR",
+        "number": 2
+    }
+},
+{
+    "model": "visualization.contestant",
+    "pk": 7,
+    "fields": {
+        "name": "IranianContestant-3",
+        "country": "IR",
+        "number": 3
+    }
+},
+{
+    "model": "visualization.contestant",
+    "pk": 8,
+    "fields": {
+        "name": "IranianContestant-4",
+        "country": "IR",
+        "number": 4
+    }
+},
+{
+    "model": "visualization.contestant",
+    "pk": 9,
+    "fields": {
+        "name": "BritishContestant-1",
+        "country": "GB",
+        "number": 1
+    }
+},
+{
+    "model": "visualization.contestant",
+    "pk": 10,
+    "fields": {
+        "name": "BritishContestant-2",
+        "country": "GB",
+        "number": 2
+    }
+},
+{
+    "model": "visualization.node",
+    "pk": 1,
+    "fields": {
+        "mac_address": "42:42:42:42:42:00",
+        "ip": "172.17.0.0",
+        "username": "user0",
+        "property_id": "YSC-0",
+        "connected": true
+    }
+},
+{
+    "model": "visualization.node",
+    "pk": 2,
+    "fields": {
+        "mac_address": "42:42:42:42:42:01",
+        "ip": "172.17.0.1",
+        "username": "user1",
+        "property_id": "YSC-1",
+        "connected": true
+    }
+},
+{
+    "model": "visualization.node",
+    "pk": 3,
+    "fields": {
+        "mac_address": "42:42:42:42:42:02",
+        "ip": "172.17.0.2",
+        "username": "user2",
+        "property_id": "YSC-2",
+        "connected": true
+    }
+},
+{
+    "model": "visualization.node",
+    "pk": 4,
+    "fields": {
+        "mac_address": "42:42:42:42:42:03",
+        "ip": "172.17.0.3",
+        "username": "user3",
+        "property_id": "YSC-3",
+        "connected": true
+    }
+},
+{
+    "model": "visualization.node",
+    "pk": 5,
+    "fields": {
+        "mac_address": "42:42:42:42:42:04",
+        "ip": "172.17.0.4",
+        "username": "user4",
+        "property_id": "YSC-4",
+        "connected": true
+    }
+},
+{
+    "model": "visualization.node",
+    "pk": 6,
+    "fields": {
+        "mac_address": "42:42:42:42:42:05",
+        "ip": "172.17.0.5",
+        "username": "user5",
+        "property_id": "YSC-5",
+        "connected": true
+    }
+},
+{
+    "model": "visualization.node",
+    "pk": 7,
+    "fields": {
+        "mac_address": "42:42:42:42:42:06",
+        "ip": "172.17.0.6",
+        "username": "user6",
+        "property_id": "YSC-6",
+        "connected": true
+    }
+},
+{
+    "model": "visualization.node",
+    "pk": 8,
+    "fields": {
+        "mac_address": "42:42:42:42:42:07",
+        "ip": "172.17.0.7",
+        "username": "user7",
+        "property_id": "YSC-7",
+        "connected": true
+    }
+},
+{
+    "model": "visualization.node",
+    "pk": 9,
+    "fields": {
+        "mac_address": "42:42:42:42:42:08",
+        "ip": "172.17.0.8",
+        "username": "user8",
+        "property_id": "YSC-8",
+        "connected": true
+    }
+},
+{
+    "model": "visualization.node",
+    "pk": 10,
+    "fields": {
+        "mac_address": "42:42:42:42:42:09",
+        "ip": "172.17.0.9",
+        "username": "user9",
+        "property_id": "YSC-9",
+        "connected": true
+    }
+}
+]
