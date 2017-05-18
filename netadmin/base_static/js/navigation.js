@@ -35,8 +35,16 @@ app.constant('NAV', [
                 template: 'taskruns.tmpl.html'
             },
             {
+                name: 'Tasks',
+                template: 'tasks.tmpl.html'
+            },
+            {
                 name: 'Services',
                 template: 'services.tmpl.html'
+            },
+            {
+                name: 'Nodes',
+                template: 'nodes.tmpl.html'
             }/*,
             {
                 name: 'Services',

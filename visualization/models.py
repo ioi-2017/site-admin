@@ -22,8 +22,8 @@ def xy_range_validator(value):
 
 
 class Desk(models.Model):
-    contestant = models.OneToOneField('Contestant', related_name='desk')
-    active_node = models.OneToOneField('Node', related_name='desk')
+    contestant = models.OneToOneField('Contestant', related_name='desk', null=True)
+    active_node = models.OneToOneField('Node', related_name='desk', null=True)
     room = models.ForeignKey('Room', on_delete=models.CASCADE)
     x = models.FloatField(default=0.5, validators=[xy_range_validator])
     y = models.FloatField(default=0.5, validators=[xy_range_validator])
@@ -63,7 +63,7 @@ class Node(models.Model):
     mac_address = models.CharField(max_length=20, unique=True)
     ip = models.GenericIPAddressField()
     username = models.CharField(max_length=20)
-    property_id = models.CharField(max_length=20, unique=True)
+    property_id = models.CharField(max_length=20, unique=True, null=True)
     connected = models.BooleanField(default=False)
 
     # history = HistoricalRecords()

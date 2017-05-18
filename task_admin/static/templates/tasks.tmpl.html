@@ -1,0 +1,49 @@
+<div id="tasks">
+    <div class="md-toolbar-tools">
+        <span>{{ selected.length }} {{ selected.length > 1 ? 'Tasks' : 'Task'}} selected</span>
+
+        <md-button class="md-fab md-mini" aria-label="Delete" md-colors="::{backgroundColor: 'red-700'}"
+                   ng-click="deleteSelected($event)" ng-disabled="selected.length<1">
+            <md-icon aria-label="backup"
+                     class="material-icons step">delete
+            </md-icon>
+        </md-button>
+
+        <md-button class="md-fab md-mini" aria-label="Create TaskRunSet"
+                   ng-click="showTaskCreate($event)">
+            <md-icon aria-label="Create"
+                     class="material-icons step">add
+            </md-icon>
+        </md-button>
+    </div>
+    <md-table-container>
+        <table md-table md-row-select="true" multiple ng-model="selected" md-progress="promise">
+            <thead md-head>
+            <tr md-row>
+                <th md-column>Name</th>
+                <th md-column>Code</th>
+                <th md-column>Is Local?</th>
+            </tr>
+            </thead>
+            <tbody md-body>
+            <tr class="na-tr" md-row md-select="result" md-select-id="id" ng-repeat="result in results">
+                <td md-cell>
+                    <md-button class="md-icon-button" aria-label="Edit Task" ng-click="showTaskCreate($event, result)">
+                        <md-icon aria-label="backup"
+                                 class="material-icons step">edit
+                        </md-icon>
+                    </md-button>
+                    {{ result.name }}
+                </td>
+                <td md-cell><code>{{ result.code.length>50 ? result.code.substr(0, 50) +
+                        '...' : result.code }}</code></td>
+                <td md-cell>
+                    <md-icon aria-label="backup"
+                             class="material-icons step">{{ result.is_local ? 'done' : 'clear'}}
+                    </md-icon>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+</div>

@@ -32,19 +32,17 @@ def get_sample_contestant():
     return contestant
 
 
-def get_all_possible_vars(context=None):
-    if context is None:
-        context = get_sample_context()
+def get_all_possible_vars():
     return {
-        '{node.ip}': context['node'].ip,
-        '{node.id}': context['node'].id,
-        '{node.mac_address}': context['node'].mac_address,
-        '{node.username}': context['node'].username,
-        '{node.property_id}': context['node'].property_id,
-        '{desk.room_id}': context['desk'].room_id,
-        '{desk.id}': context['desk'].id,
-        '{contestant.id}': context['contestant'].id,
-        '{contestant.name}': context['contestant'].name,
+        '{node.ip}': lambda context: context['node'].ip,
+        '{node.id}': lambda context: context['node'].id,
+        '{node.mac_address}': lambda context: context['node'].mac_address,
+        '{node.username}': lambda context: context['node'].username,
+        '{node.property_id}': lambda context: context['node'].property_id,
+        '{desk.room_id}': lambda context: context['desk'].room_id,
+        '{desk.id}': lambda context: context['desk'].id,
+        '{contestant.id}': lambda context: context['contestant'].id,
+        '{contestant.name}': lambda context: context['contestant'].name,
     }
 
 
@@ -69,6 +67,6 @@ def render_task(code, context):
     :return: rendered code of task
     """
 
-    for template, rendered in get_all_possible_vars(context).items():
-        code = code.replace(template, str(rendered))
+    for template, getter in get_all_possible_vars().items():
+        code = code.replace(template, str(getter(context)))
     return code
