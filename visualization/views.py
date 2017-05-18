@@ -35,7 +35,14 @@ class RetrieveIPView(View):
 
 class RetrieveDeskMap(View):
     def get(self, request, ip):
-        image = svgwrite.Drawing(size=("300px", "240px"))
+        image = svgwrite.Drawing(size=("600px", "480px"))
+        desk = Node.objects.get(ip=ip).desk
+
+        for other_desk in desk.room.desk_set.all():
+            x, y, angle = other_desk.x * 600, other_desk.y * 480, other_desk.angle
+            image.add(image.rect((x-20, y-10), (40, 20), fill='black' if other_desk.id == desk.id else 'white',
+                                 rx=2, ry=2, stroke='black'))
+
         return HttpResponse(image.tostring(), content_type="image/svg+xml")
 
 

@@ -20,14 +20,6 @@ class RenderPreviewView(View):
         return JsonResponse(response, safe=False)
 
 
-class TaskRunSetsView(TemplateView):
-    template_name = "task_admin/taskrunsets.html"
-
-
-class TaskRunsView(TemplateView):
-    template_name = "task_admin/taskruns.html"
-
-
 class TasksAPI(ModelViewSet):
     serializer_class = TaskSerializer
     filter_fields = ('id', 'name', 'author', 'is_local')
