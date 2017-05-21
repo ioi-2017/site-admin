@@ -1,5 +1,26 @@
-app.controller('taskRunsController', function ($scope, $rootScope, $http, $location, API, taskRunSetCreator) {
+app.controller('taskRunsController', function ($scope, $rootScope, $http, $location, $timeout, API, taskRunSetCreator) {
     $scope.params = $location.search();
+    $scope.status_icon_map = {
+        'PENDING': 'schedule',
+        'PROGRESS': 'sync',
+        'SUCCESS': 'done',
+        'REVOKED': 'pan_tool',
+        'FAILURE': 'clear'
+    };
+    $scope.status_color_map = {
+        'PENDING': 'blueGrey-700',
+        'PROGRESS': 'yellow-700',
+        'SUCCESS': 'green-700',
+        'REVOKED': 'blueGrey-700',
+        'FAILURE': 'red-700'
+    };
+    $scope.status_text_map = {
+        'PENDING': 'Pending',
+        'PROGRESS': 'Running',
+        'SUCCESS': 'Successful',
+        'REVOKED': 'Stopped',
+        'FAILURE': 'Internal Error'
+    };
 
     var updateParams = function (newParams) {
         return angular.extend({
@@ -47,6 +68,7 @@ app.controller('taskRunsController', function ($scope, $rootScope, $http, $locat
     };
 
     $scope.changeHovered = function (item) {
+        console.log(item);
         $scope.hovered = item
     };
 
@@ -54,8 +76,9 @@ app.controller('taskRunsController', function ($scope, $rootScope, $http, $locat
         $http.post('/api/taskruns/' + item.id + "/stop/", {});
     };
 
-    var updatePageSoft = function() {
-        API.Taskrun.query($scope.params, function (taskruns) {
+    var updatePageSoft = function () {
+        $http.get('/api/taskruns/', $scope.params).then(function (taskruns) {
+            taskruns = taskruns.data;
             if (taskruns.length != $scope.results.length) {
                 $scope.results = taskruns;
                 return;
@@ -63,8 +86,10 @@ app.controller('taskRunsController', function ($scope, $rootScope, $http, $locat
             for (var i = 0; i < taskruns.length; i++) {
                 if ($scope.results[i].id != taskruns[i].id) {
                     $scope.results = taskruns;
-                    break;
+                    return;
                 }
+                if ($scope.results[i].status != taskruns[i].status)
+                    console.log('Status updated');
                 $scope.results[i].status = taskruns[i].status;
             }
         });
@@ -74,12 +99,21 @@ app.controller('taskRunsController', function ($scope, $rootScope, $http, $locat
         updatePageSoft();
     });
 
+    $scope.selectedRowCallback = function (rows) {
+        $scope.selected = rows;
+    };
+
+
     function updatePage(flush_selected) {
         if (flush_selected == true)
             $scope.selected = [];
-        $scope.results = [];
-        API.Taskrun.query($scope.params, function (taskruns) {
-            $scope.results = taskruns;
+        $http.get('/api/taskruns/', $scope.params).then(function (taskruns) {
+            $timeout(function () {
+                $scope.results = taskruns.data;
+                console.log('shit');
+                console.log($scope.results);
+                $scope.$apply();
+            });
         });
     }
 

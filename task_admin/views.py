@@ -45,11 +45,10 @@ class TaskRunsAPI(ReadOnlyModelViewSet, mixins.ListModelMixin):
     queryset = TaskRun.objects.select_related('run_set', 'contestant', 'node', 'desk').filter(
         run_set__deleted=False).order_by(
         '-created_at')
-    pagination_class = Pagination
+    #pagination_class = Pagination
 
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
-        response.data['pagination'] = self.paginator.get_html_context()
         return response
 
     @detail_route(methods=['post'])

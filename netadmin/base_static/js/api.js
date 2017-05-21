@@ -39,13 +39,7 @@ app.service('API', function ($resource, $timeout, $http, MODELS) {
         if (api.paginated) {
             methods.query = {
                 method: 'GET',
-                isArray: true,
-                transformResponse: function (data, headers) {
-                    var tempData = data.replace(/^\)]\}',?\n/, '').trim();
-                    var jsonData = JSON.parse(tempData);
-                    headers()['pagination'] = jsonData.pagination;
-                    return jsonData.results;
-                }
+                isArray: true
             };
         }
         return methods;

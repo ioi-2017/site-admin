@@ -28,7 +28,7 @@ md-content#main {
 }
 
 table.md-table th.md-column {
-    font-size:14px;
+    font-size: 14px;
 }
 
 table.md-table th.md-column {
@@ -39,10 +39,29 @@ table.md-table td.md-cell {
     color: inherit !important;
 }
 
-table.md-table.md-row-select tbody.md-body>tr.na-tr.md-row.md-selected {
+table.md-table.md-row-select tbody.md-body > tr.na-tr.md-row.md-selected {
     background-color: inherit !important;
 }
 
-table.md-table.md-row-select tbody.md-body>tr.na-tr.md-row:not([disabled]):hover {
+table.md-table.md-row-select tbody.md-body > tr.na-tr.md-row:not([disabled]):hover {
     background-color: inherit !important;
+}
+
+.mdtTableContainer table {
+    color: inherit !important;
+    background-color: inherit !important;
+}
+
+.mdtTableContainer tr td {
+    color: inherit !important;
+    background-color: inherit !important;
+}
+
+.mdtTableContainer tr:hover td {
+    color: yellow !important;
+    background-color: inherit !important;
+}
+
+.md-virtual-repeat-container{
+  height: 400px;
 }

@@ -42,7 +42,7 @@ app.controller('taskRunsetsController', function ($scope, $rootScope, $http, $lo
         });
     };
 
-    API.poll(1000, $scope, function () {
+    API.poll(100000, $scope, function () {
         updatePageSoft();
     });
 

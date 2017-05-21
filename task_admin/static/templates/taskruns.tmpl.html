@@ -1,5 +1,5 @@
 <div layout="row">
-    <div flex id="taskrunsets">
+    <div flex id="taskrunsets" layout="column">
         <div id="task_filter" layout="row">
             <md-input-container flex-gt-sm>
                 <label>Owner</label>
@@ -31,103 +31,65 @@
                          class="material-icons step">add
                 </md-icon>
             </md-button>
-<!--            <md-button class="md-fab md-mini" aria-label="Select All Taskruns"
-                       ng-click="selectAllRuns()">
-                <md-icon aria-label="Select All"
-                         class="material-icons step">select_all
-                </md-icon>
-            </md-button>
--->
+            <!--            <md-button class="md-fab md-mini" aria-label="Select All Taskruns"
+                                   ng-click="selectAllRuns()">
+                            <md-icon aria-label="Select All"
+                                     class="material-icons step">select_all
+                            </md-icon>
+                        </md-button>
+            -->
         </div>
-        <md-table-container>
-            <table md-table md-row-select="true" multiple ng-model="selected" md-progress="promise">
-                <thead md-head>
-                <tr md-row>
-                    <th md-column>Rendered Code</th>
-                    <th md-column>Is Local?</th>
-                    <th md-column>Status</th>
-                    <th md-column>IP</th>
-                    <th md-column>Created at</th>
-                    <th md-column>Actions</th>
-                </tr>
-                </thead>
-                <tbody md-body>
-                <tr class="na-tr" md-row md-select="result" md-select-id="id" ng-repeat="result in results">
-                    <td md-cell><code>{{ result.rendered_code.length>10 ? result.rendered_code.substr(0, 10) +
-                            '...' : result.rendered_code }}</code></td>
-                    <td md-cell>
+        <mdt-table selectable-rows="true" selected-row-callback="selectedRowCallback(rows)">
+            <mdt-header-row>
+                <mdt-column align-rule="left" column-definition="IP"><span> Code</span></mdt-column>
+                <mdt-column align-rule="right" column-definition="Status of the single task run"><span>Is Local</span>
+                </mdt-column>
+                <mdt-column align-rule="right" column-definition="Status of the single task run"><span>Status</span>
+                </mdt-column>
+                <mdt-column align-rule="left" column-definition="IP"><span> IP</span></mdt-column>
+                <mdt-column align-rule="left" column-definition="IP"><span> Created at</span></mdt-column>
+                <mdt-column align-rule="left" column-definition="IP"><span> Actions</span></mdt-column>
+            </mdt-header-row>
+            <mdt-row ng-repeat="result in results" table-row-id="result.id">
+                <mdt-cell><code>{{ result.rendered_code }}</code></mdt-cell>
+                <mdt-cell><span>
+                    <md-icon aria-label="backup"
+                             class="material-icons step">{{ result.is_local ? 'done' : 'clear'}}
+                    </md-icon>
+                    </span>
+                </mdt-cell>
+                <mdt-cell><span>
+                    <button class="md-fab md-mini md-button md-ink-ripple" type="button" aria-label="Stop">
                         <md-icon aria-label="backup"
-                                 class="material-icons step">{{ result.is_local ? 'done' : 'clear'}}
+                                 class="material-icons step">{{ status_icon_map[result.status] }}
                         </md-icon>
-                    </td>
-                    <td md-cell>
-                        <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'blueGrey-700'}"
-                                   ng-show="result.status=='PENDING'">
-                            <md-icon class="material-icons step">schedule</md-icon>
-                            <md-tooltip
-                                    md-direction="left">
-                                Pending
-                            </md-tooltip>
-                        </md-button>
-                        <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'yellow-700'}"
-                                   ng-show="result.status=='PROGRESS'">
-                            <md-icon class="material-icons step">sync</md-icon>
-                            <md-tooltip
-                                    md-direction="left">
-                                Running
-                            </md-tooltip>
-                        </md-button>
-                        <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'green-700'}"
-                                   ng-show="result.status=='SUCCESS'">
-                            <md-icon class="material-icons step">done</md-icon>
-                            <md-tooltip
-                                    md-direction="left">
-                                Successful
-                            </md-tooltip>
-                        </md-button>
-                        <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'blueGrey-700'}"
-                                   ng-show="result.status=='REVOKED'">
-                            <md-icon class="material-icons step">pan_tool</md-icon>
-                            <md-tooltip
-                                    md-direction="left">
-                                Stopped
-                            </md-tooltip>
-                        </md-button>
-                        <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'red-700'}"
-                                   ng-show="result.status=='FAILURE'">
-                            <md-icon class="material-icons step">clear</md-icon>
-                            <md-tooltip
-                                    md-direction="left">
-                                Internal Error
-                            </md-tooltip>
-                        </md-button>
-                    </td>
-                    <td md-cell><code>{{ result.node.ip }}</code></td>
-                    <td md-cell>{{ result.created_at | date:'M/d/y, HH:mm:ss' }}</td>
-                    <td layout="row">
-                        <md-button class="md-fab md-mini" aria-label="Stop" ng-click="changeHovered(result)">
-                            <md-icon aria-label="backup"
-                                     class="material-icons step">visibility
-                            </md-icon>
-                        </md-button>
-                        <md-button class="md-fab md-mini" aria-label="Stop" ng-click="stopTaskrun(result)">
-                            <md-icon aria-label="backup"
-                                     class="material-icons step">pause
-                            </md-icon>
-                        </md-button>
-                        <md-button class="md-fab md-mini" aria-label="Stop">
-                            <md-icon aria-label="backup"
-                                     class="material-icons step">more_horiz
-                            </md-icon>
-                        </md-button>
 
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </md-table-container>
+                    </button>
+                        </span></mdt-cell>
+                <mdt-cell><code>{{ result.node.ip }}</code></mdt-cell>
+                <mdt-cell><span>{{ result.created_at | date:'M/d/y, HH:mm:ss' }}</span></mdt-cell>
+                <mdt-cell><span>
+                    <button class="md-fab md-mini md-button md-ink-ripple" type="button" aria-label="Stop"
+                            ng-click="changeHovered(result)">
+                        <md-icon aria-label="backup"
+                                 class="material-icons step">visibility
+                        </md-icon>
+                    </button>
+                    <button class="md-fab md-mini md-button md-ink-ripple" type="button" aria-label="Stop"
+                            ng-click="stopTaskrun(result)">
+                        <md-icon aria-label="backup"
+                                 class="material-icons step">clear
+                        </md-icon>
+                    </button>
+                    </span>
+
+
+                </mdt-cell>
+            </mdt-row>
+        </mdt-table>
 
         <br>
+
         <div layout="row" ng-show="pagination.previous_url || pagination.next_url">
             <md-button ng-disabled="!pagination.previous_url"
                        aria-label="previous"
