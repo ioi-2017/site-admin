@@ -1,9 +1,7 @@
 import subprocess
 import threading
 import time
-
 from django.core.management.base import BaseCommand
-
 from ping.models import PingLog
 from visualization.models import Node
 
@@ -35,8 +33,7 @@ class Command(BaseCommand):
         return 0
 
     @staticmethod
-    def ping_node(node_ip):
-        node_status = Node.objects.get(ip=node_ip).connected
+    def ping_node(node_ip, node_status):
         while True:
             p = subprocess.Popen(['ping', '-c', '1', '-i', '0.2', node_ip], stdout=subprocess.PIPE)
             time.sleep(0.4)
@@ -52,13 +49,16 @@ class Command(BaseCommand):
                 PingLog.objects.create(node=node, connected=success)
                 node.save(update_fields=['connected'])
             if threading.current_thread().stopped():
+                from django.db import connections
+                for conn in connections.all():
+                    conn.close()
                 return
 
     def handle(self, *args, **options):
         while True:
             all_threads = []
             for node in Node.objects.all():
-                thread = StoppableThread(target=self.ping_node, args=(node.ip,))
+                thread = StoppableThread(target=self.ping_node, args=(node.ip, node.connected))
                 thread.start()
                 all_threads.append(thread)
             time.sleep(DB_REFRESH_RATE)
