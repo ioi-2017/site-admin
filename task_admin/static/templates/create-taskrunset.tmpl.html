@@ -1,11 +1,15 @@
 <md-dialog aria-label="Create TaskRunSet" class="flex-75">
-    <form ng-cloak>
+    <form ng-cloak name="taskCreationForm" ng-submit="create()">
         <md-toolbar>
             <div class="md-toolbar-tools">
                 <h2>Create TaskRunSet</h2>
                 <md-input-container flex-gt-sm>
                     <label>TaskRunSet Name</label>
-                    <input ng-model="run_set_name" placeholder="Enter TaskRunSet name">
+                    <input required ng-model="run_set_name" name="run_set_name">
+
+                    <div ng-messages="taskCreationForm.run_set_name.$error">
+                        <div ng-message="required">This is required.</div>
+                    </div>
                 </md-input-container>
             </div>
         </md-toolbar>
@@ -50,9 +54,16 @@
                                 </div>
                                 <md-input-container class="md-block">
                                     <label>Template Code</label>
-                                    <textarea id="template-text-area" ng-model="template_code" rows="5" md-select-on-focus></textarea>
+                                    <textarea required id="template-text-area" ng-model="template_code"
+                                              name="template_code" rows="5"
+                                              md-select-on-focus></textarea>
+
+                                    <div ng-messages="taskCreationForm.template_code.$error">
+                                        <div ng-message="required">This is required.</div>
+                                    </div>
                                 </md-input-container>
                                 <p>
+
                                 <h3> Rendered Code:</h3></p>
                     <span>
                     <code>{{ rendered_code }}</code>
@@ -83,7 +94,8 @@
                                     <div class="md-list-item-text">
                                         <h3> {{ ip }} </h3>
                                     </div>
-                                    <md-button class="md-secondary md-icon-button" ng-click="removeNode(ip)"
+                                    <md-button class="md-secondary md-icon-button" type="submit"
+                                               ng-click="removeNode(ip)"
                                                aria-label="call">
                                         <md-icon aria-label="Create"
                                                  class="material-icons step">remove_circle
@@ -121,9 +133,15 @@
             <md-button ng-click="hide()">
                 Cancel
             </md-button>
-            <md-button ng-click="create()">
-                Create
-            </md-button>
+            <div>
+                <md-button type="submit" ng-disabled="ips.length<1">
+                    Create
+                </md-button>
+                <md-tooltip ng-show="ips.length<1"
+                            md-direction="top">
+                    Select nodes first
+                </md-tooltip>
+            </div>
         </md-dialog-actions>
     </form>
 </md-dialog>
