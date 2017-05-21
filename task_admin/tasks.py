@@ -47,7 +47,7 @@ def execute_task(task_run_id, is_local, ip, username, rendered_code):
             stdin, stdout, stderr = client.exec_command(rendered_code)
             result = {'stdout': stdout.read().decode('utf-8'),
                       'stderr': stderr.read().decode('utf-8'),
-                      'result_code': stdout.channel.recv_exit_status(),
+                      'return_code': stdout.channel.recv_exit_status(),
                       }
         except Exception as e:
             result = {'stdout': '',
