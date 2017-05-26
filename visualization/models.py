@@ -68,8 +68,15 @@ class Node(models.Model):
     username = models.CharField(max_length=20)
     property_id = models.CharField(max_length=20, unique=True, blank=True)
     connected = models.BooleanField(default=False)
+    last_task = models.ForeignKey('task_admin.TaskRun', related_name='node+', blank=True, null=True)
 
-    # history = HistoricalRecords()
+    @property
+    def status(self):
+        if self.connected is not True:
+            return 'DISCONNECTED'
+        elif self.last_task is not None:
+            return self.last_task.status
+        return 'CONNECTED'
 
     def __str__(self):
         return self.ip

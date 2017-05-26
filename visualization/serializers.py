@@ -6,7 +6,7 @@ from visualization.models import Node, Desk, Contestant, Room
 class NodeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Node
-        fields = ('id', 'ip', 'mac_address', 'username', 'property_id', 'connected')
+        fields = ('id', 'ip', 'mac_address', 'username', 'property_id', 'connected', 'status',)
 
 
 class DeskSerializer(serializers.ModelSerializer):
