@@ -1,3 +1,5 @@
+import logging
+
 from django.http import HttpResponse
 from django.http.response import JsonResponse
 from django.views.generic import TemplateView, View
@@ -9,6 +11,8 @@ from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet, GenericV
 from task_admin.models import TaskRunSet, Task, TaskRun
 from task_admin.serializers import TaskRunSetSerializer, TaskSerializer, TaskRunSerializer
 from task_admin.task_render import get_all_possible_vars, render_preview, get_sample_context
+
+logger = logging.getLogger(__name__)
 
 
 class RenderPreviewView(View):
@@ -47,8 +51,8 @@ class TaskRunsAPI(ReadOnlyModelViewSet, mixins.ListModelMixin):
     @detail_route(methods=['post'])
     def stop(self, request, pk):
         task_run = self.get_object()
-        result = task_run.get_celery_result()
-        result.revoke()
+        task_run.stop()
+        logger.info('Taskrun #%d has stopped' % task_run.id)
         return HttpResponse('', status=204)
 
 
@@ -82,16 +86,17 @@ class TaskRunSetsAPI(mixins.CreateModelMixin,
 
     def perform_destroy(self, instance):
         instance.deleted = True
-        # TODO: stop all remaining tasks
+        logger.info('Taskrunset #%d (%s) is deleted' % (instance.id, instance.name))
+        for task_run in instance.taskruns.all():
+            task_run.stop()
+        logger.info('Remaining taskruns of Taskrunset #%d (%s) has stopped' % (instance.id, instance.name))
         instance.save()
 
     @detail_route(methods=['post'])
     def stop(self, request, pk):
         task_runset = self.get_object()
+        logger.info('Taskrunset #%d (%s) is going to stop' % (task_runset.id, task_runset.name))
         for task_run in task_runset.taskruns.all():
-            result = task_run.get_celery_result()
-            result.revoke()
-            # TODO: check if successful , don't change the state
-            task_run.status = 'REVOKED'
-            task_run.save()
+            task_run.stop()
+        logger.info('Taskrunset #%d (%s) has stopped' % (task_runset.id, task_runset.name))
         return HttpResponse('', status=204)

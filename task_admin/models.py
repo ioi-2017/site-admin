@@ -91,5 +91,11 @@ class TaskRun(models.Model):
             return (self.finished_at - self.started_at).total_seconds() * 1000
         return 0
 
+    def stop(self):
+        self.get_celery_result().revoke()
+        if self.status == 'PENDING':
+            self.status = 'REVOKED'
+            self.save()
+
     def get_celery_result(self):
         return AsyncResult(self.celery_task)
