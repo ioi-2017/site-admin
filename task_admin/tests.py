@@ -61,16 +61,17 @@ class TaskRunSetTest(TestCase):
 
     def test_without_task(self):
         taskrunset_data = {
+            'name': 'touch',
             'code': 'touch /tmp/{contestant.name}',
             'is_local': True,
             'owner': 1,
-            'ips': json.dumps(['192.168.1.0', '192.168.1.1'])
+            'ips': json.dumps(['172.17.0.0', '172.17.0.1'])
         }
         client = Client()
         self.remove_tmp_files()
         self.assertEqual(client.post('/api/taskrunsets/', taskrunset_data).status_code, 201)
         taskruns = client.get('/api/taskruns/').json()
-        self.assertEqual(len(taskruns), 2)
+        self.assertEqual(int(taskruns['count']), 2)
         self.assertTrue(os.path.isfile('/tmp/TurkishContestant-1'))
         self.assertTrue(os.path.isfile('/tmp/TurkishContestant-2'))
         self.remove_tmp_files()
@@ -153,18 +154,21 @@ class CompleteTest(TestCase):
         desk_data = {
             'contestant': 1,
             'active_node': 1,
-            'room': 1
+            'room': 1,
+            'number': 1
         }
         self.assertEqual(client.post('/api/desks/', desk_data).status_code, 201)
 
         desk_data = {
             'contestant': 2,
             'active_node': 2,
-            'room': 1
+            'room': 1,
+            'number': 2
         }
         self.assertEqual(client.post('/api/desks/', desk_data).status_code, 201)
 
         taskrunset_data = {
+            'name': 'touch',
             'task': 1,
             'owner': 1,
             'ips': json.dumps(['192.168.1.1', '192.168.1.2'])
@@ -173,7 +177,7 @@ class CompleteTest(TestCase):
         self.remove_tmp_files()
         self.assertEqual(client.post('/api/taskrunsets/', taskrunset_data).status_code, 201)
         taskruns = client.get('/api/taskruns/').json()
-        self.assertEqual(len(taskruns), 2)
+        self.assertEqual(int(taskruns['count']), 2)
         self.assertTrue(os.path.isfile('/tmp/hamed'))
         self.assertTrue(os.path.isfile('/tmp/amin'))
         self.remove_tmp_files()

@@ -6,8 +6,9 @@
     "contestant": 1,
     "active_node": 1,
     "room": 1,
-    "x": 0.5,
-    "y": 0.5,
+    "number": 10,
+    "x": 0.7,
+    "y": 0.8,
     "angle": 0
   }
 },
@@ -18,8 +19,9 @@
     "contestant": 2,
     "active_node": 2,
     "room": 1,
-    "x": 0.5,
-    "y": 0.5,
+    "number": 9,
+    "x": 0.7,
+    "y": 0.6,
     "angle": 0
   }
 },
@@ -30,8 +32,9 @@
     "contestant": 3,
     "active_node": 3,
     "room": 1,
-    "x": 0.5,
-    "y": 0.5,
+    "number": 8,
+    "x": 0.7,
+    "y": 0.4,
     "angle": 0
   }
 },
@@ -42,8 +45,9 @@
     "contestant": 4,
     "active_node": 4,
     "room": 1,
-    "x": 0.5,
-    "y": 0.5,
+    "number": 7,
+    "x": 0.7,
+    "y": 0.2,
     "angle": 0
   }
 },
@@ -53,9 +57,10 @@
   "fields": {
     "contestant": 5,
     "active_node": 5,
-    "room": 2,
-    "x": 0.5,
-    "y": 0.5,
+    "room": 1,
+    "number": 6,
+    "x": 0.3,
+    "y": 0.8,
     "angle": 0
   }
 },
@@ -65,9 +70,10 @@
   "fields": {
     "contestant": 6,
     "active_node": 6,
-    "room": 2,
-    "x": 0.5,
-    "y": 0.5,
+    "room": 1,
+    "number": 5,
+    "x": 0.3,
+    "y": 0.6,
     "angle": 0
   }
 },
@@ -77,9 +83,10 @@
   "fields": {
     "contestant": 7,
     "active_node": 7,
-    "room": 2,
-    "x": 0.5,
-    "y": 0.5,
+    "room": 1,
+    "number": 4,
+    "x": 0.3,
+    "y": 0.4,
     "angle": 0
   }
 },
@@ -89,9 +96,10 @@
   "fields": {
     "contestant": 8,
     "active_node": 8,
-    "room": 2,
-    "x": 0.5,
-    "y": 0.5,
+    "room": 1,
+    "number": 3,
+    "x": 0.3,
+    "y": 0.2,
     "angle": 0
   }
 },
@@ -101,9 +109,10 @@
   "fields": {
     "contestant": 9,
     "active_node": 9,
-    "room": 2,
+    "room": 1,
+    "number": 2,
     "x": 0.5,
-    "y": 0.5,
+    "y": 0.8,
     "angle": 0
   }
 },
@@ -113,9 +122,10 @@
   "fields": {
     "contestant": 10,
     "active_node": 10,
-    "room": 3,
+    "room": 1,
+    "number": 1,
     "x": 0.5,
-    "y": 0.5,
+    "y": 0.2,
     "angle": 0
   }
 }
