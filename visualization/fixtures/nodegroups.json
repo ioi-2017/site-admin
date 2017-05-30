@@ -1,0 +1,26 @@
+[
+{
+  "model": "visualization.nodegroup",
+  "pk": 1,
+  "fields": {
+    "name": "All nodes",
+    "expression": "True"
+  }
+},
+{
+  "model": "visualization.nodegroup",
+  "pk": 2,
+  "fields": {
+    "name": "Connected nodes",
+    "expression": "node.connected"
+  }
+},
+{
+  "model": "visualization.nodegroup",
+  "pk": 3,
+  "fields": {
+    "name": "Disconnected nodes",
+    "expression": "not node.connected"
+  }
+}
+]

@@ -80,3 +80,21 @@ class Node(models.Model):
 
     def __str__(self):
         return self.ip
+
+
+class NodeGroup(models.Model):
+    name = models.CharField(max_length=40, unique=True)
+    expression = models.TextField()
+
+    def nodes(self):
+        result = []
+        for node in Node.objects.all():
+            try:
+                if eval(self.expression):
+                    result.append(node)
+            except:
+                continue
+        return result
+
+    def __str__(self):
+        return self.name
