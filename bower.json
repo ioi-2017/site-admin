@@ -18,6 +18,10 @@
     "angular-route": "^1.6.3",
     "angular-material-data-table": "^0.10.10",
     "papaparse": "^4.3.2",
-    "angular-moment": "^1.0.1"
+    "angular-moment": "^1.0.1",
+    "md-data-table": "^2.2.0",
+    "angular-material-icons": "^0.7.1",
+    "angular-sanitize": "^1.6.4",
+    "lodash": "^4.17.4"
   }
 }

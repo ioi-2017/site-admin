@@ -2,7 +2,8 @@ app.service('taskRunSetCreator', function ($mdDialog) {
     this.showTaskRunSetCreate = function (ev, ips, create_callback) {
         $mdDialog.show({
                 controller: function DialogController($scope, $timeout, $http, $mdDialog, $mdToast) {
-                    $scope.ips = Array.from(new Set(ips)).sort();
+                    $scope.selected_ips = [];
+                    $scope.show_connected = 'All';
                     $scope.var_helps = [];
                     $http.get('/api/task_create/').then(function (response) {
                         $scope.var_helps = response.data;
@@ -14,18 +15,9 @@ app.service('taskRunSetCreator', function ($mdDialog) {
                     $scope.queryTaskSearch = function (query) {
                         return query ? $scope.task_templates.filter(createFilterFor(query)) : $scope.task_templates;
                     };
-                    $scope.queryNodeSearch = function (query) {
-                        var available_nodes = [];
-                        console.log($scope.ips);
-                        $scope.all_nodes.forEach(function (node) {
-                            if ($scope.ips.indexOf(node.value) == -1)
-                                available_nodes.push(node)
-                            console.log(node.value);
-                        });
-                        if (available_nodes.length > 0)
-                            available_nodes.unshift({value: 'all', display: 'All nodes'});
-                        var result = query ? available_nodes.filter(createFilterForNode(query)) : available_nodes;
-                        return result;
+
+                    $scope.boz = function () {
+                        console.log($scope.selected_ips);
                     };
                     $scope.selectedTaskItemChange = function (task) {
                         if (task) {
@@ -34,23 +26,6 @@ app.service('taskRunSetCreator', function ($mdDialog) {
                             if ($scope.run_set_name == '')
                                 $scope.run_set_name = task.display
                         }
-                    };
-                    $scope.selectedNodeItemChange = function (node) {
-                        if (node) {
-                            var items = node.value;
-                            if (node.value == 'all') {
-                                items = $scope.all_nodes.map(function (x) {
-                                    return x.value;
-                                });
-                            }
-                            $scope.ips = Array.from(new Set($scope.ips.concat(items))).sort();
-                            $scope.searchNodeText = '';
-                        }
-                    };
-                    $scope.removeNode = function (node) {
-                        var ips_set = new Set($scope.ips);
-                        ips_set.delete(node);
-                        $scope.ips = Array.from(ips_set).sort();
                     };
 
                     function updateTasks() {
@@ -70,12 +45,12 @@ app.service('taskRunSetCreator', function ($mdDialog) {
                     updateTasks();
 
                     $http.get('/api/nodes/').then(function (response) {
-                        var tasks = response.data;
-                        $scope.all_nodes = tasks.map(function (node) {
-                            return {
-                                value: node.ip,
-                                display: node.ip,
-                            };
+                        $scope.all_nodes = response.data;
+                        $scope.table_nodes = angular.copy($scope.all_nodes);
+                        angular.forEach($scope.all_nodes, function (item) {
+                            if (ips.indexOf(item.ip) !== -1)
+                                $scope.selected_ips.push(item);
+
                         });
                     });
 
@@ -87,15 +62,6 @@ app.service('taskRunSetCreator', function ($mdDialog) {
 
                         return function filterFn(task_template) {
                             return (task_template.value.indexOf(lowercaseQuery) === 0);
-                        };
-
-                    }
-
-                    function createFilterForNode(query) {
-                        var lowercaseQuery = angular.lowercase(query);
-
-                        return function filterFn(task_template) {
-                            return task_template.value == 'all' || (task_template.value.indexOf(lowercaseQuery) != -1);
                         };
 
                     }
@@ -113,6 +79,21 @@ app.service('taskRunSetCreator', function ($mdDialog) {
                         });
                         $scope.rendered_code = result;
                     });
+
+                    $scope.$watch('show_connected', function () {
+                        $scope.table_nodes = [];
+                        angular.forEach($scope.all_nodes, function (item) {
+                            if ($scope.show_connected == 'All')
+                                $scope.table_nodes.push(item);
+                            if ($scope.show_connected == 'true' && item.connected)
+                                $scope.table_nodes.push(item);
+                            if ($scope.show_connected == 'false' && !item.connected)
+                                $scope.table_nodes.push(item);
+
+                        });
+                    });
+
+
                     $scope.hide = function () {
                         $mdDialog.cancel();
                     };
@@ -122,7 +103,7 @@ app.service('taskRunSetCreator', function ($mdDialog) {
                             code: $scope.template_code,
                             is_local: $scope.is_local,
                             owner: 1,
-                            ips: $scope.ips,
+                            ips: $scope.selected_ips,
                             name: $scope.run_set_name
                         }).then(function (response) {
                             console.log(response);
