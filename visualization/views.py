@@ -1,12 +1,21 @@
+from collections import defaultdict
+
 import svgwrite
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.urls import reverse
 from django.views import View
 from rest_framework.viewsets import ModelViewSet
-
-from visualization.models import Room, Node, Desk, Contestant
+from visualization.models import Room, Node, Desk, Contestant, NodeGroup
 from visualization.serializers import NodeSerializer, DeskSerializer, ContestantSerializer, RoomSerializer
+
+
+class NodeGroupsView(View):
+    def get(self, request):
+        results = []
+        for group in NodeGroup.objects.order_by('id').all():
+            results.append([group.name, [NodeSerializer(node).data for node in group.nodes()]])
+        return JsonResponse(results, safe=False)
 
 
 class RetrieveIPView(View):
