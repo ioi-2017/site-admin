@@ -1,11 +1,9 @@
 import textwrap
 from collections import Counter
-
 from celery.result import AsyncResult
 from dateutil.parser import parser
 from django.contrib.auth.models import User
 from django.db import models
-
 from visualization.models import Desk, Node, Contestant
 
 
@@ -70,8 +68,8 @@ class TaskRun(models.Model):
     rendered_code = models.TextField()
     status = models.CharField(max_length=20, db_index=True, default='PENDING')
 
-    desk = models.ForeignKey(Desk)
-    contestant = models.ForeignKey(Contestant)
+    desk = models.ForeignKey(Desk, null=True)
+    contestant = models.ForeignKey(Contestant, null=True)
     node = models.ForeignKey(Node)
 
     def get_execution_dict(self):

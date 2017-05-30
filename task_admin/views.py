@@ -2,15 +2,16 @@ import logging
 
 from django.http import HttpResponse
 from django.http.response import JsonResponse
-from django.views.generic import TemplateView, View
+from django.views.generic import View
 from django_filters.rest_framework.backends import DjangoFilterBackend
 from rest_framework import mixins
 from rest_framework.decorators import detail_route
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet, GenericViewSet
+
 from task_admin.models import TaskRunSet, Task, TaskRun
 from task_admin.serializers import TaskRunSetSerializer, TaskSerializer, TaskRunSerializer
-from task_admin.task_render import get_all_possible_vars, render_preview, get_sample_context
+from task_admin.task_render import get_all_possible_vars_sample
 
 logger = logging.getLogger(__name__)
 
@@ -18,9 +19,8 @@ logger = logging.getLogger(__name__)
 class RenderPreviewView(View):
     def get(self, request):
         response = []
-        sample_context = get_sample_context()
-        for template, getter in get_all_possible_vars().items():
-            response.append({'template': template, 'rendered': getter(sample_context)})
+        for template, rendered in get_all_possible_vars_sample().items():
+            response.append({'template': template, 'rendered': rendered})
         return JsonResponse(response, safe=False)
 
 

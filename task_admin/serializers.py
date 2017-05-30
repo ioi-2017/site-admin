@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from rest_framework.exceptions import APIException
-
 from task_admin.models import Task, TaskRunSet, TaskRun
 from task_admin.task_render import render_task
 from task_admin.tasks import execute_task
@@ -52,13 +51,10 @@ class TaskRunSetSerializer(serializers.ModelSerializer):
 
         for ip in validated_data['ips']:
             try:
-                Node.objects.get(ip=ip).desk.contestant
+                node = Node.objects.get(ip=ip)
             except Node.DoesNotExist:
                 raise BadRequest(detail=(u"Ip {0:s} doesn't exist".format(ip)), code=400)
-            except Desk.DoesNotExist:
-                raise BadRequest(detail=(u"Ip {0:s} provided is attached to no desks".format(ip)), code=400)
-            except Contestant.DoesNotExist:
-                raise BadRequest(detail=(u"IP {0:s} is not used by anyone".format(ip)), code=400)
+            render_task(code, node)
 
         taskrunset = TaskRunSet(
             code=code,
@@ -69,16 +65,12 @@ class TaskRunSetSerializer(serializers.ModelSerializer):
         taskrunset.save()
         for ip in validated_data['ips']:
             node = Node.objects.get(ip=ip)
-            rendered_code = render_task(code, {
-                'node': node,
-                'desk': node.desk,
-                'contestant': node.desk.contestant,
-            })
+            rendered_code = render_task(code, node)
             taskrun = TaskRun(
                 run_set=taskrunset,
                 node=node,
-                desk=node.desk,
-                contestant=node.desk.contestant,
+                desk=node.desk if hasattr(node, 'desk') else None,
+                contestant=node.desk.contestant if hasattr(node, 'desk') and hasattr(node.desk, 'contestant') else None,
                 rendered_code=rendered_code,
                 is_local=is_local,
             )
