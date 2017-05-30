@@ -51,7 +51,8 @@ app.directive('room', function () {
                 API.poll(1000, $scope, function () {
                     API.Node.forEach(function (node) {
                         if (node.ip in desks) {
-                            desks[node.ip].attr('class', node.connected ? 'desk ok' : 'desk failed');
+                            var style = ['desk', node.status.toLowerCase(), node.connected ? 'ok' : 'failed'];
+                            desks[node.ip].attr('class', style.join(' '));
                         }
                     });
                 }, function () {
