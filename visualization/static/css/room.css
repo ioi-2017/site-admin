@@ -5,14 +5,31 @@
     background-color: #333;
 }
 
-.desk.ok {
+.desk.ok.success,
+.desk.ok.connected {
     fill: #00aa00;
     stroke: #c0ffc0;
 }
 
-.desk.failed {
+.desk.ok.revoked,
+.desk.ok.pending {
+    fill: #455a64;
+    stroke: #a9daf2;
+}
+
+.desk.ok.progress {
+    fill: #ff9900;
+    stroke: #ffffff;
+}
+
+.desk.ok.failure {
     fill: #ff0000;
     stroke: #ffa0a0;
+}
+
+.desk.failed {
+    fill: #333333;
+    stroke :#999999;
 }
 
 .desk.unknown {

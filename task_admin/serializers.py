@@ -1,3 +1,5 @@
+import logging
+
 from rest_framework import serializers
 from rest_framework.exceptions import APIException
 
@@ -6,6 +8,8 @@ from task_admin.task_render import render_task
 from task_admin.tasks import execute_task
 from visualization.models import Node, Desk, Contestant
 from visualization.serializers import NodeSerializer, DeskSerializer, ContestantSerializer
+
+logger = logging.getLogger(__name__)
 
 
 class BadRequest(APIException):
@@ -66,7 +70,8 @@ class TaskRunSetSerializer(serializers.ModelSerializer):
             owner=validated_data['owner'],
             name=validated_data['name']
         )
-        taskrunset.save()
+        taskrunset.save()  # TODO: Taskrunset should not be created unless all taskruns created successfully
+        logger.info('Taskrunset #%d (%s) is going to be created' % (taskrunset.id, taskrunset.name))
         for ip in validated_data['ips']:
             node = Node.objects.get(ip=ip)
             rendered_code = render_task(code, {
@@ -90,6 +95,7 @@ class TaskRunSetSerializer(serializers.ModelSerializer):
             taskrun.celery_task = execute_task.apply_async(queue='local_queue' if is_local else 'remote_queue'
                                                            , kwargs=taskrun.get_execution_dict()).id
             taskrun.save(update_fields=['celery_task'])
+        logger.info('Taskrunset #%d (%s) has created' % (taskrunset.id, taskrunset.name))
         return taskrunset
 
     class Meta:
