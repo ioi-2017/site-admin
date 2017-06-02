@@ -54,15 +54,16 @@ app.controller('taskRunsetsController', function ($scope, $rootScope, $http, $lo
         });
     }
 
-    $scope.$watch("params.state", function (newValue, oldValue) {
+    var listeners = []
+    listeners.push($scope.$watch("params.state", function (newValue, oldValue) {
         if (newValue == oldValue) return;
         $scope.selected = [];
         reload({'page': 1, 'state': newValue});
-    });
-    $scope.$watch("params.page", function (newValue, oldValue) {
+    }));
+    listeners.push($scope.$watch("params.page", function (newValue, oldValue) {
         if (newValue == oldValue)return;
         reload({'page': newValue});
-    });
+    }));
     $scope.prevPage = function () {
         $scope.params.page = parseInt($scope.params.page) - 1;
     };
@@ -104,19 +105,27 @@ app.controller('taskRunsetsController', function ($scope, $rootScope, $http, $lo
         return !angular.equals($scope.params, updateParams());
     };
 
-    $rootScope.$on('$locationChangeStart', function (event) {
+    listeners.push($rootScope.$on('$locationChangeStart', function (event) {
         if (isParamsRaw()) {
             event.preventDefault();
             reload().replace();
         }
-    });
+    }));
 
-    $rootScope.$on('$locationChangeSuccess', function () {
+    listeners.push($rootScope.$on('$locationChangeSuccess', function () {
         updatePage();
-    });
+    }));
 
     if (isParamsRaw())
         reload();
     else
         updatePage();
+
+    var unbind = $scope.$on('$destroy', function () {
+        console.log('ok :{');
+        angular.forEach(listeners, function (listener_unbind) {
+            listener_unbind();
+        });
+        unbind();
+    });
 });
