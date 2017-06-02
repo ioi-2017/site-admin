@@ -42,16 +42,15 @@ app.controller('taskRunsetsController', function ($scope, $rootScope, $http, $lo
         });
     };
 
-    API.poll(1000, $scope, function () {
-        updatePageSoft();
-    });
-
     function updatePage(flush_selected) {
         if (flush_selected == true)
             $scope.selected = [];
         $scope.results = [];
         API.Taskrunset.query($scope.params, function (taskrunsets) {
             $scope.results = taskrunsets;
+            API.poll(1000, $scope, function () {
+                updatePageSoft();
+            });
         });
     }
 

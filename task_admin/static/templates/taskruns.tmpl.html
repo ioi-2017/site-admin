@@ -52,17 +52,16 @@
                 </tr>
                 </thead>
                 <tbody md-body>
-                <tr class="na-tr" md-row md-select="result" md-select-id="id" ng-repeat="result in results">
-                    <td md-cell><code>{{ result.rendered_code.length>10 ? result.rendered_code.substr(0, 10) +
-                            '...' : result.rendered_code }}</code></td>
+                <tr class="na-tr" md-row md-select="result" md-select-id="id" ng-repeat="result in results track by result.id">
+                    <td md-cell><code>{{ result.trimmed_code }}</code></td>
                     <td md-cell>
                         <md-icon aria-label="backup"
-                                 class="material-icons step">{{ result.is_local ? 'done' : 'clear'}}
+                                 class="material-icons step">{{ result.is_local_icon }}
                         </md-icon>
                     </td>
                     <td md-cell>
                         <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'blueGrey-700'}"
-                                   ng-show="result.status=='PENDING'">
+                                   ng-if="result.status=='PENDING'">
                             <md-icon class="material-icons step">schedule</md-icon>
                             <md-tooltip
                                     md-direction="left">
@@ -70,7 +69,7 @@
                             </md-tooltip>
                         </md-button>
                         <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'yellow-700'}"
-                                   ng-show="result.status=='PROGRESS'">
+                                   ng-if="result.status=='PROGRESS'">
                             <md-icon class="material-icons step">sync</md-icon>
                             <md-tooltip
                                     md-direction="left">
@@ -78,7 +77,7 @@
                             </md-tooltip>
                         </md-button>
                         <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'green-700'}"
-                                   ng-show="result.status=='SUCCESS'">
+                                   ng-if="result.status=='SUCCESS'">
                             <md-icon class="material-icons step">done</md-icon>
                             <md-tooltip
                                     md-direction="left">
@@ -86,7 +85,7 @@
                             </md-tooltip>
                         </md-button>
                         <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'blueGrey-700'}"
-                                   ng-show="result.status=='REVOKED'">
+                                   ng-if="result.status=='REVOKED'">
                             <md-icon class="material-icons step">pan_tool</md-icon>
                             <md-tooltip
                                     md-direction="left">
@@ -94,7 +93,7 @@
                             </md-tooltip>
                         </md-button>
                         <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'red-700'}"
-                                   ng-show="result.status=='FAILURE'">
+                                   ng-if="result.status=='FAILURE'">
                             <md-icon class="material-icons step">clear</md-icon>
                             <md-tooltip
                                     md-direction="left">

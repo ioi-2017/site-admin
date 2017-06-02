@@ -54,15 +54,24 @@ app.controller('taskRunsController', function ($scope, $rootScope, $http, $locat
         $http.post('/api/taskruns/' + item.id + "/stop/", {});
     };
 
+    var assignResults = function (results) {
+        for (var i = 0; i < results.length; i++) {
+            results[i].trimmed_code = (results[i].rendered_code.length>10 ? results[i].rendered_code.substr(0, 10) +
+                            '...' : results[i].rendered_code);
+            results[i].is_local_icon = results[i].is_local ? 'done' : 'clear';
+        }
+        $scope.results = results;
+    };
+
     var updatePageSoft = function() {
         API.Taskrun.query($scope.params, function (taskruns) {
             if (taskruns.length != $scope.results.length) {
-                $scope.results = taskruns;
+                assignResults(taskruns);
                 return;
             }
             for (var i = 0; i < taskruns.length; i++) {
                 if ($scope.results[i].id != taskruns[i].id) {
-                    $scope.results = taskruns;
+                    assignResults(taskruns);
                     break;
                 }
                 $scope.results[i].status = taskruns[i].status;
@@ -70,16 +79,14 @@ app.controller('taskRunsController', function ($scope, $rootScope, $http, $locat
         });
     };
 
-    API.poll(1000, $scope, function () {
-        updatePageSoft();
-    });
-
     function updatePage(flush_selected) {
         if (flush_selected == true)
             $scope.selected = [];
-        $scope.results = [];
         API.Taskrun.query($scope.params, function (taskruns) {
-            $scope.results = taskruns;
+            assignResults(taskruns);
+            API.poll(1000, $scope, function () {
+                updatePageSoft();
+            });
         });
     }
 
