@@ -20,11 +20,11 @@ md-sidenav .nav-header {
 }
 
 md-toolbar {
-    margin-bottom: 30px;
+    /*margin-bottom: 30px;*/
 }
 
 md-content#main {
-    margin: 20px;
+    margin: 0px 20px;
 }
 
 table.md-table th.md-column {
