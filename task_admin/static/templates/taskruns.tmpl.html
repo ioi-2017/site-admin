@@ -53,10 +53,10 @@
                 </thead>
                 <tbody md-body>
                 <tr class="na-tr" md-row md-select="result" md-select-id="id" ng-repeat="result in results track by result.id">
-                    <td md-cell><code>{{ result.trimmed_code }}</code></td>
+                    <td md-cell><code>{{ ::result.trimmed_code }}</code></td>
                     <td md-cell>
                         <md-icon aria-label="backup"
-                                 class="material-icons step">{{ result.is_local_icon }}
+                                 class="material-icons step">{{ ::result.is_local_icon }}
                         </md-icon>
                     </td>
                     <td md-cell>
@@ -101,7 +101,7 @@
                             </md-tooltip>
                         </md-button>
                     </td>
-                    <td md-cell><code>{{ result.node.ip }}</code></td>
+                    <td md-cell><code>{{ ::result.node.ip }}</code></td>
                     <td md-cell><span am-time-ago="result.created_at"></span></td>
                     <td layout="row">
                         <md-button class="md-fab md-mini" aria-label="Stop" ng-click="changeHovered(result)">
