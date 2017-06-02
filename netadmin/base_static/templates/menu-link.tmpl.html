@@ -1,7 +1,3 @@
-<md-button ng-href="{{ section.url }}">
-    {{ section.name }}
-    <span class="md-visually-hidden"
-          ng-if="isSelected()">
-    current page
-  </span>
+<md-button ng-href="{{ ::section.url }}">
+    {{ ::section.name }}
 </md-button>
