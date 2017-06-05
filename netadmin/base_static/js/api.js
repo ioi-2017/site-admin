@@ -63,7 +63,12 @@ app.service('API', function ($resource, $timeout, $http, MODELS) {
         };
     });
 
+    var currentPoll;
+
     apiService.poll = function (duration, pollingScope, callback, destroy) {
+        if (currentPoll != undefined && currentPoll.terminate != undefined)
+            currentPoll.terminate();
+        currentPoll = this;
         var cancelled = false;
 
         var update = function () {
@@ -74,7 +79,7 @@ app.service('API', function ($resource, $timeout, $http, MODELS) {
 
         var pollingPromise = $timeout(update, duration);
 
-        pollingScope.$on('$destroy', function () {
+        var terminate = function () {
             cancelled = true;
             if (pollingPromise) {
                 $timeout.cancel(pollingPromise);
@@ -82,6 +87,8 @@ app.service('API', function ($resource, $timeout, $http, MODELS) {
             if (destroy) {
                 destroy();
             }
-        });
+        };
+
+        pollingScope.$on('$destroy', terminate);
     };
 });
