@@ -164,12 +164,12 @@ app.provider('navigation', function () {
 app.config(function ($locationProvider, $routeProvider, navigationProvider, NAV) {
     navigationProvider.fillMenu(NAV);
     angular.forEach(navigationProvider.getLinks(), function (link) {
-        $routeProvider.when(link.urlPattern, {
+        /*$routeProvider.when(link.urlPattern, {
             templateUrl: _static('templates/' + link.template),
             controller: link.controller,
             controllerAs: 'ctrl',
             reloadOnSearch: false
-        });
+        });*/
     });
 
     $locationProvider.html5Mode(true);

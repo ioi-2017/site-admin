@@ -32,6 +32,7 @@
         <script src="{% static 'bower_components/papaparse/papaparse.min.js' %}"></script>
         <script src="{% static 'bower_components/moment/moment.js' %}"></script>
         <script src="{% static 'bower_components/angular-moment/angular-moment.min.js' %}"></script>
+        <script src="https://unpkg.com/angular-ui-router/release/angular-ui-router.min.js"></script>
     {% endblock jsinclude %}
 
     {% block script %}
@@ -43,6 +44,7 @@
         </script>
 
         <script src="{% static 'js/app.js' %}"></script>
+        <script src="{% static 'js/router.js' %}"></script>
         <script src="{% static 'js/layout.js' %}"></script>
         <script src="{% static 'js/navigation.js' %}"></script>
         <script src="{% static 'js/api.js' %}"></script>
@@ -68,13 +70,13 @@
 {% block body %}
     {% csrf_token %}
     <section layout-fill layout="row" flex>
-        <side-bar></side-bar>
+        <div ui-view="sidebar"></div>
 
         <div layout="column" tabindex="-1" role="main" flex>
-            <head-bar></head-bar>
+            <div ui-view="headbar"></div>
 
+            <div ui-view="content"></div>
             <md-content id="main" md-scroll-y layout="column" flex>
-                <ng-view></ng-view>
             </md-content>
         </div>
     </section>

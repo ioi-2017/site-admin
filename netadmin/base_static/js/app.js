@@ -2,7 +2,7 @@
  * Created by hamed on 3/19/17.
  */
 
-var app = angular.module('NetAdmin', ['ngMaterial', 'ngRoute', 'ngResource', 'ngMessages', 'Layout', 'md.data.table', 'angularMoment']);
+var app = angular.module('NetAdmin', ['ngMaterial', 'ui.router', 'ngResource', 'ngMessages', 'Layout', 'md.data.table', 'angularMoment']);
 
 app.config(function ($mdThemingProvider, $httpProvider) {
     $mdThemingProvider.theme('default')
