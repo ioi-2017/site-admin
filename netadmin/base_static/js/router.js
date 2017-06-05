@@ -11,7 +11,7 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider, $qPro
 
     $stateProvider
         .state('na', {
-            url:'/',
+            url: '/',
             views: {
                 'header': {
                     templateUrl: templateUrl('header.tmpl.html'),
@@ -26,8 +26,17 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider, $qPro
                 }
             }
         })
+        .state('na.monitor', {
+            url: 'monitor/:name',
+            views: {
+                'content@': {
+                    templateUrl: templateUrl('monitor.tmpl.html'),
+                    controller: 'monitorController'
+                }
+            }
+        })
         .state('na.taskruns', {
-            url:'taskruns',
+            url: 'taskruns',
             views: {
                 'content@': {
                     templateUrl: templateUrl('taskruns.tmpl.html'),
@@ -36,11 +45,29 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider, $qPro
             }
         })
         .state('na.tasks', {
-            url:'tasks',
+            url: 'tasks',
             views: {
                 'content@': {
                     templateUrl: templateUrl('taskrunsets.tmpl.html'),
                     controller: 'taskRunsetsController'
+                }
+            }
+        })
+        .state('na.templates', {
+            url: 'templates',
+            views: {
+                'content@': {
+                    templateUrl: templateUrl('tasks.tmpl.html'),
+                    controller: 'tasksController'
+                }
+            }
+        })
+        .state('na.nodes', {
+            url: 'nodes',
+            views: {
+                'content@': {
+                    templateUrl: templateUrl('nodes.tmpl.html'),
+                    controller: 'nodesController'
                 }
             }
         });
