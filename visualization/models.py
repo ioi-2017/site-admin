@@ -78,6 +78,10 @@ class Node(models.Model):
             return self.last_task.status
         return 'CONNECTED'
 
+    def update_last_task(self):
+        self.last_task = self.taskrun_set.filter(run_set__deleted=False).order_by('-created_at').first()
+        self.save()
+
     def __str__(self):
         return self.ip
 

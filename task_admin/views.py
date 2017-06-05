@@ -86,9 +86,11 @@ class TaskRunSetsAPI(mixins.CreateModelMixin,
 
     def perform_destroy(self, instance):
         instance.deleted = True
+        instance.save()
         logger.info('Taskrunset #%d (%s) is deleted' % (instance.id, instance.name))
         for task_run in instance.taskruns.all():
             task_run.stop()
+            task_run.node.update_last_task()
         logger.info('Remaining taskruns of Taskrunset #%d (%s) has stopped' % (instance.id, instance.name))
         instance.save()
 
