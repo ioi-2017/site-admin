@@ -1,6 +1,5 @@
 import json
 import os.path
-
 from django.test import Client
 from django.test import TestCase
 
@@ -13,7 +12,7 @@ class TaskTest(TestCase):
         response = client.get('/api/tasks/')
         self.assertEqual(response.status_code, 200)
         tasks = response.json()
-        required_fields = {'id', 'name', 'author', 'code', 'is_local'}
+        required_fields = {'id', 'name', 'author', 'code', 'is_local', 'timeout', 'username'}
         self.assertTrue(len(tasks) > 0)
         for task in tasks:
             self.assertSetEqual(set(task.keys()), required_fields)
@@ -36,7 +35,7 @@ class TaskTest(TestCase):
 
     def test_create(self):
         client = Client()
-        data = {'name': 'test', 'author': 1, 'code': 'code', 'is_local': True}
+        data = {'name': 'test', 'author': 1, 'code': 'code', 'is_local': True, 'timeout': 7.0, 'username': ''}
         response = client.post('/api/tasks/', data)
         self.assertEqual(response.status_code, 201)
         task = response.json()
@@ -64,6 +63,8 @@ class TaskRunSetTest(TestCase):
             'name': 'touch',
             'code': 'touch /tmp/{contestant.name}',
             'is_local': True,
+            'timeout': 7.0,
+            'username': '',
             'owner': 1,
             'ips': json.dumps(['172.17.0.0', '172.17.0.1'])
         }
@@ -94,7 +95,6 @@ class TaskRunSetTest(TestCase):
         taskrunset_data = {
             'code': 'touch /tmp/{contestant.name}',
             'is_local': True,
-            'task': 1,
             'owner': 1,
             'ips': json.dumps(['192.168.1.0', '192.168.1.1'])
         }
@@ -112,7 +112,8 @@ class CompleteTest(TestCase):
 
     def create_tasks(self):
         client = Client()
-        task_data = {'name': 'touch', 'author': 1, 'code': 'touch /tmp/{contestant.name}', 'is_local': True}
+        task_data = {'name': 'touch', 'author': 1, 'code': 'touch /tmp/{contestant.name}', 'is_local': True,
+                     'timeout': 7.0, 'username': ''}
         client.post('/api/tasks/', task_data)
         node_data = {
             'ip': '192.168.1.1',
@@ -169,7 +170,10 @@ class CompleteTest(TestCase):
 
         taskrunset_data = {
             'name': 'touch',
-            'task': 1,
+            'code': task_data['code'],
+            'is_local': task_data['is_local'],
+            'timeout': task_data['timeout'],
+            'username': task_data['username'],
             'owner': 1,
             'ips': json.dumps(['192.168.1.1', '192.168.1.2'])
         }

@@ -3,8 +3,6 @@ import os
 import subprocess
 
 import django
-import pytz
-from celery import Task
 from paramiko import SSHClient, AutoAddPolicy
 
 from netadmin.settings import app
@@ -14,11 +12,11 @@ django.setup()
 
 from task_admin.models import TaskRun
 
-RUN_TIMEOUT_SECONDS = 10
+SSH_CONNECTION_TIMEOUT = 1
 
 
 @app.task
-def execute_task(task_run_id, is_local, ip, username, rendered_code):
+def execute_task(task_run_id, is_local, ip, username, rendered_code, timeout):
     task_run = TaskRun.objects.get(id=task_run_id)
     task_run.status = 'PROGRESS'
     task_run.started_at = datetime.datetime.now()
@@ -27,7 +25,7 @@ def execute_task(task_run_id, is_local, ip, username, rendered_code):
         try:
             command = subprocess.Popen((rendered_code,), shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                                        stderr=subprocess.PIPE, universal_newlines=True)
-            stdout, stderr = command.communicate(timeout=RUN_TIMEOUT_SECONDS)
+            stdout, stderr = command.communicate(timeout=timeout)
             result = {'stdout': str(stdout),
                       'stderr': str(stderr),
                       'return_code': command.returncode,
@@ -43,8 +41,8 @@ def execute_task(task_run_id, is_local, ip, username, rendered_code):
             client = SSHClient()
             client.load_system_host_keys()
             client.set_missing_host_key_policy(AutoAddPolicy())
-            client.connect(ip, username=username, timeout=RUN_TIMEOUT_SECONDS)
-            stdin, stdout, stderr = client.exec_command(rendered_code)
+            client.connect(ip, username=username, timeout=SSH_CONNECTION_TIMEOUT)
+            stdin, stdout, stderr = client.exec_command(rendered_code, timeout=timeout)
             result = {'stdout': stdout.read().decode('utf-8'),
                       'stderr': stderr.read().decode('utf-8'),
                       'return_code': stdout.channel.recv_exit_status(),
