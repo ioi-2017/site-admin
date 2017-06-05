@@ -47,10 +47,18 @@
                                         <md-checkbox name="tos" ng-model="is_local">
                                             Local Task
                                         </md-checkbox>
-
-
                                     </md-input-container>
                                     <div flex></div>
+                                </div>
+                                <div layout="row" layout-align="space-between center">
+                                    <md-input-container flex>
+                                        <label>SSH Username</label>
+                                        <input ng-model="username">
+                                    </md-input-container>
+                                    <md-input-container flex>
+                                        <label>Timeout</label>
+                                        <input ng-model="timeout" type="number" step="any" min="0" required>
+                                    </md-input-container>
                                 </div>
                                 <md-input-container class="md-block">
                                     <label>Template Code</label>
@@ -113,7 +121,8 @@
                             <md-input-container class="md-block">
                                 <md-radio-group ng-model="nodes_filter">
 
-                                    <md-radio-button ng-repeat="(k,v) in all_filters" value="{{ k }}">{{ k }}</md-radio-button>
+                                    <md-radio-button ng-repeat="(k,v) in all_filters"
+                                                     value="{{ k }}">{{ k }}</md-radio-button>
 
                                 </md-radio-group>
                             </md-input-container>

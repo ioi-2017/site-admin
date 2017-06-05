@@ -14,6 +14,8 @@ app.controller('tasksController', function ($scope, $rootScope, $http, $location
 
 
                     $scope.task_name = '';
+                    $scope.timeout = 10;
+                    $scope.username = '';
                     $scope.template_code = '';
                     $scope.is_local = true;
                     $scope.edit_mode = false;
@@ -21,6 +23,8 @@ app.controller('tasksController', function ($scope, $rootScope, $http, $location
                         $scope.task_name = task.name;
                         $scope.template_code = task.code;
                         $scope.is_local = task.is_local;
+                        $scope.timeout = task.timeout;
+                        $scope.username = task.username;
                         $scope.edit_mode = true;
                     }
                     $scope.$watch('template_code', function () {
@@ -41,6 +45,8 @@ app.controller('tasksController', function ($scope, $rootScope, $http, $location
                                 name: $scope.task_name,
                                 code: $scope.template_code,
                                 is_local: $scope.is_local,
+                                timeout: $scope.timeout,
+                                username: $scope.username,
                                 author: 1
                             }).then(function (response) {
                                 $mdDialog.hide();
@@ -57,6 +63,8 @@ app.controller('tasksController', function ($scope, $rootScope, $http, $location
                                 name: $scope.task_name,
                                 code: $scope.template_code,
                                 is_local: $scope.is_local,
+                                timeout: $scope.timeout,
+                                username: $scope.username,
                                 author: 1
                             }).then(function (response) {
                                 $mdDialog.hide();

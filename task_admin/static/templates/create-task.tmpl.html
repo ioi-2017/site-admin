@@ -1,5 +1,5 @@
 <md-dialog aria-label="Create Task" class="flex-60">
-    <form ng-cloak>
+    <form ng-cloak ng-submit="create()">
         <md-toolbar>
             <div class="md-toolbar-tools">
                 <h2>{{ edit_mode? 'Edit':'Create' }} Task</h2>
@@ -13,7 +13,7 @@
                         <div layout="row" layout-align="space-between center">
                             <md-input-container flex>
                                 <label>Task Name</label>
-                                <input ng-model="task_name">
+                                <input ng-model="task_name" required>
                             </md-input-container>
                             <md-input-container class="md-block">
                                 <md-checkbox name="tos" ng-model="is_local">
@@ -21,9 +21,19 @@
                                 </md-checkbox>
                             </md-input-container>
                         </div>
+                        <div layout="row" layout-align="space-between center">
+                            <md-input-container flex>
+                                <label>SSH Username</label>
+                                <input ng-model="username">
+                            </md-input-container>
+                            <md-input-container flex>
+                                <label>Timeout</label>
+                                <input ng-model="timeout" type="number" step="any" min="0" required>
+                            </md-input-container>
+                        </div>
                         <md-input-container class="md-block">
                             <label>Template Code</label>
-                            <textarea id="template-text-area" ng-model="template_code" rows="5"
+                            <textarea required id="template-text-area" ng-model="template_code" rows="5"
                                       md-select-on-focus></textarea>
                         </md-input-container>
                         <p>
@@ -58,7 +68,7 @@
             <md-button ng-click="hide()">
                 Cancel
             </md-button>
-            <md-button ng-click="create()">
+            <md-button type="submit">
                 {{ edit_mode? 'Save':'Create' }}
             </md-button>
         </md-dialog-actions>

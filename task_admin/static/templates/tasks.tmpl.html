@@ -23,6 +23,8 @@
                 <th md-column>Name</th>
                 <th md-column>Code</th>
                 <th md-column>Is Local?</th>
+                <th md-column>Timeout</th>
+                <th md-column>Username</th>
             </tr>
             </thead>
             <tbody md-body>
@@ -41,6 +43,12 @@
                     <md-icon aria-label="backup"
                              class="material-icons step">{{ result.is_local ? 'done' : 'clear'}}
                     </md-icon>
+                </td>
+                <td md-cell>
+                    {{ result.timeout }}
+                </td>
+                <td md-cell>
+                    {{ result.username }}
                 </td>
             </tr>
             </tbody>
