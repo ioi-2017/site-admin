@@ -1,5 +1,5 @@
-<div layout="row">
-    <div flex id="rooms_wrapper" layout="column">
+<div layout="row" layout-fill>
+    <div flex id="rooms_wrapper" class="flex-65" layout="column">
         <div ng-repeat="room in rooms">
             <room data="room" select="select"></room>
         </div>

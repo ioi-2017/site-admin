@@ -50,3 +50,10 @@ table.md-table.md-row-select tbody.md-body>tr.na-tr.md-row.md-selected {
 table.md-table.md-row-select tbody.md-body>tr.na-tr.md-row:not([disabled]):hover {
     background-color: inherit !important;
 }
+
+#details {
+    position: fixed;
+    right: 0;
+    top: 64px;
+    overflow-y: auto;
+}
