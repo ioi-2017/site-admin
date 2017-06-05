@@ -7,6 +7,10 @@ md-sidenav .nav-header {
     border-bottom: 1px solid #333;
 }
 
+md-sidenav {
+    height: 100%;
+}
+
 .logo {
     font-weight: 300;
 }
@@ -24,7 +28,7 @@ md-toolbar {
 }
 
 md-content#main {
-    margin: 0px 20px;
+    margin: 0 20px;
 }
 
 table.md-table th.md-column {
