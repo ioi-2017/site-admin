@@ -22,7 +22,7 @@
         <script src="{% static 'bower_components/jquery/dist/jquery.min.js' %}"></script>
         <script src="{% static 'bower_components/raphael/raphael.min.js' %}"></script>
         <script src="{% static 'bower_components/angular/angular.js' %}"></script>
-        <script src="{% static 'bower_components/angular-route/angular-route.js' %}"></script>
+        <script src="{% static 'bower_components/angular-ui-router/release/angular-ui-router.js' %}"></script>
         <script src="{% static 'bower_components/angular-animate/angular-animate.js' %}"></script>
         <script src="{% static 'bower_components/angular-aria/angular-aria.js' %}"></script>
         <script src="{% static 'bower_components/angular-messages/angular-messages.js' %}"></script>
@@ -43,8 +43,8 @@
         </script>
 
         <script src="{% static 'js/app.js' %}"></script>
+        <script src="{% static 'js/router.js' %}"></script>
         <script src="{% static 'js/layout.js' %}"></script>
-        <script src="{% static 'js/navigation.js' %}"></script>
         <script src="{% static 'js/api.js' %}"></script>
 
         <script src="{% static 'js/room.js' %}"></script>
@@ -67,14 +67,15 @@
 
 {% block body %}
     {% csrf_token %}
+    <!--a ui-sref="na.taskruns">taskruns</a-->
     <section layout-fill layout="row" flex>
-        <side-bar></side-bar>
+        <div ui-view="sidebar"></div>
 
         <div layout="column" tabindex="-1" role="main" flex>
-            <head-bar></head-bar>
+            <div ui-view="header"></div>
 
             <md-content id="main" md-scroll-y layout="column" flex>
-                <ng-view></ng-view>
+                <div ui-view="content"></div>
             </md-content>
         </div>
     </section>

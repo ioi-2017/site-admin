@@ -5,17 +5,14 @@
     <header class="nav-header" layout="column">
         <h1 class="logo md-display-2" md-truncate>Net Admin</h1>
         <div>
-            <img class="contest-logo" ng-src="{{ sidebar.contest_logo }}"/>
+            <img class="contest-logo" ng-src="{{ ::contest_logo }}"/>
         </div>
-        <h4 class="contest-title md-title">{{ sidebar.contest_title }}</h4>
+        <h4 class="contest-title md-title">{{ ::contest_title }}</h4>
     </header>
 
-    <md-content flex role="navigation">
-        <ul class="nav-menu">
-            <li ng-repeat="section in sidebar.menu">
-                <menu-toggle section="section" ng-if="section.type == 'toggle' && !section.hidden"></menu-toggle>
-                <menu-link section="section" ng-if="section.type != 'toggle' && !section.hidden"></menu-link>
-            </li>
-        </ul>
+    <md-content flex role="navigation" layout="column">
+        <md-button ui-sref="na"> Home </md-button>
+        <md-button ui-sref="na.tasks"> Tasks </md-button>
+        <md-button ui-sref="na.taskruns"> Taskruns </md-button>
     </md-content>
 </md-sidenav>
