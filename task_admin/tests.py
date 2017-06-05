@@ -77,6 +77,26 @@ class TaskRunSetTest(TestCase):
         self.assertTrue(os.path.isfile('/tmp/TurkishContestant-2'))
         self.remove_tmp_files()
 
+    def test_timeout(self):
+        taskrunset_data = {
+            'name': 'sleep test',
+            'code': 'sleep 2 && touch /tmp/{contestant.name}',
+            'is_local': True,
+            'timeout': 1,
+            'username': '',
+            'owner': 1,
+            'ips': json.dumps(['172.17.0.0', '172.17.0.1'])
+        }
+        client = Client()
+        self.remove_tmp_files()
+        self.assertEqual(client.post('/api/taskrunsets/', taskrunset_data).status_code, 201)
+        taskruns = client.get('/api/taskruns/').json()
+        self.assertEqual(int(taskruns['count']), 2)
+        for result in taskruns['results']:
+            self.assertEqual(result['status'], 'FAILURE')
+        self.assertFalse(os.path.isfile('/tmp/TurkishContestant-1'))
+        self.assertFalse(os.path.isfile('/tmp/TurkishContestant-2'))
+
     def remove_tmp_files(self):
         if os.path.isfile('/tmp/TurkishContestant-1'):
             os.remove('/tmp/TurkishContestant-1')
