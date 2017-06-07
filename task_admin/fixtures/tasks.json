@@ -4,6 +4,8 @@
   "pk": 1,
   "fields": {
     "is_local": true,
+    "timeout": 10,
+    "username": "",
     "name": "scp tasks",
     "code": "scp /home/ioi/tasks/{node.id} {node.username}@{node.ip}:tasks/",
     "author": 1,
@@ -16,6 +18,8 @@
   "pk": 2,
   "fields": {
     "is_local": true,
+    "timeout": 10,
+    "username": "",
     "name": "Make temp directories",
     "code": "mkdir /tmp/{contestant.id}-{node.username}",
     "author": 1,
@@ -28,6 +32,8 @@
   "pk": 3,
   "fields": {
     "is_local": false,
+    "timeout": 10,
+    "username": "",
     "name": "List home directory",
     "code": "ls ~",
     "author": 1,
@@ -40,6 +46,8 @@
   "pk": 4,
   "fields": {
     "is_local": false,
+    "timeout": 10,
+    "username": "",
     "name": "Home dir size",
     "code": "du -sc /tmp/ | tail -1 | awk '{ print $1 }'",
     "author": 1,
@@ -52,6 +60,8 @@
   "pk": 5,
   "fields": {
     "is_local": false,
+    "timeout": 10,
+    "username": "",
     "name": "Collect ip address",
     "code": "ip route",
     "author": 1,
@@ -64,6 +74,8 @@
   "pk": 6,
   "fields": {
     "is_local": false,
+    "timeout": 10,
+    "username": "",
     "name": "Reboot worker",
     "code": "reboot",
     "author": 1,
@@ -76,6 +88,8 @@
   "pk": 7,
   "fields": {
     "is_local": true,
+    "timeout": 10,
+    "username": "",
     "name": "Make temp directories",
     "code": "mkdir /tmp/{contestant.id}-{node.username}",
     "author": 1,

@@ -21,6 +21,8 @@ app.service('taskRunSetCreator', function ($mdDialog) {
                         if (task) {
                             $scope.template_code = task.code;
                             $scope.is_local = task.is_local;
+                            $scope.timeout = task.timeout;
+                            $scope.username = task.username;
                             if ($scope.run_set_name == '')
                                 $scope.run_set_name = task.display
                         }
@@ -34,7 +36,9 @@ app.service('taskRunSetCreator', function ($mdDialog) {
                                     value: task.name.toLowerCase(),
                                     display: task.name,
                                     code: task.code,
-                                    is_local: task.is_local
+                                    is_local: task.is_local,
+                                    timeout: task.timeout,
+                                    username: task.username
                                 };
                             });
                         });
@@ -74,6 +78,8 @@ app.service('taskRunSetCreator', function ($mdDialog) {
 
                     $scope.template_code = '';
                     $scope.is_local = true;
+                    $scope.timeout = 10;
+                    $scope.username = '';
                     $scope.run_set_name = '';
                     $scope.rendered_code = '';
                     $scope.$watch('template_code', function () {
@@ -92,6 +98,8 @@ app.service('taskRunSetCreator', function ($mdDialog) {
                         $http.post('/api/taskrunsets/', {
                             code: $scope.template_code,
                             is_local: $scope.is_local,
+                            timeout: $scope.timeout,
+                            username: $scope.username,
                             owner: 1,
                             ips: $scope.selected_ips.map(function (node) {
                                 return node.ip;

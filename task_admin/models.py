@@ -9,6 +9,8 @@ from visualization.models import Desk, Node, Contestant
 
 class Task(models.Model):
     is_local = models.BooleanField()
+    timeout = models.FloatField()
+    username = models.CharField(max_length=20, blank=True, null=True)
     name = models.CharField(max_length=100)
     code = models.TextField()
     author = models.ForeignKey(User)
@@ -22,6 +24,8 @@ class Task(models.Model):
 class TaskRunSet(models.Model):
     name = models.TextField(blank=True)
     is_local = models.BooleanField()
+    timeout = models.FloatField()
+    username = models.CharField(max_length=20, blank=True, null=True)
     code = models.TextField()
     owner = models.ForeignKey(User, related_name='taskrunset', null=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -58,6 +62,8 @@ class TaskRunSet(models.Model):
 class TaskRun(models.Model):
     celery_task = models.CharField(max_length=255, unique=True, null=True)
     is_local = models.BooleanField()
+    timeout = models.FloatField()
+    username = models.CharField(max_length=20, blank=True, null=True)
     run_set = models.ForeignKey(TaskRunSet, related_name='taskruns')
     created_at = models.DateTimeField(auto_now_add=True)
     started_at = models.DateTimeField(blank=True, null=True)
@@ -78,10 +84,11 @@ class TaskRun(models.Model):
         """
         return {
             'is_local': self.is_local,
+            'timeout': self.timeout,
+            'username': self.username or self.node.username,
             'ip': self.node.ip,
-            'username': self.node.username,
             'rendered_code': self.rendered_code,
-            'task_run_id': self.id,
+            'task_run_id': self.id
         }
 
     def duration_milliseconds(self):
