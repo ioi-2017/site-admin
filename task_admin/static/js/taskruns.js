@@ -63,7 +63,7 @@ app.controller('taskRunsController', function ($scope, $rootScope, $http, $locat
         $scope.results = results;
     };
 
-    var updatePageSoft = function() {
+    var updatePageSoft = function(callback) {
         API.Taskrun.query($scope.params, function (taskruns) {
             if (taskruns.length != $scope.results.length) {
                 assignResults(taskruns);
@@ -76,6 +76,7 @@ app.controller('taskRunsController', function ($scope, $rootScope, $http, $locat
                 }
                 $scope.results[i].status = taskruns[i].status;
             }
+            callback();
         });
     };
 
@@ -84,8 +85,8 @@ app.controller('taskRunsController', function ($scope, $rootScope, $http, $locat
             $scope.selected = [];
         API.Taskrun.query($scope.params, function (taskruns) {
             assignResults(taskruns);
-            API.poll(1000, $scope, function () {
-                updatePageSoft();
+            API.poll(1000, $scope, function (next) {
+                updatePageSoft(next);
             });
         });
     }

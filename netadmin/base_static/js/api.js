@@ -72,9 +72,10 @@ app.service('API', function ($resource, $timeout, $http, MODELS) {
         var cancelled = false;
 
         var update = function () {
-            callback();
-            if (!cancelled)
-                pollingPromise = $timeout(update, duration);
+            callback(function () {
+                if (!cancelled)
+                    pollingPromise = $timeout(update, duration);
+            });
         };
 
         var pollingPromise = $timeout(update, duration);

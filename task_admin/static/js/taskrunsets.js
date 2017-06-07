@@ -26,7 +26,7 @@ app.controller('taskRunsetsController', function ($scope, $rootScope, $http, $lo
         $scope.params.page = n;
     };
 
-    var updatePageSoft = function() {
+    var updatePageSoft = function(callback) {
         API.Taskrunset.query($scope.params, function (taskrunsets) {
             if (taskrunsets.length != $scope.results.length) {
                 $scope.results = taskrunsets;
@@ -39,6 +39,7 @@ app.controller('taskRunsetsController', function ($scope, $rootScope, $http, $lo
                 }
                 $scope.results[i].summary = taskrunsets[i].summary;
             }
+            callback();
         });
     };
 
@@ -48,8 +49,8 @@ app.controller('taskRunsetsController', function ($scope, $rootScope, $http, $lo
         $scope.results = [];
         API.Taskrunset.query($scope.params, function (taskrunsets) {
             $scope.results = taskrunsets;
-            API.poll(1000, $scope, function () {
-                updatePageSoft();
+            API.poll(1000, $scope, function (next) {
+                updatePageSoft(next);
             });
         });
     }
