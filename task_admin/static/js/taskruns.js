@@ -6,7 +6,7 @@ app.controller('taskRunsController', function ($scope, $rootScope, $http, $locat
             desk: '',
             contestant: '',
             node: '',
-            state: 'ALL',
+            status: 'ALL',
             run_set: '',
             page: 1
         }, $location.search(), newParams);
@@ -63,8 +63,16 @@ app.controller('taskRunsController', function ($scope, $rootScope, $http, $locat
         $scope.results = results;
     };
 
+    function remove_all(params)
+    {
+        var query_params = angular.copy(params);
+        if (query_params.status == 'ALL')
+            query_params.status = '';
+        return query_params;
+    }
+
     var updatePageSoft = function(callback) {
-        API.Taskrun.query($scope.params, function (taskruns) {
+        API.Taskrun.query(remove_all($scope.params), function (taskruns) {
             if (taskruns.length != $scope.results.length) {
                 assignResults(taskruns);
                 return;
@@ -83,7 +91,7 @@ app.controller('taskRunsController', function ($scope, $rootScope, $http, $locat
     function updatePage(flush_selected) {
         if (flush_selected == true)
             $scope.selected = [];
-        API.Taskrun.query($scope.params, function (taskruns) {
+        API.Taskrun.query(remove_all($scope.params), function (taskruns) {
             assignResults(taskruns);
             API.poll(1000, $scope, function (next) {
                 updatePageSoft(next);

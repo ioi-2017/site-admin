@@ -1,9 +1,11 @@
 import textwrap
 from collections import Counter
+
 from celery.result import AsyncResult
-from dateutil.parser import parser
 from django.contrib.auth.models import User
-from django.db import models
+from django.db import models, transaction, connection
+from django.contrib.postgres.fields import JSONField
+
 from visualization.models import Desk, Node, Contestant
 
 
@@ -30,6 +32,7 @@ class TaskRunSet(models.Model):
     owner = models.ForeignKey(User, related_name='taskrunset', null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     deleted = models.BooleanField(default=False)
+    summary = JSONField()
 
     @property
     def last_finished_at(self):
@@ -38,11 +41,6 @@ class TaskRunSet(models.Model):
     @property
     def max_duration_milliseconds(self):
         return max(task_run.duration_milliseconds for task_run in self.taskruns.all())
-
-    @property
-    def summary(self):
-        counter = Counter([task_run.status for task_run in self.taskruns.all()])
-        return counter
 
     @property
     def is_finished(self):
@@ -99,8 +97,21 @@ class TaskRun(models.Model):
     def stop(self):
         self.get_celery_result().revoke()
         if self.status == 'PENDING':
-            self.status = 'REVOKED'
-            self.save()
+            with transaction.atomic():
+                self.change_status('ABORTED')
+                self.save()
+
+    @transaction.atomic
+    def change_status(self, new_status):
+        if new_status == self.status:
+            return
+        cursor = connection.cursor()
+        cursor.execute(
+            "UPDATE task_admin_taskrunset set summary = summary || "
+            "jsonb_build_object('{0}',(summary->>'{0}')::int-1) ||"
+            "jsonb_build_object('{1}',(summary->>'{1}')::int+1) "
+            "where id={2};".format(self.status, new_status, self.run_set_id))
+        self.status = new_status
 
     def get_celery_result(self):
         return AsyncResult(self.celery_task)

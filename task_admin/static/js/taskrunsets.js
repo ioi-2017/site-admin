@@ -4,7 +4,7 @@ app.controller('taskRunsetsController', function ($scope, $rootScope, $http, $lo
 
     var updateParams = function (newParams) {
         return angular.extend({
-            state: 'all',
+            state: 'ALL',
             owner_id: '',
             page: 1
         }, $location.search(), newParams);

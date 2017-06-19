@@ -24,6 +24,7 @@ class TaskRunSetSerializer(serializers.ModelSerializer):
     owner_data = serializers.StringRelatedField(source='owner')
     taskruns = serializers.StringRelatedField(many=True, read_only=True)
     ips = serializers.JSONField(write_only=True)
+    summary = serializers.JSONField(read_only=True)
     code = serializers.CharField(required=True)
     is_local = serializers.BooleanField(required=True)
     timeout = serializers.FloatField(required=True)
@@ -45,6 +46,11 @@ class TaskRunSetSerializer(serializers.ModelSerializer):
             username=data['username'],
             owner=data['owner'],
             name=data['name'],
+            summary={'PENDING': len(data['ips']),
+                     'SUCCESS': 0,
+                     'ABORTED': 0,
+                     'FAILED': 0,
+                     'RUNNING': 0}
         )
         taskrunset.save()  # TODO: Taskrunset should not be created unless all taskruns created successfully
         logger.info('Taskrunset #%d (%s) is going to be created' % (taskrunset.id, taskrunset.name))
