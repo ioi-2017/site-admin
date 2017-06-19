@@ -2,7 +2,7 @@
  * Created by hamed on 6/2/17.
  */
 
-app.config(function($stateProvider, $urlRouterProvider, $locationProvider, $qProvider) {
+app.config(function ($stateProvider, $urlRouterProvider, $locationProvider, $qProvider) {
     $urlRouterProvider.otherwise('/');
 
     var templateUrl = function (templateName) {
@@ -62,12 +62,21 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider, $qPro
                 }
             }
         })
-        .state('na.nodes', {
-            url: 'nodes',
+        .state('na.node-import', {
+            url: 'node-import',
             views: {
                 'content@': {
-                    templateUrl: templateUrl('nodes.tmpl.html'),
-                    controller: 'nodesController'
+                    templateUrl: templateUrl('node-import.tmpl.html'),
+                    controller: 'nodeImportController'
+                }
+            }
+        })
+        .state('na.nodegroups', {
+            url: 'nodegroups',
+            views: {
+                'content@': {
+                    templateUrl: templateUrl('nodegroups.tmpl.html'),
+                    controller: 'nodeGroupsController'
                 }
             }
         });

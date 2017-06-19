@@ -9,6 +9,9 @@ app.constant('MODELS', {
     'Node': {
         url: '/api/nodes/:id/'
     },
+    'Nodegroup': {
+        url: '/api/nodegroups/:id/'
+    },
     'Desk': {
         url: '/api/desks/:id/'
     },

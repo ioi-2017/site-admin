@@ -5,6 +5,7 @@ app.service('taskRunSetCreator', function ($mdDialog) {
                     $scope.selected_ips = [];
                     $scope.nodes_filter = '';
                     $scope.all_filters = {};
+                    $scope.filter_names = [];
                     $scope.var_helps = [];
                     $http.get('/api/task_create/').then(function (response) {
                         $scope.var_helps = response.data;
@@ -47,9 +48,10 @@ app.service('taskRunSetCreator', function ($mdDialog) {
                     updateTasks();
 
                     $http.get('/api/nodegroups/').then(function (response) {
-                        $scope.nodes_filter = response.data[0][0]; //Key of the first filter
+                        $scope.nodes_filter = response.data[0].name; //Key of the first filter
                         angular.forEach(response.data, function (filter) {
-                            $scope.all_filters[filter[0]] = filter[1]
+                            $scope.all_filters[filter.name] = filter.nodes;
+                            $scope.filter_names.push(filter.name);
                         });
                     });
 

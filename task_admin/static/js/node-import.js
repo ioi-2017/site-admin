@@ -1,4 +1,4 @@
-app.controller('nodesController', function ($scope, $rootScope, $http, $location, $mdDialog) {
+app.controller('nodeImportController', function ($scope, $rootScope, $http, $location, $mdDialog) {
     $scope.results = [];
     $scope.addNodes = function (ev) {
         var confirm = $mdDialog.confirm()

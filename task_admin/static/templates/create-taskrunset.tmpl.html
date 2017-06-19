@@ -121,8 +121,8 @@
                             <md-input-container class="md-block">
                                 <md-radio-group ng-model="nodes_filter">
 
-                                    <md-radio-button ng-repeat="(k,v) in all_filters"
-                                                     value="{{ k }}">{{ k }}</md-radio-button>
+                                    <md-radio-button ng-repeat="name in filter_names"
+                                                     value="{{ name }}">{{ name }}</md-radio-button>
 
                                 </md-radio-group>
                             </md-input-container>

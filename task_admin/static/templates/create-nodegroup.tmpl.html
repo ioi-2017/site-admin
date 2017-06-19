@@ -1,0 +1,90 @@
+<md-dialog aria-label="Create Node Group" class="flex-75">
+    <form ng-cloak name="nodeGroupCreationForm" ng-submit="create()">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Create NodeGroup</h2>
+                <md-input-container flex-gt-sm>
+                    <label>NodeGroup Name</label>
+                    <input required ng-model="nodegroup.name" name="name">
+
+                    <div ng-messages="nodeGroupCreationForm.name.$error">
+                        <div ng-message="required">This is required.</div>
+                    </div>
+                </md-input-container>
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <md-tabs md-dynamic-height md-border-bottom md-selected="selected_tab">
+                    <md-tab label="Task Code">
+                        <div layout="row">
+                            <div flex>
+                                <md-input-container class="md-block">
+                                    <label>Expression</label>
+                                    <textarea required id="template-text-area" ng-model="nodegroup.expression"
+                                              name="expression" rows="5"
+                                              md-select-on-focus></textarea>
+
+                                    <div ng-messages="nodeGroupCreationForm.expression.$error">
+                                        <div ng-message="required">This is required.</div>
+                                    </div>
+                                </md-input-container>
+                                <p>
+
+                                <md-button class="md-raised md-primary" ng-click="evaluate_expression()">Evaluate Expression</md-button>
+                    <span>
+                        </span>
+                            </div>
+                        </div>
+                    </md-tab>
+
+                    <md-tab label="Nodes ({{ selected_ips.length }})">
+                        <div layout="row">
+                            <md-table-container class="flex-80">
+                                <table id="iptable" md-table md-row-select multiple ng-model="selected_ips" md-progress="promise">
+                                    <thead md-head>
+                                    <tr md-row>
+                                        <th md-column>IP</th>
+                                        <th md-column>Mac</th>
+                                        <th md-column>Connected</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody md-body>
+                                    <tr class="na-tr" md-row md-select="node" md-select-id="ip" md-on-select="boz"
+                                        ng-repeat="node in all_filters[nodes_filter]">
+                                        <td md-cell><code>{{ node.ip }}</code></td>
+                                        <td md-cell><code>{{ node.mac_address }}</code></td>
+                                        <td md-cell>{{ node.connected }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </md-table-container>
+
+                            <md-input-container class="md-block">
+                                <md-button class="md-raised md-primary" ng-click="make_expression()">Make Expression</md-button>
+                                <md-radio-group ng-model="nodes_filter">
+
+                                    <md-radio-button ng-repeat="name in filter_names"
+                                                     value="{{ name }}">{{ name }}</md-radio-button>
+
+                                </md-radio-group>
+                            </md-input-container>
+                        </div>
+                    </md-tab>
+                </md-tabs>
+
+            </div>
+        </md-dialog-content>
+
+        <md-dialog-actions layout="row">
+            <span flex></span>
+            <md-button ng-click="hide()">
+                Cancel
+            </md-button>
+            <md-button type="submit">
+                {{ edit_mode? 'Save':'Create' }}
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

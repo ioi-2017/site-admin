@@ -1,0 +1,43 @@
+<div id="nodes">
+    <div class="md-toolbar-tools">
+        <span>{{ selected.length }} {{ selected.length > 1 ? 'Node Groups' : 'Node Group'}} selected</span>
+
+        <md-button class="md-fab md-mini" aria-label="Delete" md-colors="::{backgroundColor: 'red-700'}"
+                   ng-click="deleteSelected($event)" ng-disabled="selected.length<1">
+            <md-icon aria-label="backup"
+                     class="material-icons step">delete
+            </md-icon>
+        </md-button>
+
+        <md-button class="md-fab md-mini" aria-label="Create TaskRunSet"
+                   ng-click="showNodeGroupCreate($event)">
+            <md-icon aria-label="Create"
+                     class="material-icons step">add
+            </md-icon>
+        </md-button>
+    </div>
+    <md-table-container>
+        <table md-table md-row-select="true" multiple ng-model="selected" md-progress="promise">
+            <thead md-head>
+            <tr md-row>
+                <th md-column>Name</th>
+                <th md-column>Expression</th>
+                <th md-column>Node Count</th>
+            </tr>
+            </thead>
+            <tbody md-body>
+            <tr class="na-tr" md-select="result" md-row ng-repeat="result in results">
+                <td md-cell>
+                    <md-button class="md-icon-button" aria-label="Edit NodeGroup" ng-click="showNodeGroupCreate($event, result)">
+                        <md-icon aria-label="backup"
+                                 class="material-icons step">edit
+                        </md-icon>
+                    </md-button>
+                    {{ result.name }}</td>
+                <td md-cell><code>{{ trim_code(result.expression, 60) }}</code></td>
+                <td md-cell>{{ result.nodes.length }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+</div>

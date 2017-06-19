@@ -1,5 +1,4 @@
 from collections import defaultdict
-
 import svgwrite
 from django.http import HttpResponse
 from django.http import JsonResponse
@@ -9,14 +8,26 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from visualization.models import Room, Node, Desk, Contestant, NodeGroup
-from visualization.serializers import NodeSerializer, DeskSerializer, ContestantSerializer, RoomSerializer
+from visualization.serializers import NodeSerializer, DeskSerializer, ContestantSerializer, RoomSerializer, \
+    NodeGroupSerializer
 
 
-class NodeGroupsView(View):
-    def get(self, request):
+class NodeGroupsViewAPI(ModelViewSet):
+    serializer_class = NodeGroupSerializer
+    queryset = NodeGroup.objects.all()
+
+    def list(self, request, **kwargs):
         results = []
         for group in NodeGroup.objects.order_by('id').all():
-            results.append([group.name, [NodeSerializer(node).data for node in group.nodes()]])
+            results.append({'id': group.id, 'name': group.name, 'expression': group.expression,
+                            'nodes': [NodeSerializer(node).data for node in group.nodes()]})
+        return JsonResponse(results, safe=False)
+
+
+class NodeGroupsRenderView(View):
+    def get(self, request):
+        group = NodeGroup(expression=request.GET['expression'])
+        results = [NodeSerializer(node).data for node in group.nodes()]
         return JsonResponse(results, safe=False)
 
 
@@ -51,7 +62,7 @@ class RetrieveDeskMap(View):
 
         for other_desk in desk.room.desk_set.all():
             x, y, angle = other_desk.x * 600, other_desk.y * 480, other_desk.angle
-            image.add(image.rect((x-20, y-10), (40, 20), fill='black' if other_desk.id == desk.id else 'white',
+            image.add(image.rect((x - 20, y - 10), (40, 20), fill='black' if other_desk.id == desk.id else 'white',
                                  rx=2, ry=2, stroke='black'))
 
         return HttpResponse(image.tostring(), content_type="image/svg+xml")
