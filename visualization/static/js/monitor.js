@@ -61,7 +61,9 @@ app.controller('monitorController', function ($scope, $stateParams, $http, $time
         });
     }
 
-    $scope.rooms = API.Room.query({}, function () {
+    var query = ($stateParams['name'] == 'all'? {} : {'name': $stateParams['name']});
+    console.log(query);
+    $scope.rooms = API.Room.query(query, function () {
         $timeout(function () {
             angular.forEach($scope.rooms, function (room) {
                 initRoom(room);
