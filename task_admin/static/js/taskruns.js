@@ -142,7 +142,6 @@ app.controller('taskRunsController', function ($scope, $rootScope, $http, $locat
 
 
     var unbind = $scope.$on('$destroy', function () {
-        console.log('ok :{');
         angular.forEach(listeners, function (listener_unbind) {
             listener_unbind();
         });

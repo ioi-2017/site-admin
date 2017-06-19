@@ -27,7 +27,7 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider, $qPro
             }
         })
         .state('na.monitor', {
-            url: 'monitor/:name',
+            url: 'monitor/:name/',
             views: {
                 'content@': {
                     templateUrl: templateUrl('monitor.tmpl.html'),

@@ -1,8 +1,13 @@
 <div layout="row" layout-fill>
     <div flex id="rooms_wrapper" class="flex-65" layout="column">
-        <div ng-repeat="room in rooms">
-            <room data="room" select="select"></room>
-        </div>
+        <md-card ng-repeat="room in rooms">
+            <div class="room" id="container-{{ room.id }}">
+
+            </div>
+            <md-card-actions layout="row" layout-align="end center">
+                {{ room.name | uppercase }}
+            </md-card-actions>
+        </md-card>
     </div>
     <div flex class="flex-35" id="details">
         <div ng-show="select.desk">

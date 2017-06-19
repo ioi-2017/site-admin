@@ -54,11 +54,12 @@ app.service('API', function ($resource, $timeout, $http, MODELS) {
     angular.forEach(MODELS, function (api, model) {
         apiService[model] = $resource(api.url, {id: '@_id'}, getMethods(api), {stripTrailingSlashes: false});
 
-        apiService[model].forEach = function (callback, params) {
+        apiService[model].forEach = function (callback, params, destroy) {
             var items = apiService[model].query(params || {}, function() {
                 angular.forEach(items, function (item) {
                     callback(item);
                 });
+                if (destroy) destroy();
             });
         };
     });
@@ -68,12 +69,13 @@ app.service('API', function ($resource, $timeout, $http, MODELS) {
     apiService.poll = function (duration, pollingScope, callback, destroy) {
         if (currentPoll != undefined && currentPoll.terminate != undefined)
             currentPoll.terminate();
-        currentPoll = this;
+        var poll = this;
+        currentPoll = poll;
         var cancelled = false;
 
         var update = function () {
             callback(function () {
-                if (!cancelled)
+                if (!cancelled && poll == currentPoll)
                     pollingPromise = $timeout(update, duration);
             });
         };

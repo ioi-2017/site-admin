@@ -123,7 +123,6 @@ app.controller('taskRunsetsController', function ($scope, $rootScope, $http, $lo
         updatePage();
 
     var unbind = $scope.$on('$destroy', function () {
-        console.log('ok :{');
         angular.forEach(listeners, function (listener_unbind) {
             listener_unbind();
         });

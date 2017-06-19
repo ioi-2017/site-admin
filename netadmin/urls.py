@@ -25,6 +25,5 @@ urlpatterns = [
     url(r'^api/', include('ping.urls', namespace='ping')),
     url(r'^admin/', admin.site.urls),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    url(r'^.*/$', TemplateView.as_view(template_name='netadmin/base.html'), name='home'),
-    url(r'^$', RedirectView.as_view(url='home', permanent=False))
+    url(r'^.*$', TemplateView.as_view(template_name='netadmin/base.html'), name='home')
 ]

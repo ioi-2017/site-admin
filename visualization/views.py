@@ -5,6 +5,8 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 from django.urls import reverse
 from django.views import View
+from rest_framework.generics import get_object_or_404
+from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from visualization.models import Room, Node, Desk, Contestant, NodeGroup
 from visualization.serializers import NodeSerializer, DeskSerializer, ContestantSerializer, RoomSerializer
@@ -76,3 +78,24 @@ class ContestantsAPI(ModelViewSet):
 class RoomsAPI(ModelViewSet):
     serializer_class = RoomSerializer
     queryset = Room.objects.all()
+
+    @staticmethod
+    def get_room_data(room):
+        data = RoomSerializer(room).data
+        data['desks'] = []
+        for desk in Desk.objects.filter(room=room).prefetch_related('contestant', 'active_node'):
+            deskData = DeskSerializer(desk).data
+            deskData['active_node'] = NodeSerializer(desk.active_node).data
+            deskData['contestant'] = ContestantSerializer(desk.contestant).data
+            data['desks'].append(deskData)
+        return data
+
+    def retrieve(self, request, *args, pk=None, **kwargs):
+        room = get_object_or_404(self.queryset, pk=pk)
+        return Response(self.get_room_data(room))
+
+    def list(self, request, **kwargs):
+        data = []
+        for room in self.queryset:
+            data.append(self.get_room_data(room))
+        return Response(data)
