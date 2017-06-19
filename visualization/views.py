@@ -1,15 +1,26 @@
-from collections import defaultdict
 import svgwrite
 from django.http import HttpResponse
 from django.http import JsonResponse
+from django.template import Context,Template
 from django.urls import reverse
 from django.views import View
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
+
 from visualization.models import Room, Node, Desk, Contestant, NodeGroup
 from visualization.serializers import NodeSerializer, DeskSerializer, ContestantSerializer, RoomSerializer, \
     NodeGroupSerializer
+
+
+class ExportView(View):
+    def get(self, request):
+        template = Template(request.GET.get('template', ''))
+        context = Context({"Nodes": Node.objects.all(),
+                           "Desks": Desk.objects.all(),
+                           "Contestants": Contestant.objects.all(),
+                           })
+        return HttpResponse(template.render(context))
 
 
 class NodeGroupsViewAPI(ModelViewSet):
