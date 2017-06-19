@@ -56,4 +56,6 @@ table.md-table.md-row-select tbody.md-body>tr.na-tr.md-row:not([disabled]):hover
     right: 0;
     top: 64px;
     overflow-y: auto;
+    width: 100%;
+    z-index: 1000;
 }

@@ -1,5 +1,5 @@
 <div layout="row" layout-fill>
-    <div flex id="rooms_wrapper" class="flex-65" layout="column">
+    <div flex id="rooms_wrapper" class="flex-60" layout="column">
         <md-card ng-repeat="room in rooms">
             <div class="room" id="container-{{ room.id }}">
 
@@ -9,7 +9,7 @@
             </md-card-actions>
         </md-card>
     </div>
-    <div flex class="flex-35" id="details">
+    <div flex class="flex-30" id="details">
         <div ng-show="select.desk">
             <md-card ng-show="select.desk">
                 <md-card-title>
