@@ -60,8 +60,18 @@ class TaskRunSetFilterBackend(DjangoFilterBackend):
     def filter_queryset(self, request, queryset, view):
         filter_queryset = super().filter_queryset(request, queryset, view)
         runset_state = request.query_params.get('state', None)
-        if runset_state == 'finished':
-            return [runset for runset in filter_queryset if runset.is_finished]
+        if runset_state == 'SUCCESS':
+            return filter_queryset.filter(summary__PENDING=0, summary__RUNNING=0, summary__FAILED=0)
+        if runset_state == 'FINISHED':
+            return filter_queryset.filter(summary__PENDING=0, summary__RUNNING=0)
+        if runset_state == 'RUNNING':
+            return filter_queryset.filter(summary__RUNNING__gt=0)
+        if runset_state == 'PENDING':
+            return filter_queryset.filter(summary__RUNNING=0, summary__PENDING__gt=0)
+        if runset_state == 'ABORTED':
+            return filter_queryset.filter(summary__ABORTED__gt=0)
+        if runset_state == 'FAILED':
+            return filter_queryset.filter(summary__FAILED__gt=0)
         return filter_queryset
 
 

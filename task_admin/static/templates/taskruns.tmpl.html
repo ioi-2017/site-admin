@@ -13,8 +13,9 @@
                     <md-option value="ALL">All</md-option>
                     <md-option value="SUCCESS">Success</md-option>
                     <md-option value="PENDING">Pending</md-option>
-                    <md-option value="PROGRESS">Progress</md-option>
-                    <md-option value="FAILURE">Failure</md-option>
+                    <md-option value="RUNNING">Running</md-option>
+                    <md-option value="FAILED">Failed</md-option>
+                    <md-option value="ABORTED">Aborted</md-option>
                 </md-select>
             </md-input-container>
             <md-input-container flex-gt-sm>
@@ -69,7 +70,7 @@
                             </md-tooltip>
                         </md-button>
                         <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'yellow-700'}"
-                                   ng-if="result.status=='PROGRESS'">
+                                   ng-if="result.status=='RUNNING'">
                             <md-icon class="material-icons step">sync</md-icon>
                             <md-tooltip
                                     md-direction="left">
@@ -84,16 +85,16 @@
                                 Successful
                             </md-tooltip>
                         </md-button>
-                        <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'blueGrey-700'}"
-                                   ng-if="result.status=='REVOKED'">
+                        <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'brown-700'}"
+                                   ng-if="result.status=='ABORTED'">
                             <md-icon class="material-icons step">pan_tool</md-icon>
                             <md-tooltip
                                     md-direction="left">
-                                Stopped
+                                Aborted
                             </md-tooltip>
                         </md-button>
                         <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'red-700'}"
-                                   ng-if="result.status=='FAILURE'">
+                                   ng-if="result.status=='FAILED'">
                             <md-icon class="material-icons step">clear</md-icon>
                             <md-tooltip
                                     md-direction="left">

@@ -93,7 +93,7 @@ class TaskRunSetTest(TestCase):
         taskruns = client.get('/api/taskruns/').json()
         self.assertEqual(int(taskruns['count']), 2)
         for result in taskruns['results']:
-            self.assertEqual(result['status'], 'FAILURE')
+            self.assertEqual(result['status'], 'FAILED')
         self.assertFalse(os.path.isfile('/tmp/TurkishContestant-1'))
         self.assertFalse(os.path.isfile('/tmp/TurkishContestant-2'))
 

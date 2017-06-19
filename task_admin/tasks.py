@@ -7,6 +7,8 @@ import django
 from paramiko import SSHClient, AutoAddPolicy
 from netadmin.settings import app
 
+from django.db import transaction
+
 TIMEOUT_EXIT_CODE = 124
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "netadmin.settings")
@@ -19,10 +21,11 @@ SSH_CONNECTION_TIMEOUT = 1
 
 @app.task
 def execute_task(task_run_id, is_local, ip, username, rendered_code, timeout):
-    task_run = TaskRun.objects.get(id=task_run_id)
-    task_run.status = 'PROGRESS'
-    task_run.started_at = datetime.datetime.now()
-    task_run.save(update_fields=['status', 'started_at'])
+    with transaction.atomic():
+        task_run = TaskRun.objects.get(id=task_run_id)
+        task_run.change_status('RUNNING')
+        task_run.started_at = datetime.datetime.now()
+        task_run.save(update_fields=['status', 'started_at'])
 
     # Prepare the script
     script = tempfile.NamedTemporaryFile('w', delete=False)
@@ -66,14 +69,14 @@ def execute_task(task_run_id, is_local, ip, username, rendered_code, timeout):
                       'stderr': str(e),
                       'return_code': -1,
                       }
-    task_run.finished_at = datetime.datetime.now()
-    task_run.stdout = result['stdout']
-    task_run.stderr = result['stderr']
-    task_run.return_code = result['return_code']
-    if result['return_code'] != 0:
-        task_run.status = 'FAILURE'
-    else:
-        task_run.status = 'SUCCESS'
-    task_run.save(update_fields=['status', 'finished_at', 'stdout', 'stderr', 'return_code'])
-
+    with transaction.atomic():
+        task_run.finished_at = datetime.datetime.now()
+        task_run.stdout = result['stdout']
+        task_run.stderr = result['stderr']
+        task_run.return_code = result['return_code']
+        if result['return_code'] != 0:
+            task_run.change_status('FAILED')
+        else:
+            task_run.change_status('SUCCESS')
+        task_run.save(update_fields=['status', 'finished_at', 'stdout', 'stderr', 'return_code'])
     os.remove(script.name)
