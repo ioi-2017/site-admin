@@ -125,6 +125,8 @@ app.service('taskRunSetCreator', function ($mdDialog) {
                             name: task_name,
                             code: $scope.template_code,
                             is_local: $scope.is_local,
+                            timeout: $scope.timeout,
+                            username: $scope.username,
                             author: 1
                         }).then(function () {
                             updateTasks();
