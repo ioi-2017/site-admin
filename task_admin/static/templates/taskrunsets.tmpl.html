@@ -55,7 +55,7 @@
                 <td md-cell><span am-time-ago="result.created_at"></span></td>
                 <td md-cell>
                     <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'blueGrey-700'}"
-                               ng-href="/admin/taskruns?run_set={{ ::result.id }}&state=PENDING">
+                               ui-sref="na.taskruns({run_set:{{ ::result.id }}, state:'PENDING'})">
                         {{ result.summary.PENDING }}
                         <md-tooltip
                                 md-direction="left">
@@ -63,7 +63,7 @@
                         </md-tooltip>
                     </md-button>
                     <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'yellow-700'}"
-                               ng-href="/admin/taskruns?run_set={{ ::result.id }}&state=RUNNING">
+                               ui-sref="na.taskruns({run_set:{{ ::result.id }}, state:'RUNNING'})">
                         {{ result.summary.RUNNING }}
                         <md-tooltip
                                 md-direction="top">
@@ -71,7 +71,7 @@
                         </md-tooltip>
                     </md-button>
                     <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'green-700'}"
-                               ng-href="/admin/taskruns?run_set={{ ::result.id }}&state=SUCCESS">
+                               ui-sref="na.taskruns({run_set:{{ ::result.id }}, state:'SUCCESS'})">
                         {{ result.summary.SUCCESS }}
                         <md-tooltip
                                 md-direction="top">
@@ -79,7 +79,7 @@
                         </md-tooltip>
                     </md-button>
                     <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'red-700'}"
-                               ng-href="/admin/taskruns?run_set={{ ::result.id }}&state=FAILED">
+                               ui-sref="na.taskruns({run_set:{{ ::result.id }}, state:'FAILED'})">
                         {{ result.summary.FAILED }}
                         <md-tooltip
                                 md-direction="top">
@@ -87,7 +87,7 @@
                         </md-tooltip>
                     </md-button>
                     <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'brown-700'}"
-                               ng-href="/admin/taskruns?run_set={{ ::result.id }}&state=ABORTED">
+                               ui-sref="na.taskruns({run_set:{{ ::result.id }}, state:'ABORTED'})">
                         {{ result.summary.ABORTED }}
                         <md-tooltip
                                 md-direction="right">
