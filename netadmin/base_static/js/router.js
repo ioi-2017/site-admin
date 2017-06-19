@@ -36,7 +36,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $locationProvider, $qPr
             }
         })
         .state('na.taskruns', {
-            url: 'taskruns',
+            url: 'taskruns?status&run_set&desk&node&contestant',
             views: {
                 'content@': {
                     templateUrl: templateUrl('taskruns.tmpl.html'),
