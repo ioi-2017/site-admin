@@ -20,7 +20,7 @@ SSH_CONNECTION_TIMEOUT = 1
 @app.task
 def execute_task(task_run_id, is_local, ip, username, rendered_code, timeout):
     task_run = TaskRun.objects.get(id=task_run_id)
-    task_run.status = 'PROGRESS'
+    task_run.change_status('PROGRESS', commit=False)
     task_run.started_at = datetime.datetime.now()
     task_run.save(update_fields=['status', 'started_at'])
 
@@ -71,9 +71,9 @@ def execute_task(task_run_id, is_local, ip, username, rendered_code, timeout):
     task_run.stderr = result['stderr']
     task_run.return_code = result['return_code']
     if result['return_code'] != 0:
-        task_run.status = 'FAILURE'
+        task_run.change_status('FAILURE')
     else:
-        task_run.status = 'SUCCESS'
+        task_run.change_status('SUCCESS')
     task_run.save(update_fields=['status', 'finished_at', 'stdout', 'stderr', 'return_code'])
 
     os.remove(script.name)

@@ -45,6 +45,11 @@ class TaskRunSetSerializer(serializers.ModelSerializer):
             username=data['username'],
             owner=data['owner'],
             name=data['name'],
+            summary={'PENDING': len(data['ips']),
+                     'SUCCESS': 0,
+                     'REVOKED': 0,
+                     'FAILURE': 0,
+                     'PROGRESS': 0}
         )
         taskrunset.save()  # TODO: Taskrunset should not be created unless all taskruns created successfully
         logger.info('Taskrunset #%d (%s) is going to be created' % (taskrunset.id, taskrunset.name))
