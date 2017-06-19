@@ -1,17 +1,30 @@
-app.controller('taskRunsController', function ($scope, $rootScope, $http, $location, API, taskRunSetCreator) {
+app.controller('taskRunsController', function ($stateParams, $state, $scope, $http, API, taskRunSetCreator) {
+    $scope.results = [];
     $scope.selected = [];
+    $scope.hovered = null;
+
+    $scope.filters = {
+        status: 'ALL',
+        run_set: -1,
+        node: 0,
+        desk: 0,
+        contestant: 0
+    };
+
+    angular.extend($scope.filters, $stateParams);
+
+    $scope.filter = function(field) {
+        var query = {};
+        query[field] = $scope.filters[field];
+        $state.go('na.taskruns', query);
+    };
+
     $scope.showTaskRunSetCreate = function (ev) {
         taskRunSetCreator.showTaskRunSetCreate(ev, $scope.selected.map(function (taskrun) {
             return taskrun.node.ip
         }), function () {
-            $scope.selected = [];
-            updatePage(true);
+            updatePageSoft();
         });
-    };
-
-    $scope.hovered = null;
-    $scope.setPage = function (n) {
-        $scope.params.page = n;
     };
 
     $scope.changeHovered = function (item) {
@@ -31,15 +44,14 @@ app.controller('taskRunsController', function ($scope, $rootScope, $http, $locat
         $scope.results = results;
     };
 
-    function remove_all(params)
-    {
+    function remove_all(params) {
         var query_params = angular.copy(params);
         if (query_params.status == 'ALL')
             query_params.status = '';
         return query_params;
     }
 
-    var updatePageSoft = function(callback) {
+    var updatePageSoft = function(next) {
         API.Taskrun.query(remove_all($scope.params), function (taskruns) {
             if (taskruns.length != $scope.results.length) {
                 assignResults(taskruns);
@@ -52,68 +64,16 @@ app.controller('taskRunsController', function ($scope, $rootScope, $http, $locat
                 }
                 $scope.results[i].status = taskruns[i].status;
             }
-            callback();
+            if (next) next();
         });
     };
 
-    function updatePage(flush_selected) {
-        if (flush_selected == true)
-            $scope.selected = [];
-        API.Taskrun.query(remove_all($scope.params), function (taskruns) {
-            assignResults(taskruns);
+    API.Taskrun.query(remove_all($stateParams), function (taskruns) {
+        assignResults(taskruns);
+        $timeout(function () {
             API.poll(1000, $scope, function (next) {
                 updatePageSoft(next);
             });
         });
-    }
-
-    var listeners = [];
-    listeners.push($scope.$watch("params.run_set", function (newValue, oldValue) {
-        if (newValue == oldValue) return;
-        $scope.selected = [];
-        reload({'page': 1, 'run_set': newValue});
-    }));
-    listeners.push($scope.$watch("params.status", function (newValue, oldValue) {
-        if (newValue == oldValue) return;
-        $scope.selected = [];
-        reload({'page': 1, 'status': newValue});
-    }));
-    listeners.push($scope.$watch("params.page", function (newValue, oldValue) {
-        if (newValue == oldValue) return;
-        reload({'page': newValue});
-    }));
-    $scope.prevPage = function () {
-        $scope.params.page = parseInt($scope.params.page) - 1;
-    };
-    $scope.nextPage = function () {
-        $scope.params.page = parseInt($scope.params.page) + 1;
-    };
-
-    var isParamsRaw = function () {
-        return !angular.equals($scope.params, updateParams());
-    };
-
-    listeners.push($rootScope.$on('$locationChangeStart', function (event) {
-        if (isParamsRaw()) {
-            event.preventDefault();
-            reload().replace();
-        }
-    }));
-
-    listeners.push($rootScope.$on('$locationChangeSuccess', function () {
-        updatePage();
-    }));
-
-    if (isParamsRaw())
-        reload();
-    else
-        updatePage();
-
-
-    var unbind = $scope.$on('$destroy', function () {
-        angular.forEach(listeners, function (listener_unbind) {
-            listener_unbind();
-        });
-        unbind();
     });
 });

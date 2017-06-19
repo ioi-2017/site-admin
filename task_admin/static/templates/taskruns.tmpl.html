@@ -3,7 +3,7 @@
         <div id="task_filter" layout="row">
             <md-input-container flex-gt-sm>
                 <label>Status</label>
-                <md-select ng-model="params.status">
+                <md-select ng-model="filters.status" ng-change="filter('status')">
                     <md-option value="ALL">All</md-option>
                     <md-option value="SUCCESS">Success</md-option>
                     <md-option value="PENDING">Pending</md-option>
@@ -14,8 +14,7 @@
             </md-input-container>
             <md-input-container flex-gt-sm>
                 <label>TaskRunSet ID</label>
-                <input ng-model="params.run_set" placeholder="TaskRunSet ID"
-                       ng-model-options="{updateOn: 'blur'}">
+                <input ng-model="filters.run_set" ng-blur="filter('run_set')" placeholder="TaskRunSet ID">
             </md-input-container>
         </div>
         <div class="md-toolbar-tools">

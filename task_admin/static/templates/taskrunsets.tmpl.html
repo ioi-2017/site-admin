@@ -1,7 +1,7 @@
 <div id="task_filter">
     <md-input-container>
         <label>State</label>
-        <md-select ng-change="filter_state()" ng-model="filter.state">
+        <md-select ng-change="filter('state')" ng-model="filters.state">
             <md-option value="ALL">All</md-option>
             <md-option value="SUCCESS">Success</md-option>
             <md-option value="FINISHED">Finished</md-option>
@@ -48,7 +48,7 @@
                 <td md-cell><span am-time-ago="result.created_at"></span></td>
                 <td md-cell>
                     <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'blueGrey-700'}"
-                               ui-sref="na.taskruns({run_set:{{ ::result.id }}, state:'PENDING'})">
+                               ui-sref="na.taskruns({run_set:{{ ::result.id }}, status:'PENDING'})">
                         {{ result.summary.PENDING }}
                         <md-tooltip
                                 md-direction="left">
@@ -56,7 +56,7 @@
                         </md-tooltip>
                     </md-button>
                     <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'yellow-700'}"
-                               ui-sref="na.taskruns({run_set:{{ ::result.id }}, state:'RUNNING'})">
+                               ui-sref="na.taskruns({run_set:{{ ::result.id }}, status:'RUNNING'})">
                         {{ result.summary.RUNNING }}
                         <md-tooltip
                                 md-direction="top">
@@ -64,7 +64,7 @@
                         </md-tooltip>
                     </md-button>
                     <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'green-700'}"
-                               ui-sref="na.taskruns({run_set:{{ ::result.id }}, state:'SUCCESS'})">
+                               ui-sref="na.taskruns({run_set:{{ ::result.id }}, status:'SUCCESS'})">
                         {{ result.summary.SUCCESS }}
                         <md-tooltip
                                 md-direction="top">
@@ -72,7 +72,7 @@
                         </md-tooltip>
                     </md-button>
                     <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'red-700'}"
-                               ui-sref="na.taskruns({run_set:{{ ::result.id }}, state:'FAILED'})">
+                               ui-sref="na.taskruns({run_set:{{ ::result.id }}, status:'FAILED'})">
                         {{ result.summary.FAILED }}
                         <md-tooltip
                                 md-direction="top">
@@ -80,7 +80,7 @@
                         </md-tooltip>
                     </md-button>
                     <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'brown-700'}"
-                               ui-sref="na.taskruns({run_set:{{ ::result.id }}, state:'ABORTED'})">
+                               ui-sref="na.taskruns({run_set:{{ ::result.id }}, status:'ABORTED'})">
                         {{ result.summary.ABORTED }}
                         <md-tooltip
                                 md-direction="right">
