@@ -88,6 +88,7 @@ class ContestantsAPI(ModelViewSet):
 
 class RoomsAPI(ModelViewSet):
     serializer_class = RoomSerializer
+    filter_fields = ('name',)
     queryset = Room.objects.all()
 
     @staticmethod
@@ -107,6 +108,6 @@ class RoomsAPI(ModelViewSet):
 
     def list(self, request, **kwargs):
         data = []
-        for room in self.queryset:
+        for room in self.filter_queryset(self.get_queryset()):
             data.append(self.get_room_data(room))
         return Response(data)
