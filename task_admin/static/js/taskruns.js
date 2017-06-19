@@ -1,22 +1,4 @@
 app.controller('taskRunsController', function ($scope, $rootScope, $http, $location, API, taskRunSetCreator) {
-    $scope.params = $location.search();
-
-    var updateParams = function (newParams) {
-        return angular.extend({
-            desk: '',
-            contestant: '',
-            node: '',
-            status: 'ALL',
-            run_set: '',
-            page: 1
-        }, $location.search(), newParams);
-    };
-
-    var reload = function (newParams) {
-        $scope.params = updateParams(newParams);
-        return $location.search($scope.params);
-    };
-
     $scope.selected = [];
     $scope.showTaskRunSetCreate = function (ev) {
         taskRunSetCreator.showTaskRunSetCreate(ev, $scope.selected.map(function (taskrun) {
@@ -26,20 +8,6 @@ app.controller('taskRunsController', function ($scope, $rootScope, $http, $locat
             updatePage(true);
         });
     };
-
-    //$scope.selectAllRuns = function () {
-    //    $http.get('/api/taskruns/',
-    //        {
-    //            params: angular.extend(angular.copy($scope.params), {page_size: 100000, page: 1})
-    //        }
-    //    ).then(function (response) {
-    //        $scope.selected = [];
-    //        angular.forEach(response.data.results, function (value) {
-    //            $scope.selected.push(value)
-    //        });
-    //        updatePage(true);
-    //    });
-    //};
 
     $scope.hovered = null;
     $scope.setPage = function (n) {
@@ -120,13 +88,6 @@ app.controller('taskRunsController', function ($scope, $rootScope, $http, $locat
     $scope.nextPage = function () {
         $scope.params.page = parseInt($scope.params.page) + 1;
     };
-
-    $scope.owners = [
-        {
-            id: '1',
-            name: 'admin'
-        }
-    ];
 
     var isParamsRaw = function () {
         return !angular.equals($scope.params, updateParams());

@@ -13,8 +13,8 @@
     <md-content flex role="navigation" layout="column">
         <md-button ui-sref="na"> Home </md-button>
         <md-button ui-sref="na.monitor({name: 'all'})"> Monitor </md-button>
-        <md-button ui-sref="na.tasks"> Tasks </md-button>
-        <md-button ui-sref="na.taskruns"> Taskruns </md-button>
+        <md-button ui-sref="na.tasks({})" ui-sref-opts="{reload: true, inherit: false}"> Tasks </md-button>
+        <md-button ui-sref="na.taskruns({})" ui-sref-opts="{reload: true, inherit: false}"> Taskruns </md-button>
         <md-button ui-sref="na.templates"> Templates </md-button>
         <md-button ui-sref="na.node-import"> Node Import </md-button>
         <md-button ui-sref="na.nodegroups"> Node Groups </md-button>

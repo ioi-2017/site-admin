@@ -1,14 +1,7 @@
 <div id="task_filter">
     <md-input-container>
-        <label>Owner</label>
-        <md-select ng-model="params.owner_id">
-            <md-option value="">All owners</md-option>
-            <md-option ng-repeat="owner in owners" value="{{ owner.id }}">{{ owner.name }}</md-option>
-        </md-select>
-    </md-input-container>
-    <md-input-container>
         <label>State</label>
-        <md-select ng-model="params.state">
+        <md-select ng-change="filter_state()" ng-model="filter.state">
             <md-option value="ALL">All</md-option>
             <md-option value="SUCCESS">Success</md-option>
             <md-option value="FINISHED">Finished</md-option>

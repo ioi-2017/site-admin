@@ -1,6 +1,14 @@
-app.controller('taskRunsetsController', function ($stateParams, $scope, $timeout, $rootScope, $http, $location, $mdDialog, API, taskRunSetCreator) {
+app.controller('taskRunsetsController', function ($stateParams, $scope, $state, $timeout, $rootScope, $http, $location, $mdDialog, API, taskRunSetCreator) {
     $scope.results = [];
     $scope.selected = [];
+
+    $scope.filter = {
+        state: ''
+    };
+
+    $scope.filter_state = function () {
+        $state.go('na.tasks', {state: $scope.filter.state});
+    };
 
     $scope.showTaskRunSetCreate = function (ev) {
         taskRunSetCreator.showTaskRunSetCreate(ev, [], function () {
@@ -32,7 +40,7 @@ app.controller('taskRunsetsController', function ($stateParams, $scope, $timeout
     };
 
     var updatePageSoft = function(next) {
-        API.Taskrunset.query($scope.params, function (taskrunsets) {
+        API.Taskrunset.query($stateParams, function (taskrunsets) {
             if (taskrunsets.length != $scope.results.length) {
                 $scope.results = taskrunsets;
                 return;
