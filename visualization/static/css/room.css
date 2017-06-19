@@ -11,18 +11,22 @@
     stroke: #c0ffc0;
 }
 
-.desk.ok.revoked,
+.desk.ok.aborted {
+    fill: #895512;
+    stroke: #a58a42;
+}
+
 .desk.ok.pending {
     fill: #455a64;
     stroke: #a9daf2;
 }
 
-.desk.ok.progress {
+.desk.ok.running {
     fill: #ff9900;
     stroke: #ffffff;
 }
 
-.desk.ok.failure {
+.desk.ok.failed {
     fill: #ff0000;
     stroke: #ffa0a0;
 }

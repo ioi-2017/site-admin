@@ -2,12 +2,6 @@
     <div flex id="taskrunsets" class="flex-65">
         <div id="task_filter" layout="row">
             <md-input-container flex-gt-sm>
-                <label>Owner</label>
-                <md-select ng-model="params.contestant">
-                    <md-option value="">All owners</md-option>
-                </md-select>
-            </md-input-container>
-            <md-input-container flex-gt-sm>
                 <label>Status</label>
                 <md-select ng-model="params.status">
                     <md-option value="ALL">All</md-option>
@@ -32,13 +26,6 @@
                          class="material-icons step">add
                 </md-icon>
             </md-button>
-<!--            <md-button class="md-fab md-mini" aria-label="Select All Taskruns"
-                       ng-click="selectAllRuns()">
-                <md-icon aria-label="Select All"
-                         class="material-icons step">select_all
-                </md-icon>
-            </md-button>
--->
         </div>
         <md-table-container>
             <table md-table md-row-select="true" multiple ng-model="selected" md-progress="promise">
