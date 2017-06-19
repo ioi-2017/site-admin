@@ -35,14 +35,20 @@ def execute_task(task_run_id, is_local, ip, username, rendered_code, timeout):
     os.chmod(script.name, st.st_mode | stat.S_IEXEC)
 
     if is_local:
-        process = subprocess.Popen(('timeout', str(timeout), script.name,),
-                                   stdout=subprocess.PIPE,
-                                   stderr=subprocess.PIPE, universal_newlines=True)
-        stdout, stderr = process.communicate()
-        result = {'stdout': str(stdout),
-                  'stderr': 'Execution timeout' if process.returncode == TIMEOUT_EXIT_CODE else str(stderr),
-                  'return_code': process.returncode,
-                  }
+        try:
+            process = subprocess.Popen(('timeout', str(timeout), script.name,),
+                                       stdout=subprocess.PIPE,
+                                       stderr=subprocess.PIPE, universal_newlines=True)
+            stdout, stderr = process.communicate()
+            result = {'stdout': str(stdout),
+                      'stderr': 'Execution timeout' if process.returncode == TIMEOUT_EXIT_CODE else str(stderr),
+                      'return_code': process.returncode,
+                      }
+        except Exception as e:
+            result = {'stdout': '',
+                      'stderr': str(e),
+                      'return_code': -1,
+                      }
 
 
     else:
