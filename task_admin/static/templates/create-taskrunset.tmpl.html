@@ -134,15 +134,16 @@
         </md-dialog-content>
 
         <md-dialog-actions layout="row">
+            <span md-colors="{color:'default-warn'}">{{ error_message }}</span>
             <span flex></span>
             <md-button ng-click="hide()">
                 Cancel
             </md-button>
             <div>
-                <md-button type="submit" ng-disabled="ips.length<1">
+                <md-button type="submit" ng-disabled="selected_ips.length<1">
                     Create
                 </md-button>
-                <md-tooltip ng-show="ips.length<1"
+                <md-tooltip ng-show="selected_ips.length<1"
                             md-direction="top">
                     Select nodes first
                 </md-tooltip>

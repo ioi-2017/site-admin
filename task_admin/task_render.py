@@ -36,5 +36,8 @@ def render_task(code, node):
 
     for template, getter in get_all_possible_vars().items():
         if template in code:
-            code = code.replace(template, str(getter(node)))
+            try:
+                code = code.replace(template, str(getter(node)))
+            except:
+                raise Exception("Can't use %s since it is not filled for all nodes" % template)
     return code

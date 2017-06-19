@@ -1,10 +1,12 @@
 import logging
+
 from rest_framework import serializers
 from rest_framework.exceptions import APIException
+
 from task_admin.models import Task, TaskRunSet, TaskRun
 from task_admin.task_render import render_task
 from task_admin.tasks import execute_task
-from visualization.models import Node, Desk, Contestant
+from visualization.models import Node
 from visualization.serializers import NodeSerializer, DeskSerializer, ContestantSerializer
 
 logger = logging.getLogger(__name__)
@@ -37,7 +39,10 @@ class TaskRunSetSerializer(serializers.ModelSerializer):
                 node = Node.objects.get(ip=ip)
             except Node.DoesNotExist:
                 raise BadRequest(detail=(u"Ip {0:s} doesn't exist".format(ip)), code=400)
-            render_task(data['code'], node)  # Ensure render doesn't throw exception
+            try:
+                render_task(data['code'], node)
+            except Exception as e:
+                raise BadRequest(detail=str(e))
 
         taskrunset = TaskRunSet(
             code=data['code'],

@@ -7,6 +7,7 @@ app.service('taskRunSetCreator', function ($mdDialog) {
                     $scope.all_filters = {};
                     $scope.filter_names = [];
                     $scope.var_helps = [];
+                    $scope.error_message = '';
                     $http.get('/api/task_create/').then(function (response) {
                         $scope.var_helps = response.data;
                     });
@@ -116,6 +117,8 @@ app.service('taskRunSetCreator', function ($mdDialog) {
                                     .position('top right')
                                     .hideDelay(6000)
                             );
+                        }, function (response) {
+                            $scope.error_message = response.data['detail'];
                         });
                     };
 

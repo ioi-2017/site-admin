@@ -1,4 +1,4 @@
-app.controller('taskRunsetsController', function ($stateParams, $scope, $state, $timeout, $rootScope, $http, $location, $mdDialog, API, taskRunSetCreator) {
+app.controller('taskRunsetsController', function ($stateParams, $scope, $state, $timeout, $rootScope, $http, $mdToast, $location, $mdDialog, API, taskRunSetCreator) {
     $scope.results = [];
     $scope.selected = [];
 
@@ -17,7 +17,21 @@ app.controller('taskRunsetsController', function ($stateParams, $scope, $state, 
     };
 
     $scope.stopTaskrunset = function (taskrunset) {
-        $http.post('/api/taskrunsets/' + taskrunset.id + "/stop/", {});
+        $http.post('/api/taskrunsets/' + taskrunset.id + "/stop/", {}).then(function () {
+            $mdToast.show(
+                $mdToast.simple()
+                    .textContent('TaskRunSet Aborted')
+                    .position('top right')
+                    .hideDelay(6000)
+            )
+        }, function () {
+            $mdToast.show(
+                $mdToast.simple()
+                    .textContent('TaskRunSet Failed to abort!')
+                    .position('top right')
+                    .hideDelay(6000)
+            )
+        });
     };
 
     $scope.deleteSelected = function (ev) {
@@ -39,7 +53,7 @@ app.controller('taskRunsetsController', function ($stateParams, $scope, $state, 
         });
     };
 
-    var updatePageSoft = function(next) {
+    var updatePageSoft = function (next) {
         API.Taskrunset.query($stateParams, function (taskrunsets) {
             if (taskrunsets.length != $scope.results.length) {
                 $scope.results = taskrunsets;
@@ -52,7 +66,7 @@ app.controller('taskRunsetsController', function ($stateParams, $scope, $state, 
                 }
                 $scope.results[i].summary = taskrunsets[i].summary;
             }
-            if(next) next();
+            if (next) next();
         });
     };
 
