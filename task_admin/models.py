@@ -96,7 +96,7 @@ class TaskRun(models.Model):
 
     def stop(self):
         self.get_celery_result().revoke()
-        if self.status == 'PENDING':
+        if self.get_celery_result().status == 'PENDING':
             with transaction.atomic():
                 self.change_status('ABORTED')
                 self.save()

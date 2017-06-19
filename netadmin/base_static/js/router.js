@@ -79,6 +79,15 @@ app.config(function ($stateProvider, $urlRouterProvider, $locationProvider, $qPr
                     controller: 'nodeGroupsController'
                 }
             }
+        })
+        .state('na.export', {
+            url: 'export',
+            views: {
+                'content@': {
+                    templateUrl: templateUrl('export.tmpl.html'),
+                    controller: 'exportController'
+                }
+            }
         });
 
     $locationProvider.html5Mode(true);
