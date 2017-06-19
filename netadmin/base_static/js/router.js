@@ -45,7 +45,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $locationProvider, $qPr
             }
         })
         .state('na.tasks', {
-            url: 'tasks',
+            url: 'tasks?state',
             views: {
                 'content@': {
                     templateUrl: templateUrl('taskrunsets.tmpl.html'),

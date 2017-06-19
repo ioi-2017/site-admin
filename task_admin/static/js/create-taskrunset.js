@@ -138,7 +138,7 @@ app.service('taskRunSetCreator', function ($mdDialog) {
                 templateUrl: _static('templates/create-taskrunset.tmpl.html'),
                 parent: angular.element(document.body),
                 targetEvent: ev,
-                clickOutsideToClose: true,
+                clickOutsideToClose: true
             })
             .then(function () {
                 create_callback();
