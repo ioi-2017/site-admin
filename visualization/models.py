@@ -47,7 +47,10 @@ class Desk(models.Model):
 
 
 class Contestant(models.Model):
-    name = models.CharField(max_length=100)
+    first_name = models.CharField(max_length=100, blank=True, null=True)
+    last_name = models.CharField(max_length=100, blank=True, null=True)
+    gender = models.CharField(max_length=1, choices={'F': 'Female', 'M': 'Male'}.items(), blank=True, null=True)
+    email = models.EmailField(blank=True, null=True)
     country = CountryField(null=True)
     number = models.IntegerField(default=1)
 
@@ -57,6 +60,10 @@ class Contestant(models.Model):
     @property
     def identifier(self):
         return self.country.alpha3 + str(self.number)
+
+    @property
+    def name(self):
+        return '%s %s' % (self.first_name, self.last_name)
 
     def __str__(self):
         return "%s - %s" % (self.identifier, self.name)
