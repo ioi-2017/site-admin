@@ -1,6 +1,6 @@
 [
 {
-  "model": "visualization.room",
+  "model": "visualization.zone",
   "pk": 1,
   "fields": {
     "name": "floor1"

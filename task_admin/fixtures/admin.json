@@ -783,6 +783,33 @@
   }
 },
 {
+  "model": "auth.permission",
+  "pk": 88,
+  "fields": {
+    "name": "Can add zone",
+    "content_type": 8,
+    "codename": "add_zone"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 89,
+  "fields": {
+    "name": "Can change zone",
+    "content_type": 8,
+    "codename": "change_zone"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 90,
+  "fields": {
+    "name": "Can delete zone",
+    "content_type": 8,
+    "codename": "delete_zone"
+  }
+},
+{
   "model": "auth.user",
   "pk": 1,
   "fields": {

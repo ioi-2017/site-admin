@@ -8,8 +8,8 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from visualization.models import Room, Node, Desk, Contestant, NodeGroup
-from visualization.serializers import NodeSerializer, DeskSerializer, ContestantSerializer, RoomSerializer, \
+from visualization.models import Zone, Node, Desk, Contestant, NodeGroup
+from visualization.serializers import NodeSerializer, DeskSerializer, ContestantSerializer, ZoneSerializer, \
     NodeGroupSerializer
 
 
@@ -59,7 +59,7 @@ class RetrieveIPView(View):
                 'id': contestant.identifier,
             },
             'desk': {
-                'room': desk.room.name,
+                'zone': desk.zone.name,
                 'number': desk.number,
                 'map': reverse('visualization:node-map', kwargs={'ip': ip}),
             },
@@ -71,7 +71,7 @@ class RetrieveDeskMap(View):
         image = svgwrite.Drawing(size=("600px", "480px"))
         desk = Node.objects.get(ip=ip).desk
 
-        for other_desk in desk.room.desk_set.all():
+        for other_desk in desk.zone.desk_set.all():
             x, y, angle = other_desk.x * 600, other_desk.y * 480, other_desk.angle
             image.add(image.rect((x - 20, y - 10), (40, 20), fill='black' if other_desk.id == desk.id else 'white',
                                  rx=2, ry=2, stroke='black'))
@@ -87,7 +87,7 @@ class NodesAPI(ModelViewSet):
 
 class DesksAPI(ModelViewSet):
     serializer_class = DeskSerializer
-    filter_fields = ('contestant', 'active_node', 'room',)
+    filter_fields = ('contestant', 'active_node', 'zone',)
     queryset = Desk.objects.all()
 
 
@@ -97,16 +97,16 @@ class ContestantsAPI(ModelViewSet):
     queryset = Contestant.objects.all()
 
 
-class RoomsAPI(ModelViewSet):
-    serializer_class = RoomSerializer
+class ZonesAPI(ModelViewSet):
+    serializer_class = ZoneSerializer
     filter_fields = ('name',)
-    queryset = Room.objects.all()
+    queryset = Zone.objects.all()
 
     @staticmethod
-    def get_room_data(room):
-        data = RoomSerializer(room).data
+    def get_zone_data(zone):
+        data = ZoneSerializer(zone).data
         data['desks'] = []
-        for desk in Desk.objects.filter(room=room).prefetch_related('contestant', 'active_node'):
+        for desk in Desk.objects.filter(zone=zone).prefetch_related('contestant', 'active_node'):
             deskData = DeskSerializer(desk).data
             deskData['active_node'] = NodeSerializer(desk.active_node).data
             deskData['contestant'] = ContestantSerializer(desk.contestant).data
@@ -114,11 +114,11 @@ class RoomsAPI(ModelViewSet):
         return data
 
     def retrieve(self, request, *args, pk=None, **kwargs):
-        room = get_object_or_404(self.queryset, pk=pk)
-        return Response(self.get_room_data(room))
+        zone = get_object_or_404(self.queryset, pk=pk)
+        return Response(self.get_zone_data(zone))
 
     def list(self, request, **kwargs):
         data = []
-        for room in self.filter_queryset(self.get_queryset()):
-            data.append(self.get_room_data(room))
+        for zone in self.filter_queryset(self.get_queryset()):
+            data.append(self.get_zone_data(zone))
         return Response(data)

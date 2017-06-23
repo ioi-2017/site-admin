@@ -3,8 +3,8 @@
  */
 
 app.constant('MODELS', {
-    'Room': {
-        url: '/api/rooms/:id/'
+    'Zone': {
+        url: '/api/zones/:id/'
     },
     'Node': {
         url: '/api/nodes/:id/'

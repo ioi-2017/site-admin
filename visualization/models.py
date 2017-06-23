@@ -5,7 +5,7 @@ from django_countries.fields import CountryField
 from django.utils.translation import ugettext_lazy as _
 
 
-class Room(models.Model):
+class Zone(models.Model):
     name = models.CharField(max_length=40, unique=True)
 
     def __str__(self):
@@ -23,7 +23,7 @@ def xy_range_validator(value):
 class Desk(models.Model):
     contestant = models.OneToOneField('Contestant', related_name='desk', blank=True, null=True)
     active_node = models.OneToOneField('Node', related_name='desk', blank=True, null=True)
-    room = models.ForeignKey('Room', on_delete=models.CASCADE)
+    zone = models.ForeignKey('Zone', on_delete=models.CASCADE)
     number = models.IntegerField(null=True)
     x = models.FloatField(default=0.5, validators=[xy_range_validator])
     y = models.FloatField(default=0.5, validators=[xy_range_validator])
@@ -32,7 +32,7 @@ class Desk(models.Model):
     ])
 
     class Meta:
-        unique_together = ('room', 'number')
+        unique_together = ('zone', 'number')
 
     def position_data(self):
         return {

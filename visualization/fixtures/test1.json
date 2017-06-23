@@ -1,6 +1,6 @@
 [
 {
-  "model": "visualization.room",
+  "model": "visualization.zone",
   "pk": 1,
   "fields": {
     "name": "test"
@@ -12,7 +12,7 @@
   "fields": {
     "contestant": 1,
     "active_node": 1,
-    "room": 1,
+    "zone": 1,
     "x": "0.20000",
     "y": "0.30000",
     "angle": 150
@@ -24,7 +24,7 @@
   "fields": {
     "contestant": 2,
     "active_node": 2,
-    "room": 1,
+    "zone": 1,
     "x": "0.50000",
     "y": "0.20000",
     "angle": 0
@@ -36,7 +36,7 @@
   "fields": {
     "contestant": 3,
     "active_node": 3,
-    "room": 1,
+    "zone": 1,
     "x": "0.80000",
     "y": "0.30000",
     "angle": 30
@@ -48,7 +48,7 @@
   "fields": {
     "contestant": 4,
     "active_node": 4,
-    "room": 1,
+    "zone": 1,
     "x": "0.20000",
     "y": "0.70000",
     "angle": 30
@@ -60,7 +60,7 @@
   "fields": {
     "contestant": 5,
     "active_node": 5,
-    "room": 1,
+    "zone": 1,
     "x": "0.50000",
     "y": "0.80000",
     "angle": 0
@@ -72,7 +72,7 @@
   "fields": {
     "contestant": 6,
     "active_node": 6,
-    "room": 1,
+    "zone": 1,
     "x": "0.80000",
     "y": "0.70000",
     "angle": 150

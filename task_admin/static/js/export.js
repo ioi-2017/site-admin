@@ -14,7 +14,7 @@ app.controller('exportController', function ($scope, $rootScope, $http) {
         'contestant.number': '1',
         'desk.contestant': 'Refers to desk contestant',
         'desk.active_node': 'Refers to desk active node',
-        'desk.room': 'floor1',
+        'desk.zone': 'floor1',
         'desk.number': '3'
     };
     $scope.renderDjango = function () {

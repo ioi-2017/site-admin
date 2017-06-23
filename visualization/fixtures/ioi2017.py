@@ -11,7 +11,7 @@ def next_desk_pk():
     return None
 
 
-def generate_desks(rows_size, room_id):
+def generate_desks(rows_size, zone_id):
     for row in range(3):
         margin = 0.1
         hor_num = row * 2 + 5
@@ -32,7 +32,7 @@ def generate_desks(rows_size, room_id):
                 "model": "visualization.desk",
                 "pk": next_desk_pk(),
                 "fields": {
-                    "room": room_id,
+                    "zone": zone_id,
                     "number": row * 20 + (10 if row == 0 else 0) + index,
                     "x": x,
                     "y": y,
@@ -41,9 +41,9 @@ def generate_desks(rows_size, room_id):
             }
 
 
-def generate_room(id, name):
+def generate_zone(id, name):
     yield {
-        "model": "visualization.room",
+        "model": "visualization.zone",
         "pk": id,
         "fields": {
             "name": name,
@@ -52,11 +52,11 @@ def generate_room(id, name):
 
 
 if __name__ == '__main__':
-    room_name = sys.argv[1]
+    zone_name = sys.argv[1]
     rows = list(map(int, sys.argv[2:5]))
     angle = int(sys.argv[5])
-    room_id = int(sys.argv[6]) if len(sys.argv) > 6 else None
+    zone_id = int(sys.argv[6]) if len(sys.argv) > 6 else None
     desk_id = int(sys.argv[7]) if len(sys.argv) > 7 else None
-    ans = list(generate_room(room_id, room_name))
-    ans += list(generate_desks(rows, room_id))
+    ans = list(generate_zone(zone_id, zone_name))
+    ans += list(generate_desks(rows, zone_id))
     print(json.dumps(ans))

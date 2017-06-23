@@ -56,7 +56,7 @@ class TemplateTest(TestCase):
 
 
 class TaskTest(TestCase):
-    fixtures = ['nodes.json', 'desks.json', 'rooms.json', 'contestants.json', 'admin.json']
+    fixtures = ['nodes.json', 'desks.json', 'zones.json', 'contestants.json', 'admin.json']
 
     def test_without_task(self):
         task_data = {
@@ -153,10 +153,10 @@ class CompleteTest(TestCase):
         }
         self.assertEqual(client.post('/api/nodes/', node_data).status_code, 201)
 
-        room_data = {
+        zone_data = {
             'name': 'floor1',
         }
-        self.assertEqual(client.post('/api/rooms/', room_data).status_code, 201)
+        self.assertEqual(client.post('/api/zones/', zone_data).status_code, 201)
 
         contestant_data = {
             'first_name': 'amin',
@@ -175,7 +175,7 @@ class CompleteTest(TestCase):
         desk_data = {
             'contestant': 1,
             'active_node': 1,
-            'room': 1,
+            'zone': 1,
             'number': 1
         }
         self.assertEqual(client.post('/api/desks/', desk_data).status_code, 201)
@@ -183,7 +183,7 @@ class CompleteTest(TestCase):
         desk_data = {
             'contestant': 2,
             'active_node': 2,
-            'room': 1,
+            'zone': 1,
             'number': 2
         }
         self.assertEqual(client.post('/api/desks/', desk_data).status_code, 201)

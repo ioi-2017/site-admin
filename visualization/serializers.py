@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from visualization.models import Node, Desk, Contestant, Room, NodeGroup
+from visualization.models import Node, Desk, Contestant, Zone, NodeGroup
 
 
 class NodeSerializer(serializers.ModelSerializer):
@@ -17,7 +17,7 @@ class NodeGroupSerializer(serializers.ModelSerializer):
 class DeskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Desk
-        fields = ('id', 'contestant', 'active_node', 'room', 'x', 'y', 'angle',)
+        fields = ('id', 'contestant', 'active_node', 'zone', 'x', 'y', 'angle',)
 
 
 class ContestantSerializer(serializers.ModelSerializer):
@@ -26,7 +26,7 @@ class ContestantSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'first_name', 'last_name', 'gender', 'email', 'country', 'number',)
 
 
-class RoomSerializer(serializers.ModelSerializer):
+class ZoneSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Room
+        model = Zone
         fields = ('id', 'name',)
