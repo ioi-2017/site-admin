@@ -24,7 +24,6 @@ class TaskTemplateSerializer(serializers.ModelSerializer):
 
 class TaskSerializer(serializers.ModelSerializer):
     owner_data = serializers.StringRelatedField(source='owner')
-    taskruns = serializers.StringRelatedField(many=True, read_only=True)
     ips = serializers.JSONField(write_only=True)
     summary = serializers.JSONField(read_only=True)
     code = serializers.CharField(required=True)
@@ -87,8 +86,8 @@ class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
         fields = (
-            'id', 'code', 'is_local', 'timeout', 'username', 'name', 'owner', 'owner_data', 'created_at', 'taskruns',
-            'ips', 'results', 'summary', 'is_finished')
+            'id', 'code', 'is_local', 'timeout', 'username', 'name', 'owner', 'owner_data', 'created_at',
+            'ips', 'summary', 'is_finished')
 
 
 class TaskRunSerializer(serializers.ModelSerializer):
