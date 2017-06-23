@@ -98,6 +98,6 @@ class TaskRunSerializer(serializers.ModelSerializer):
     class Meta:
         model = TaskRun
         fields = (
-            'id', 'celery_task', 'is_local', 'timeout', 'username', 'task', 'created_at', 'started_at',
+            'id', 'celery_task', 'is_local', 'timeout', 'username', 'task', 'task_name', 'created_at', 'started_at',
             'finished_at', 'rendered_code', 'duration_milliseconds', 'stdout', 'stderr', 'return_code', 'status',
             'desk', 'contestant', 'node')

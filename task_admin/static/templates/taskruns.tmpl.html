@@ -30,8 +30,7 @@
             <table md-table md-row-select="true" multiple ng-model="selected" md-progress="promise">
                 <thead md-head>
                 <tr md-row>
-                    <th md-column>Rendered Code</th>
-                    <th md-column>Is Local?</th>
+                    <th md-column>Task</th>
                     <th md-column>Status</th>
                     <th md-column>IP</th>
                     <th md-column>Created at</th>
@@ -40,99 +39,21 @@
                 </thead>
                 <tbody md-body>
                 <tr class="na-tr" md-row md-select="result" md-select-id="id" ng-repeat="result in results track by result.id">
-                    <td md-cell><code>{{ ::result.trimmed_code }}</code></td>
+                    <td md-cell><code>{{ result.task_name }} {{ result.is_local ? '[Local]' : '[Remote]' }}</code></td>
                     <td md-cell>
-                        <md-icon aria-label="backup"
-                                 class="material-icons step">{{ ::result.is_local_icon }}
-                        </md-icon>
+                            <md-icon ng-click="changeHovered($event,result)" md-colors="::{backgroundColor: '{{ result.status_color }}-700'}" class="material-icons step circle-button">{{ result.icon }}</md-icon>
                     </td>
-                    <td md-cell>
-                        <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'blueGrey-700'}"
-                                   ng-if="result.status=='PENDING'">
-                            <md-icon class="material-icons step">schedule</md-icon>
-                            <md-tooltip
-                                    md-direction="left">
-                                Pending
-                            </md-tooltip>
-                        </md-button>
-                        <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'yellow-700'}"
-                                   ng-if="result.status=='RUNNING'">
-                            <md-icon class="material-icons step">sync</md-icon>
-                            <md-tooltip
-                                    md-direction="left">
-                                Running
-                            </md-tooltip>
-                        </md-button>
-                        <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'green-700'}"
-                                   ng-if="result.status=='SUCCESS'">
-                            <md-icon class="material-icons step">done</md-icon>
-                            <md-tooltip
-                                    md-direction="left">
-                                Successful
-                            </md-tooltip>
-                        </md-button>
-                        <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'red-700'}"
-                                   ng-if="result.status=='FAILED'">
-                            <md-icon class="material-icons step">clear</md-icon>
-                            <md-tooltip
-                                    md-direction="left">
-                                Failed
-                            </md-tooltip>
-                        </md-button>
-                        <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'brown-700'}"
-                                   ng-if="result.status=='ABORTED'">
-                            <md-icon class="material-icons step">pan_tool</md-icon>
-                            <md-tooltip
-                                    md-direction="left">
-                                Aborted
-                            </md-tooltip>
-                        </md-button>
-                    </td>
-                    <td md-cell><code>{{ ::result.node.ip }}</code></td>
+                    <td md-cell><code>{{ result.node.ip }}</code></td>
                     <td md-cell><span am-time-ago="result.created_at"></span></td>
-                    <td md-cell layout="row">
-                        <md-button class="md-fab md-mini" aria-label="Stop" ng-click="changeHovered(result)">
-                            <md-icon aria-label="backup"
-                                     class="material-icons step">visibility
+                    <td md-cell>
+                            <md-icon ng-click="stopTaskrun(result)"
+                                     class="material-icons step circle-button" md-colors="::{backgroundColor: 'green-700'}">pause
                             </md-icon>
-                        </md-button>
-                        <md-button class="md-fab md-mini" aria-label="Stop" ng-click="stopTaskrun(result)">
-                            <md-icon aria-label="backup"
-                                     class="material-icons step">pause
-                            </md-icon>
-                        </md-button>
                     </td>
                 </tr>
                 </tbody>
             </table>
         </md-table-container>
-
-        <br>
-        <div layout="row" ng-show="pagination.previous_url || pagination.next_url">
-            <md-button ng-disabled="!pagination.previous_url"
-                       aria-label="previous"
-                       class="md-icon-button md-raised"
-                       ng-click="prevPage()"
-                       aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-            </md-button>
-            <md-button ng-repeat="page in pagination.page_links"
-                       aria-label="page_number"
-                       ng-disabled="page[3]"
-                       class="md-icon-button"
-                       ng-class="{'md-accent md-raised':page[2]==true}"
-                       ng-click="setPage(page[1])">
-                <span ng-if="page[3]" aria-hidden="true">&hellip;</span>
-                <span ng-if="!page[3]">{{ page[1] }}</span>
-            </md-button>
-            <md-button ng-disabled="!pagination.next_url"
-                       aria-label="next"
-                       class="md-icon-button md-raised"
-                       ng-click="nextPage()"
-                       aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-            </md-button>
-        </div>
     </div>
     <div flex class="flex-30" id="details">
         <div ng-if="hovered">
@@ -194,12 +115,7 @@
             <md-card>
                 <md-card-title>
                     <md-card-title-text>
-                        <span class="md-headline">Click on <md-button class="md-fab md-mini"
-                                                                      aria-label="help_details">
-                            <md-icon aria-label="backup"
-                                     class="material-icons step">visibility
-                            </md-icon>
-                        </md-button> to see task details</span>
+                        <span class="md-headline">Click on task status to see task details</span>
                     </md-card-title-text>
                 </md-card-title>
             </md-card>

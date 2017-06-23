@@ -31,7 +31,7 @@ class TaskTemplatesAPI(ModelViewSet):
 
 
 class Pagination(PageNumberPagination):
-    page_size = 20
+    page_size = 400
     page_size_query_param = 'page_size'
 
 

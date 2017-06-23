@@ -32,7 +32,7 @@ md-content#main {
 }
 
 table.md-table th.md-column {
-    font-size:14px;
+    font-size: 14px;
 }
 
 table.md-table th.md-column {
@@ -43,12 +43,19 @@ table.md-table td.md-cell {
     color: inherit !important;
 }
 
-table.md-table.md-row-select tbody.md-body>tr.na-tr.md-row.md-selected {
+table.md-table.md-row-select tbody.md-body > tr.na-tr.md-row.md-selected {
     background-color: inherit !important;
 }
 
-table.md-table.md-row-select tbody.md-body>tr.na-tr.md-row:not([disabled]):hover {
-    background-color: inherit !important;
+
+
+table.md-table.md-row-select tbody.md-body > tr.na-tr.md-row:not([disabled]):hover {
+    background-color: #353535 !important;
+}
+
+table.md-table.md-row-select tbody.md-body > tr.na-tr.md-row.show-info,
+table.md-table.md-row-select tbody.md-body > tr.na-tr.md-row.show-info:hover {
+    background-color: #212121 !important;
 }
 
 #details {
@@ -58,4 +65,10 @@ table.md-table.md-row-select tbody.md-body>tr.na-tr.md-row:not([disabled]):hover
     overflow-y: auto;
     width: 100%;
     z-index: 1000;
+}
+
+.circle-button {
+    cursor: pointer;
+    border-radius: 100px;
+    padding: 7px;
 }
