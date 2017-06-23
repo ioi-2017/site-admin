@@ -38,7 +38,7 @@ class Pagination(PageNumberPagination):
 class TaskRunsAPI(ReadOnlyModelViewSet, mixins.ListModelMixin):
     serializer_class = TaskRunSerializer
     filter_fields = ('desk', 'contestant', 'node', 'task', 'status')
-    queryset = TaskRun.objects.select_related('task', 'contestant', 'node', 'desk').filter(
+    queryset = TaskRun.objects.select_related('task', 'contestant', 'node', 'desk', 'node__last_task').filter(
         task__deleted=False).order_by(
         '-created_at')
     pagination_class = Pagination
