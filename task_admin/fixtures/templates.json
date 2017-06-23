@@ -1,99 +1,99 @@
 [
 {
-  "model": "task_admin.task",
+  "model": "task_admin.tasktemplate",
   "pk": 1,
   "fields": {
     "is_local": true,
-    "timeout": 10,
+    "timeout": 10.0,
     "username": "",
     "name": "scp tasks",
     "code": "scp /home/ioi/tasks/{node.id} {node.username}@{node.ip}:tasks/",
     "author": 1,
-    "created_at": "2017-03-08T16:36:27.495Z",
+    "created_at": "2017-03-08T20:06:27.495",
     "deleted": false
   }
 },
 {
-  "model": "task_admin.task",
-  "pk": 2,
-  "fields": {
-    "is_local": true,
-    "timeout": 10,
-    "username": "",
-    "name": "Make temp directories",
-    "code": "mkdir /tmp/{contestant.id}-{node.username}",
-    "author": 1,
-    "created_at": "2017-03-19T09:55:12.077Z",
-    "deleted": false
-  }
-},
-{
-  "model": "task_admin.task",
+  "model": "task_admin.tasktemplate",
   "pk": 3,
   "fields": {
     "is_local": false,
-    "timeout": 10,
+    "timeout": 10.0,
     "username": "",
     "name": "List home directory",
     "code": "ls ~",
     "author": 1,
-    "created_at": "2017-03-18T13:05:40.425Z",
+    "created_at": "2017-03-18T16:35:40.425",
     "deleted": false
   }
 },
 {
-  "model": "task_admin.task",
+  "model": "task_admin.tasktemplate",
   "pk": 4,
   "fields": {
     "is_local": false,
-    "timeout": 10,
+    "timeout": 10.0,
     "username": "",
     "name": "Home dir size",
     "code": "du -sc /tmp/ | tail -1 | awk '{ print $1 }'",
     "author": 1,
-    "created_at": "2017-03-18T13:13:06.109Z",
+    "created_at": "2017-03-18T16:43:06.109",
     "deleted": false
   }
 },
 {
-  "model": "task_admin.task",
+  "model": "task_admin.tasktemplate",
   "pk": 5,
   "fields": {
     "is_local": false,
-    "timeout": 10,
+    "timeout": 10.0,
     "username": "",
     "name": "Collect ip address",
     "code": "ip route",
     "author": 1,
-    "created_at": "2017-03-18T13:14:57.366Z",
+    "created_at": "2017-03-18T16:44:57.366",
     "deleted": false
   }
 },
 {
-  "model": "task_admin.task",
+  "model": "task_admin.tasktemplate",
   "pk": 6,
   "fields": {
     "is_local": false,
-    "timeout": 10,
+    "timeout": 10.0,
     "username": "",
     "name": "Reboot worker",
     "code": "reboot",
     "author": 1,
-    "created_at": "2017-03-18T13:20:57.620Z",
+    "created_at": "2017-03-18T16:50:57.620",
     "deleted": false
   }
 },
 {
-  "model": "task_admin.task",
+  "model": "task_admin.tasktemplate",
   "pk": 7,
   "fields": {
     "is_local": true,
-    "timeout": 10,
+    "timeout": 10.0,
     "username": "",
     "name": "Make temp directories",
     "code": "mkdir /tmp/{contestant.id}-{node.username}",
     "author": 1,
-    "created_at": "2017-03-18T13:40:12.064Z",
+    "created_at": "2017-03-18T17:10:12.064",
+    "deleted": false
+  }
+},
+{
+  "model": "task_admin.tasktemplate",
+  "pk": 8,
+  "fields": {
+    "is_local": true,
+    "timeout": 10.0,
+    "username": "",
+    "name": "Tricky sleep",
+    "code": "sleep `expr {node.id} + 4`",
+    "author": 1,
+    "created_at": "2017-06-19T21:53:45.578",
     "deleted": false
   }
 }

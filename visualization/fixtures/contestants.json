@@ -3,7 +3,7 @@
   "model": "visualization.contestant",
   "pk": 1,
   "fields": {
-    "name": "TurkishContestant-1",
+    "first_name": "TurkishContestant-1",
     "country": "TR",
     "number": 1
   }
@@ -12,7 +12,7 @@
   "model": "visualization.contestant",
   "pk": 2,
   "fields": {
-    "name": "TurkishContestant-2",
+    "first_name": "TurkishContestant-2",
     "country": "TR",
     "number": 2
   }
@@ -21,7 +21,7 @@
   "model": "visualization.contestant",
   "pk": 3,
   "fields": {
-    "name": "TurkishContestant-3",
+    "first_name": "TurkishContestant-3",
     "country": "TR",
     "number": 3
   }
@@ -30,7 +30,7 @@
   "model": "visualization.contestant",
   "pk": 4,
   "fields": {
-    "name": "TurkishContestant-4",
+    "first_name": "TurkishContestant-4",
     "country": "TR",
     "number": 4
   }
@@ -39,7 +39,7 @@
   "model": "visualization.contestant",
   "pk": 5,
   "fields": {
-    "name": "IranianContestant-1",
+    "first_name": "IranianContestant-1",
     "country": "IR",
     "number": 1
   }
@@ -48,7 +48,7 @@
   "model": "visualization.contestant",
   "pk": 6,
   "fields": {
-    "name": "IranianContestant-2",
+    "first_name": "IranianContestant-2",
     "country": "IR",
     "number": 2
   }
@@ -57,7 +57,7 @@
   "model": "visualization.contestant",
   "pk": 7,
   "fields": {
-    "name": "IranianContestant-3",
+    "first_name": "IranianContestant-3",
     "country": "IR",
     "number": 3
   }
@@ -66,7 +66,7 @@
   "model": "visualization.contestant",
   "pk": 8,
   "fields": {
-    "name": "IranianContestant-4",
+    "first_name": "IranianContestant-4",
     "country": "IR",
     "number": 4
   }
@@ -75,7 +75,7 @@
   "model": "visualization.contestant",
   "pk": 9,
   "fields": {
-    "name": "BritishContestant-1",
+    "first_name": "BritishContestant-1",
     "country": "GB",
     "number": 1
   }
@@ -84,7 +84,7 @@
   "model": "visualization.contestant",
   "pk": 10,
   "fields": {
-    "name": "BritishContestant-2",
+    "first_name": "BritishContestant-2",
     "country": "GB",
     "number": 2
   }

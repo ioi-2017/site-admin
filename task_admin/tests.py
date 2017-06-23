@@ -4,64 +4,64 @@ from django.test import Client
 from django.test import TestCase
 
 
-class TaskTest(TestCase):
-    fixtures = ["tasks.json", "admin.json"]
+class TemplateTest(TestCase):
+    fixtures = ["templates.json", "admin.json"]
 
     def test_fields(self):
         client = Client()
-        response = client.get('/api/tasks/')
+        response = client.get('/api/templates/')
         self.assertEqual(response.status_code, 200)
-        tasks = response.json()
+        templates = response.json()
         required_fields = {'id', 'name', 'author', 'code', 'is_local', 'timeout', 'username'}
-        self.assertTrue(len(tasks) > 0)
-        for task in tasks:
-            self.assertSetEqual(set(task.keys()), required_fields)
+        self.assertTrue(len(templates) > 0)
+        for template in templates:
+            self.assertSetEqual(set(template.keys()), required_fields)
 
     def test_filtering(self):
         client = Client()
-        response = client.get('/api/tasks/?is_local=true')
-        tasks = response.json()
+        response = client.get('/api/templates/?is_local=true')
+        templates = response.json()
         self.assertEqual(response.status_code, 200)
-        self.assertTrue(len(tasks) > 0)
-        for task in tasks:
-            self.assertTrue(task['is_local'])
+        self.assertTrue(len(templates) > 0)
+        for template in templates:
+            self.assertTrue(template['is_local'])
 
-        response = client.get('/api/tasks/?is_local=false')
-        tasks = response.json()
+        response = client.get('/api/templates/?is_local=false')
+        templates = response.json()
         self.assertEqual(response.status_code, 200)
-        self.assertTrue(len(tasks) > 0)
-        for task in tasks:
-            self.assertFalse(task['is_local'])
+        self.assertTrue(len(templates) > 0)
+        for template in templates:
+            self.assertFalse(template['is_local'])
 
     def test_create(self):
         client = Client()
         data = {'name': 'test', 'author': 1, 'code': 'code', 'is_local': True, 'timeout': 7.0, 'username': ''}
-        response = client.post('/api/tasks/', data)
+        response = client.post('/api/templates/', data)
         self.assertEqual(response.status_code, 201)
-        task = response.json()
-        task.pop('id')
-        self.assertDictEqual(task, data)
+        template = response.json()
+        template.pop('id')
+        self.assertDictEqual(template, data)
 
-    def test_single_task(self):
+    def test_single_template(self):
         client = Client()
-        response = client.get('/api/tasks/2/')
+        response = client.get('/api/templates/2/')
         self.assertEqual(response.status_code, 200)
-        task = response.json()
-        task['is_local'] = not task['is_local']
-        put_response = client.put('/api/tasks/2/', json.dumps(task), content_type='application/json')
-        self.assertDictEqual(put_response.json(), task)
-        delete_response = client.delete('/api/tasks/2/')
+        template = response.json()
+        template['is_local'] = not template['is_local']
+        put_response = client.put('/api/templates/2/', json.dumps(template), content_type='application/json')
+        self.assertDictEqual(put_response.json(), template)
+        delete_response = client.delete('/api/templates/2/')
         self.assertEqual(delete_response.status_code, 204)
-        self.assertEqual(client.get('/api/tasks/2/').status_code, 404)
+        self.assertEqual(client.get('/api/templates/2/').status_code, 404)
 
 
-class TaskRunSetTest(TestCase):
+class TaskTest(TestCase):
     fixtures = ['nodes.json', 'desks.json', 'rooms.json', 'contestants.json', 'admin.json']
 
     def test_without_task(self):
-        taskrunset_data = {
+        task_data = {
             'name': 'touch',
-            'code': 'touch /tmp/{contestant.name}',
+            'code': 'touch /tmp/{contestant.first_name}',
             'is_local': True,
             'timeout': 7.0,
             'username': '',
@@ -70,17 +70,18 @@ class TaskRunSetTest(TestCase):
         }
         client = Client()
         self.remove_tmp_files()
-        self.assertEqual(client.post('/api/taskrunsets/', taskrunset_data).status_code, 201)
+        self.assertEqual(client.post('/api/tasks/', task_data).status_code, 201)
         taskruns = client.get('/api/taskruns/').json()
+        print(taskruns)
         self.assertEqual(int(taskruns['count']), 2)
         self.assertTrue(os.path.isfile('/tmp/TurkishContestant-1'))
         self.assertTrue(os.path.isfile('/tmp/TurkishContestant-2'))
         self.remove_tmp_files()
 
     def test_timeout(self):
-        taskrunset_data = {
+        task_data = {
             'name': 'sleep test',
-            'code': 'sleep 2 && touch /tmp/{contestant.name}',
+            'code': 'sleep 2 && touch /tmp/{contestant.first_name}',
             'is_local': True,
             'timeout': 1,
             'username': '',
@@ -89,7 +90,7 @@ class TaskRunSetTest(TestCase):
         }
         client = Client()
         self.remove_tmp_files()
-        self.assertEqual(client.post('/api/taskrunsets/', taskrunset_data).status_code, 201)
+        self.assertEqual(client.post('/api/tasks/', task_data).status_code, 201)
         taskruns = client.get('/api/taskruns/').json()
         self.assertEqual(int(taskruns['count']), 2)
         for result in taskruns['results']:
@@ -105,36 +106,36 @@ class TaskRunSetTest(TestCase):
 
     def test_partial_field(self):
         client = Client()
-        taskrunset_data = {
-            'code': 'touch /tmp/{contestant.name}',
+        task_data = {
+            'code': 'touch /tmp/{contestant.first_name}',
             'owner': 1,
             'ips': json.dumps(['192.168.1.0', '192.168.1.1'])
         }
-        self.assertEqual(client.post('/api/taskrunsets/', taskrunset_data).status_code, 400)
+        self.assertEqual(client.post('/api/tasks/', task_data).status_code, 400)
 
-        taskrunset_data = {
-            'code': 'touch /tmp/{contestant.name}',
+        task_data = {
+            'code': 'touch /tmp/{contestant.first_name}',
             'is_local': True,
             'owner': 1,
             'ips': json.dumps(['192.168.1.0', '192.168.1.1'])
         }
-        self.assertEqual(client.post('/api/taskrunsets/', taskrunset_data).status_code, 400)
+        self.assertEqual(client.post('/api/tasks/', task_data).status_code, 400)
 
-        taskrunset_data = {
+        task_data = {
             'owner': 1,
             'ips': json.dumps(['192.168.1.0', '192.168.1.1'])
         }
-        self.assertEqual(client.post('/api/taskrunsets/', taskrunset_data).status_code, 400)
+        self.assertEqual(client.post('/api/tasks/', task_data).status_code, 400)
 
 
 class CompleteTest(TestCase):
     fixtures = ['admin.json']
 
-    def create_tasks(self):
+    def create_templates(self):
         client = Client()
-        task_data = {'name': 'touch', 'author': 1, 'code': 'touch /tmp/{contestant.name}', 'is_local': True,
+        template_data = {'name': 'touch', 'author': 1, 'code': 'touch /tmp/{contestant.first_name}', 'is_local': True,
                      'timeout': 7.0, 'username': ''}
-        client.post('/api/tasks/', task_data)
+        client.post('/api/templates/', template_data)
         node_data = {
             'ip': '192.168.1.1',
             'mac_address': 'some_mac',
@@ -159,14 +160,14 @@ class CompleteTest(TestCase):
         self.assertEqual(client.post('/api/rooms/', room_data).status_code, 201)
 
         contestant_data = {
-            'name': 'amin',
+            'first_name': 'amin',
             'country': 'IR',
             'number': 3
         }
         self.assertEqual(client.post('/api/contestants/', contestant_data).status_code, 201)
 
         contestant_data = {
-            'name': 'hamed',
+            'first_name': 'hamed',
             'country': 'IR',
             'number': 2
         }
@@ -188,18 +189,18 @@ class CompleteTest(TestCase):
         }
         self.assertEqual(client.post('/api/desks/', desk_data).status_code, 201)
 
-        taskrunset_data = {
+        task_data = {
             'name': 'touch',
-            'code': task_data['code'],
-            'is_local': task_data['is_local'],
-            'timeout': task_data['timeout'],
-            'username': task_data['username'],
+            'code': template_data['code'],
+            'is_local': template_data['is_local'],
+            'timeout': template_data['timeout'],
+            'username': template_data['username'],
             'owner': 1,
             'ips': json.dumps(['192.168.1.1', '192.168.1.2'])
         }
 
         self.remove_tmp_files()
-        self.assertEqual(client.post('/api/taskrunsets/', taskrunset_data).status_code, 201)
+        self.assertEqual(client.post('/api/tasks/', task_data).status_code, 201)
         taskruns = client.get('/api/taskruns/').json()
         self.assertEqual(int(taskruns['count']), 2)
         self.assertTrue(os.path.isfile('/tmp/hamed'))
@@ -213,4 +214,4 @@ class CompleteTest(TestCase):
             os.remove('/tmp/amin')
 
     def test_everything(self):
-        self.create_tasks()
+        self.create_templates()
