@@ -76,6 +76,9 @@ class TaskRun(models.Model):
     contestant = models.ForeignKey(Contestant, null=True)
     node = models.ForeignKey(Node)
 
+    def task_name(self):
+        return self.task.name
+
     def get_execution_dict(self):
         """
         :return: all parameters needed for execute_task function
