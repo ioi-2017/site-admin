@@ -45,3 +45,8 @@
     stroke: #fff;
     stroke-width: 2px;
 }
+
+.desk.selected {
+    stroke: #fff !important;
+    stroke-width: 2px;
+}

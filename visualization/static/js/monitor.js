@@ -33,12 +33,16 @@ app.controller('monitorController', function ($scope, $stateParams, $http, $time
     };
 
     function updateSoft(next) {
-        API.Node.forEach(function (node) {
-            if (node.ip in $scope.desks) {
-                var style = ['desk', node.status.toLowerCase(), node.connected ? 'ok' : 'failed'];
-                $scope.desks[node.ip].attr('class', style.join(' '));
+        API.Node.query(function (nodes) {
+            for (var i = 0; i < nodes.length; i++) {
+                var node = nodes[i];
+                if (node.ip in $scope.desks) {
+                    var style = ['desk', node.status.toLowerCase(), node.connected ? 'ok' : 'failed'];
+                    if ($scope.select.desk != null && $scope.select.node.ip == node.ip)
+                        style.push('selected');
+                    $scope.desks[node.ip].attr('class', style.join(' '));
+                }
             }
-        }, {}, function () {
             if (next) next();
         });
     }
@@ -51,11 +55,26 @@ app.controller('monitorController', function ($scope, $stateParams, $http, $time
             var contestant = desk.contestant;
 
             var deskElement = createDesk(zone, desk.x, desk.y, desk.angle);
-            deskElement.attr("class", "desk unknown");
+            deskElement.attr('class', 'desk unknown');
             deskElement.node.onclick = function () {
+                var style = [];
+                if ($scope.select.desk != null) {
+                    style = $scope.select.element.attr('class').split(' ');
+                    style = style.filter(function (class_name) {
+                        return class_name !== 'selected';
+                    });
+                    $scope.select.element.attr('class', style.join(' '));
+                }
                 $scope.select.desk = desk;
                 $scope.select.node = node;
                 $scope.select.contestant = contestant;
+                $scope.select.element = deskElement;
+                style = deskElement.attr('class').split(' ');
+                style = style.filter(function (class_name) {
+                    return class_name !== 'selected';
+                });
+                style.push('selected');
+                deskElement.attr('class', style.join(' '));
             };
             $scope.desks[node.ip] = deskElement;
         });
