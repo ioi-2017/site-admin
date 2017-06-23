@@ -50,6 +50,7 @@ app.controller('tasksController', function ($stateParams, $state, $scope, $timeo
         $mdDialog.show(confirm).then(function () {
             angular.forEach($scope.selected, function (item) {
                 $http.delete('/api/tasks/' + item.id + '/', {}).then(function () {
+                    $scope.selected = [];
                     updatePageSoft();
                 });
             });
