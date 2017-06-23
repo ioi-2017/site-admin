@@ -101,8 +101,8 @@ class TasksAPI(mixins.CreateModelMixin,
         for task_run in instance.taskruns.all():
             task_run.stop()
             task_run.node.update_last_task()
-        logger.info('Remaining taskruns of Task #%d (%s) has stopped' % (instance.id, instance.name))
         instance.save()
+        logger.info('Remaining taskruns of Task #%d (%s) has stopped' % (instance.id, instance.name))
 
     @detail_route(methods=['post'])
     def stop(self, request, pk):

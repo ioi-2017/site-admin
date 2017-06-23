@@ -1,3 +1,4 @@
+import logging
 import textwrap
 from collections import Counter
 
@@ -7,6 +8,8 @@ from django.db import models, transaction, connection
 from django.contrib.postgres.fields import JSONField
 
 from visualization.models import Desk, Node, Contestant
+
+logger = logging.getLogger(__name__)
 
 
 class TaskTemplate(models.Model):
@@ -103,6 +106,7 @@ class TaskRun(models.Model):
             with transaction.atomic():
                 self.change_status('ABORTED')
                 self.save()
+            logger.info('Taskrun %#d (Task: %s) aborted. status: %s' % (self.id, self.task.name, self.status))
 
     @transaction.atomic
     def change_status(self, new_status):

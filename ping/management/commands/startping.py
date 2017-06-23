@@ -1,9 +1,12 @@
+import logging
 import subprocess
 import threading
 import time
 from django.core.management.base import BaseCommand
 from ping.models import PingLog
 from visualization.models import Node
+
+logger = logging.getLogger(__name__)
 
 DB_REFRESH_RATE = 60
 
@@ -48,6 +51,10 @@ class Command(BaseCommand):
                 node.connected = success
                 PingLog.objects.create(node=node, connected=success)
                 node.save(update_fields=['connected'])
+                if success:
+                    logger.info('Node %s connected' % node.ip)
+                else:
+                    logger.info('Node %s disconnected' % node.ip)
             if threading.current_thread().stopped():
                 from django.db import connections
                 for conn in connections.all():

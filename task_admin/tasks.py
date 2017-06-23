@@ -1,4 +1,5 @@
 import datetime
+import logging
 import os
 import stat
 import subprocess
@@ -8,6 +9,8 @@ from paramiko import SSHClient, AutoAddPolicy
 from netadmin.settings import app
 
 from django.db import transaction
+
+logger = logging.getLogger(__name__)
 
 TIMEOUT_EXIT_CODE = 124
 
@@ -26,6 +29,7 @@ def execute_task(task_run_id, is_local, ip, username, rendered_code, timeout):
         task_run.change_status('RUNNING')
         task_run.started_at = datetime.datetime.now()
         task_run.save(update_fields=['status', 'started_at'])
+    logger.info('Taskrun %#d (Task: %s) started. status: %s' % (task_run.id, task_run.task.name, task_run.status))
 
     # Prepare the script
     script = tempfile.NamedTemporaryFile('w', delete=False)
@@ -85,4 +89,5 @@ def execute_task(task_run_id, is_local, ip, username, rendered_code, timeout):
         else:
             task_run.change_status('SUCCESS')
         task_run.save(update_fields=['status', 'finished_at', 'stdout', 'stderr', 'return_code'])
+    logger.info('Taskrun %#d (Task: %s) has finished. status: %s' % (task_run.id, task_run.task.name, task_run.status))
     os.remove(script.name)
