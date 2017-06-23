@@ -1,13 +1,13 @@
-<md-dialog aria-label="Create TaskRunSet" class="flex-75">
+<md-dialog aria-label="Create Task" class="flex-75">
     <form ng-cloak name="taskCreationForm" ng-submit="create()">
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2>Create TaskRunSet</h2>
+                <h2>Create Task</h2>
                 <md-input-container flex-gt-sm>
-                    <label>TaskRunSet Name</label>
-                    <input required ng-model="run_set_name" name="run_set_name">
+                    <label>Task Name</label>
+                    <input required ng-model="task_name" name="task_name">
 
-                    <div ng-messages="taskCreationForm.run_set_name.$error">
+                    <div ng-messages="taskCreationForm.task_name.$error">
                         <div ng-message="required">This is required.</div>
                     </div>
                 </md-input-container>

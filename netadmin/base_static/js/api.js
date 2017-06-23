@@ -18,8 +18,8 @@ app.constant('MODELS', {
     'Contestant': {
         url: '/api/contestants/:id/'
     },
-    'Taskrunset': {
-        url: '/api/taskrunsets/:id/',
+    'Task': {
+        url: '/api/tasks/:id/',
         paginated: true
     },
     'Taskrun': {

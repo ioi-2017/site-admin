@@ -9,8 +9,8 @@ from rest_framework.decorators import detail_route
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet, GenericViewSet
 
-from task_admin.models import TaskRunSet, TaskTemplate, TaskRun
-from task_admin.serializers import TaskRunSetSerializer, TaskTemplateSerializer, TaskRunSerializer
+from task_admin.models import Task, TaskTemplate, TaskRun
+from task_admin.serializers import TaskSerializer, TaskTemplateSerializer, TaskRunSerializer
 from task_admin.task_render import get_all_possible_vars_sample
 
 logger = logging.getLogger(__name__)
@@ -37,9 +37,9 @@ class Pagination(PageNumberPagination):
 
 class TaskRunsAPI(ReadOnlyModelViewSet, mixins.ListModelMixin):
     serializer_class = TaskRunSerializer
-    filter_fields = ('desk', 'contestant', 'node', 'run_set', 'status')
-    queryset = TaskRun.objects.select_related('run_set', 'contestant', 'node', 'desk').filter(
-        run_set__deleted=False).order_by(
+    filter_fields = ('desk', 'contestant', 'node', 'task', 'status')
+    queryset = TaskRun.objects.select_related('task', 'contestant', 'node', 'desk').filter(
+        task__deleted=False).order_by(
         '-created_at')
     pagination_class = Pagination
 
@@ -56,35 +56,35 @@ class TaskRunsAPI(ReadOnlyModelViewSet, mixins.ListModelMixin):
         return HttpResponse('', status=204)
 
 
-class TaskRunSetFilterBackend(DjangoFilterBackend):
+class TaskFilterBackend(DjangoFilterBackend):
     def filter_queryset(self, request, queryset, view):
         filter_queryset = super().filter_queryset(request, queryset, view)
-        runset_state = request.query_params.get('state', None)
-        if runset_state == 'SUCCESS':
+        task_state = request.query_params.get('state', None)
+        if task_state == 'SUCCESS':
             return filter_queryset.filter(summary__PENDING=0, summary__RUNNING=0, summary__FAILED=0)
-        if runset_state == 'FINISHED':
+        if task_state == 'FINISHED':
             return filter_queryset.filter(summary__PENDING=0, summary__RUNNING=0)
-        if runset_state == 'RUNNING':
+        if task_state == 'RUNNING':
             return filter_queryset.filter(summary__RUNNING__gt=0)
-        if runset_state == 'PENDING':
+        if task_state == 'PENDING':
             return filter_queryset.filter(summary__RUNNING=0, summary__PENDING__gt=0)
-        if runset_state == 'ABORTED':
+        if task_state == 'ABORTED':
             return filter_queryset.filter(summary__ABORTED__gt=0)
-        if runset_state == 'FAILED':
+        if task_state == 'FAILED':
             return filter_queryset.filter(summary__FAILED__gt=0)
         return filter_queryset
 
 
-class TaskRunSetsAPI(mixins.CreateModelMixin,
-                     mixins.RetrieveModelMixin,
-                     mixins.ListModelMixin,
-                     mixins.DestroyModelMixin,
-                     GenericViewSet):
-    filter_backends = (TaskRunSetFilterBackend,)
+class TasksAPI(mixins.CreateModelMixin,
+               mixins.RetrieveModelMixin,
+               mixins.ListModelMixin,
+               mixins.DestroyModelMixin,
+               GenericViewSet):
+    filter_backends = (TaskFilterBackend,)
     pagination_class = Pagination
-    serializer_class = TaskRunSetSerializer
+    serializer_class = TaskSerializer
     filter_fields = ('is_local',)
-    queryset = TaskRunSet.objects.prefetch_related('taskruns', 'taskruns__desk', 'taskruns__node',
+    queryset = Task.objects.prefetch_related('taskruns', 'taskruns__desk', 'taskruns__node',
                                                    'taskruns__contestant').select_related('owner').filter(
         deleted=False).order_by('-created_at')
     max_page_size = 10000
@@ -97,18 +97,18 @@ class TaskRunSetsAPI(mixins.CreateModelMixin,
     def perform_destroy(self, instance):
         instance.deleted = True
         instance.save()
-        logger.info('Taskrunset #%d (%s) is deleted' % (instance.id, instance.name))
+        logger.info('Task #%d (%s) is deleted' % (instance.id, instance.name))
         for task_run in instance.taskruns.all():
             task_run.stop()
             task_run.node.update_last_task()
-        logger.info('Remaining taskruns of Taskrunset #%d (%s) has stopped' % (instance.id, instance.name))
+        logger.info('Remaining taskruns of Task #%d (%s) has stopped' % (instance.id, instance.name))
         instance.save()
 
     @detail_route(methods=['post'])
     def stop(self, request, pk):
-        task_runset = self.get_object()
-        logger.info('Taskrunset #%d (%s) is going to stop' % (task_runset.id, task_runset.name))
-        for task_run in task_runset.taskruns.all():
-            task_run.stop()
-        logger.info('Taskrunset #%d (%s) has stopped' % (task_runset.id, task_runset.name))
+        task = self.get_object()
+        logger.info('Task #%d (%s) is going to stop' % (task.id, task.name))
+        for taskrun in task.taskruns.all():
+            taskrun.stop()
+        logger.info('Task #%d (%s) has stopped' % (task.id, task.name))
         return HttpResponse('', status=204)

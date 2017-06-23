@@ -36,7 +36,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $locationProvider, $qPr
             }
         })
         .state('na.taskruns', {
-            url: 'taskruns?status&run_set&desk&node&contestant',
+            url: 'taskruns?status&task&desk&node&contestant',
             views: {
                 'content@': {
                     templateUrl: templateUrl('taskruns.tmpl.html'),
@@ -48,8 +48,8 @@ app.config(function ($stateProvider, $urlRouterProvider, $locationProvider, $qPr
             url: 'tasks?state',
             views: {
                 'content@': {
-                    templateUrl: templateUrl('taskrunsets.tmpl.html'),
-                    controller: 'taskRunsetsController'
+                    templateUrl: templateUrl('tasks.tmpl.html'),
+                    controller: 'tasksController'
                 }
             }
         })

@@ -19,7 +19,7 @@ function createDesk(room, x, y, angle) {
     return desk;
 }
 
-app.controller('monitorController', function ($scope, $stateParams, $http, $timeout, $interval, API, taskRunSetCreator) {
+app.controller('monitorController', function ($scope, $stateParams, $http, $timeout, $interval, API, taskCreator) {
     $scope.rooms = [];
     $scope.desks = {};
 
@@ -27,8 +27,8 @@ app.controller('monitorController', function ($scope, $stateParams, $http, $time
         desk: null
     };
 
-    $scope.showTaskRunSetCreateForDesk = function(ev) {
-        taskRunSetCreator.showTaskRunSetCreate(ev, [$scope.select.node.ip], function () {
+    $scope.showTaskCreateForDesk = function(ev) {
+        taskCreator.showTaskCreate(ev, [$scope.select.node.ip], function () {
         });
     };
 

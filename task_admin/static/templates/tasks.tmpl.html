@@ -12,9 +12,9 @@
         </md-select>
     </md-input-container>
 </div>
-<div id="taskrunsets">
+<div id="tasks">
     <div class="md-toolbar-tools">
-        <span>{{ selected.length }} {{ selected.length > 1 ? 'Task Run Sets' : 'Task Run Set'}} selected</span>
+        <span>{{ selected.length }} {{ selected.length > 1 ? 'Tasks' : 'Task'}} selected</span>
 
         <md-button class="md-fab md-mini" aria-label="Delete" md-colors="::{backgroundColor: 'red-700'}"
                    ng-click="deleteSelected($event)" ng-disabled="selected.length<1">
@@ -23,8 +23,8 @@
             </md-icon>
         </md-button>
 
-        <md-button class="md-fab md-mini" aria-label="Create TaskRunSet"
-                   ng-click="showTaskRunSetCreate($event)">
+        <md-button class="md-fab md-mini" aria-label="Create Task"
+                   ng-click="showTaskCreate($event)">
             <md-icon aria-label="Create"
                      class="material-icons step">add
             </md-icon>
@@ -48,7 +48,7 @@
                 <td md-cell><span am-time-ago="result.created_at"></span></td>
                 <td md-cell>
                     <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'blueGrey-700'}"
-                               ui-sref="na.taskruns({run_set:{{ ::result.id }}, status:'PENDING'})">
+                               ui-sref="na.taskruns({task:{{ ::result.id }}, status:'PENDING'})">
                         {{ result.summary.PENDING }}
                         <md-tooltip
                                 md-direction="left">
@@ -56,7 +56,7 @@
                         </md-tooltip>
                     </md-button>
                     <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'yellow-700'}"
-                               ui-sref="na.taskruns({run_set:{{ ::result.id }}, status:'RUNNING'})">
+                               ui-sref="na.taskruns({task:{{ ::result.id }}, status:'RUNNING'})">
                         {{ result.summary.RUNNING }}
                         <md-tooltip
                                 md-direction="top">
@@ -64,7 +64,7 @@
                         </md-tooltip>
                     </md-button>
                     <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'green-700'}"
-                               ui-sref="na.taskruns({run_set:{{ ::result.id }}, status:'SUCCESS'})">
+                               ui-sref="na.taskruns({task:{{ ::result.id }}, status:'SUCCESS'})">
                         {{ result.summary.SUCCESS }}
                         <md-tooltip
                                 md-direction="top">
@@ -72,7 +72,7 @@
                         </md-tooltip>
                     </md-button>
                     <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'red-700'}"
-                               ui-sref="na.taskruns({run_set:{{ ::result.id }}, status:'FAILED'})">
+                               ui-sref="na.taskruns({task:{{ ::result.id }}, status:'FAILED'})">
                         {{ result.summary.FAILED }}
                         <md-tooltip
                                 md-direction="top">
@@ -80,7 +80,7 @@
                         </md-tooltip>
                     </md-button>
                     <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'brown-700'}"
-                               ui-sref="na.taskruns({run_set:{{ ::result.id }}, status:'ABORTED'})">
+                               ui-sref="na.taskruns({task:{{ ::result.id }}, status:'ABORTED'})">
                         {{ result.summary.ABORTED }}
                         <md-tooltip
                                 md-direction="right">
@@ -94,13 +94,13 @@
                                  class="material-icons step">refresh
                         </md-icon>
                     </md-button-->
-                    <md-button class="md-fab md-mini" aria-label="Stop" ng-click="stopTaskrunset(result)">
+                    <md-button class="md-fab md-mini" aria-label="Stop" ng-click="stopTask(result)">
                         <md-icon aria-label="backup"
                                  class="material-icons step">pause
                         </md-icon>
                     </md-button>
                     <md-button class="md-fab md-mini" aria-label="Stop"
-                               ng-href="/admin/taskruns?run_set={{ ::result.id }}">
+                               ui-sref="na.taskruns({task:{{ ::result.id }}})">
                         <md-icon aria-label="backup"
                                  class="material-icons step">more_horiz
                         </md-icon>

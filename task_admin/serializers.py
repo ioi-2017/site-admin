@@ -3,7 +3,7 @@ import logging
 from rest_framework import serializers
 from rest_framework.exceptions import APIException
 
-from task_admin.models import TaskTemplate, TaskRunSet, TaskRun
+from task_admin.models import TaskTemplate, Task, TaskRun
 from task_admin.task_render import render_task
 from task_admin.tasks import execute_task
 from visualization.models import Node
@@ -22,7 +22,7 @@ class TaskTemplateSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'author', 'code', 'is_local', 'timeout', 'username')
 
 
-class TaskRunSetSerializer(serializers.ModelSerializer):
+class TaskSerializer(serializers.ModelSerializer):
     owner_data = serializers.StringRelatedField(source='owner')
     taskruns = serializers.StringRelatedField(many=True, read_only=True)
     ips = serializers.JSONField(write_only=True)
@@ -44,7 +44,7 @@ class TaskRunSetSerializer(serializers.ModelSerializer):
             except Exception as e:
                 raise BadRequest(detail=str(e))
 
-        taskrunset = TaskRunSet(
+        task = Task(
             code=data['code'],
             is_local=data['is_local'],
             timeout=data['timeout'],
@@ -57,13 +57,13 @@ class TaskRunSetSerializer(serializers.ModelSerializer):
                      'FAILED': 0,
                      'RUNNING': 0}
         )
-        taskrunset.save()  # TODO: Taskrunset should not be created unless all taskruns created successfully
-        logger.info('Taskrunset #%d (%s) is going to be created' % (taskrunset.id, taskrunset.name))
+        task.save()  # TODO: Task should not be created unless all taskruns created successfully
+        logger.info('Task #%d (%s) is going to be created' % (task.id, task.name))
         for ip in data['ips']:
             node = Node.objects.get(ip=ip)
             rendered_code = render_task(data['code'], node)
             taskrun = TaskRun(
-                run_set=taskrunset,
+                task=task,
                 node=node,
                 desk=node.desk if hasattr(node, 'desk') else None,
                 contestant=node.desk.contestant if hasattr(node, 'desk') and hasattr(node.desk, 'contestant') else None,
@@ -81,11 +81,11 @@ class TaskRunSetSerializer(serializers.ModelSerializer):
                 queue='local_queue' if data['is_local'] else 'remote_queue'
                 , kwargs=taskrun.get_execution_dict()).id
             taskrun.save(update_fields=['celery_task'])
-        logger.info('Taskrunset #%d (%s) has created' % (taskrunset.id, taskrunset.name))
-        return taskrunset
+        logger.info('Task #%d (%s) has created' % (task.id, task.name))
+        return task
 
     class Meta:
-        model = TaskRunSet
+        model = Task
         fields = (
             'id', 'code', 'is_local', 'timeout', 'username', 'name', 'owner', 'owner_data', 'created_at', 'taskruns',
             'ips', 'results', 'summary', 'is_finished')
@@ -99,6 +99,6 @@ class TaskRunSerializer(serializers.ModelSerializer):
     class Meta:
         model = TaskRun
         fields = (
-            'id', 'celery_task', 'is_local', 'timeout', 'username', 'run_set', 'created_at', 'started_at',
+            'id', 'celery_task', 'is_local', 'timeout', 'username', 'task', 'created_at', 'started_at',
             'finished_at', 'rendered_code', 'duration_milliseconds', 'stdout', 'stderr', 'return_code', 'status',
             'desk', 'contestant', 'node')

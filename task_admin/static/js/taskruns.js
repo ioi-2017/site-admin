@@ -1,11 +1,11 @@
-app.controller('taskRunsController', function ($stateParams, $state, $scope, $http, API, taskRunSetCreator) {
+app.controller('taskRunsController', function ($stateParams, $state, $scope, $http, API, taskCreator) {
     $scope.results = [];
     $scope.selected = [];
     $scope.hovered = null;
 
     $scope.filters = {
         status: 'ALL',
-        run_set: -1,
+        task: -1,
         node: 0,
         desk: 0,
         contestant: 0
@@ -19,8 +19,8 @@ app.controller('taskRunsController', function ($stateParams, $state, $scope, $ht
         $state.go('na.taskruns', query);
     };
 
-    $scope.showTaskRunSetCreate = function (ev) {
-        taskRunSetCreator.showTaskRunSetCreate(ev, $scope.selected.map(function (taskrun) {
+    $scope.showTaskCreate = function (ev) {
+        taskCreator.showTaskCreate(ev, $scope.selected.map(function (taskrun) {
             return taskrun.node.ip
         }), function () {
             updatePageSoft();

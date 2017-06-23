@@ -1,5 +1,5 @@
-app.service('taskRunSetCreator', function ($mdDialog) {
-    this.showTaskRunSetCreate = function (ev, ips, create_callback) {
+app.service('taskCreator', function ($mdDialog) {
+    this.showTaskCreate = function (ev, ips, create_callback) {
         $mdDialog.show({
                 controller: function DialogController($scope, $timeout, $http, $mdDialog, $mdToast) {
                     $scope.selected_ips = [];
@@ -25,8 +25,8 @@ app.service('taskRunSetCreator', function ($mdDialog) {
                             $scope.is_local = template.is_local;
                             $scope.timeout = template.timeout;
                             $scope.username = template.username;
-                            if ($scope.run_set_name == '')
-                                $scope.run_set_name = template.display;
+                            if ($scope.task_name == '')
+                                $scope.task_name = template.display;
                         }
                     };
 
@@ -83,7 +83,7 @@ app.service('taskRunSetCreator', function ($mdDialog) {
                     $scope.is_local = true;
                     $scope.timeout = 10;
                     $scope.username = '';
-                    $scope.run_set_name = '';
+                    $scope.task_name = '';
                     $scope.rendered_code = '';
                     $scope.$watch('template_code', function () {
                         var result = $scope.template_code;
@@ -98,7 +98,7 @@ app.service('taskRunSetCreator', function ($mdDialog) {
                     };
 
                     $scope.create = function () {
-                        $http.post('/api/taskrunsets/', {
+                        $http.post('/api/tasks/', {
                             code: $scope.template_code,
                             is_local: $scope.is_local,
                             timeout: $scope.timeout,
@@ -107,13 +107,12 @@ app.service('taskRunSetCreator', function ($mdDialog) {
                             ips: $scope.selected_ips.map(function (node) {
                                 return node.ip;
                             }),
-                            name: $scope.run_set_name
+                            name: $scope.task_name
                         }).then(function (response) {
-                            console.log(response);
                             $mdDialog.hide();
                             $mdToast.show(
                                 $mdToast.simple()
-                                    .textContent('TaskRunSet Created')
+                                    .textContent('Task Created')
                                     .position('top right')
                                     .hideDelay(6000)
                             );
@@ -140,7 +139,7 @@ app.service('taskRunSetCreator', function ($mdDialog) {
                     };
 
                 },
-                templateUrl: _static('templates/create-taskrunset.tmpl.html'),
+                templateUrl: _static('templates/create-task.tmpl.html'),
                 parent: angular.element(document.body),
                 targetEvent: ev,
                 clickOutsideToClose: true

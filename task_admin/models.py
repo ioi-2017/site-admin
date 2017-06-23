@@ -23,13 +23,13 @@ class TaskTemplate(models.Model):
         return '[%s] by %s' % (self.name, self.author)
 
 
-class TaskRunSet(models.Model):
+class Task(models.Model):
     name = models.TextField(blank=True)
     is_local = models.BooleanField()
     timeout = models.FloatField()
     username = models.CharField(max_length=20, blank=True, null=True)
     code = models.TextField()
-    owner = models.ForeignKey(User, related_name='taskrunset', null=True)
+    owner = models.ForeignKey(User, related_name='task', null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     deleted = models.BooleanField(default=False)
     summary = JSONField()
@@ -62,7 +62,7 @@ class TaskRun(models.Model):
     is_local = models.BooleanField()
     timeout = models.FloatField()
     username = models.CharField(max_length=20, blank=True, null=True)
-    run_set = models.ForeignKey(TaskRunSet, related_name='taskruns')
+    task = models.ForeignKey(Task, related_name='taskruns')
     created_at = models.DateTimeField(auto_now_add=True)
     started_at = models.DateTimeField(blank=True, null=True)
     finished_at = models.DateTimeField(blank=True, null=True)
@@ -107,10 +107,10 @@ class TaskRun(models.Model):
             return
         cursor = connection.cursor()
         cursor.execute(
-            "UPDATE task_admin_taskrunset set summary = summary || "
+            "UPDATE task_admin_task set summary = summary || "
             "jsonb_build_object('{0}',(summary->>'{0}')::int-1) ||"
             "jsonb_build_object('{1}',(summary->>'{1}')::int+1) "
-            "where id={2};".format(self.status, new_status, self.run_set_id))
+            "where id={2};".format(self.status, new_status, self.task_id))
         self.status = new_status
 
     def get_celery_result(self):

@@ -1,5 +1,5 @@
 <div layout="row">
-    <div flex id="taskrunsets" class="flex-60">
+    <div flex id="tasks" class="flex-60">
         <div id="task_filter" layout="row">
             <md-input-container flex-gt-sm>
                 <label>Status</label>
@@ -13,14 +13,14 @@
                 </md-select>
             </md-input-container>
             <md-input-container flex-gt-sm>
-                <label>TaskRunSet ID</label>
-                <input ng-model="filters.run_set" ng-blur="filter('run_set')" placeholder="TaskRunSet ID">
+                <label>Task ID</label>
+                <input ng-model="filters.task" ng-blur="filter('task')" placeholder="Task ID">
             </md-input-container>
         </div>
         <div class="md-toolbar-tools">
             <span>{{ selected.length }} {{ selected.length > 1 ? 'Task Runs' : 'Task Run'}} selected</span>
-            <md-button class="md-fab md-mini" aria-label="Create TaskRunSet"
-                       ng-click="showTaskRunSetCreate($event)">
+            <md-button class="md-fab md-mini" aria-label="Create Task"
+                       ng-click="showTaskCreate($event)">
                 <md-icon aria-label="Create"
                          class="material-icons step">add
                 </md-icon>
