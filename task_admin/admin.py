@@ -10,10 +10,10 @@ class TaskRunSetAdmin(admin.ModelAdmin):
     list_display = ('__str__', 'id', 'created_at', 'number_of_nodes', 'owner')
 
 
-class TaskAdmin(admin.ModelAdmin):
+class TaskTemplateAdmin(admin.ModelAdmin):
     list_display = ('__str__', 'id', 'created_at', 'name', 'is_local', 'author', 'deleted')
 
 
-admin.site.register(models.Task, TaskAdmin)
+admin.site.register(models.TaskTemplate, TaskTemplateAdmin)
 admin.site.register(models.TaskRun, TaskRunAdmin)
 admin.site.register(models.TaskRunSet, TaskRunSetAdmin)

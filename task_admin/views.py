@@ -9,8 +9,8 @@ from rest_framework.decorators import detail_route
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet, GenericViewSet
 
-from task_admin.models import TaskRunSet, Task, TaskRun
-from task_admin.serializers import TaskRunSetSerializer, TaskSerializer, TaskRunSerializer
+from task_admin.models import TaskRunSet, TaskTemplate, TaskRun
+from task_admin.serializers import TaskRunSetSerializer, TaskTemplateSerializer, TaskRunSerializer
 from task_admin.task_render import get_all_possible_vars_sample
 
 logger = logging.getLogger(__name__)
@@ -24,10 +24,10 @@ class RenderPreviewView(View):
         return JsonResponse(response, safe=False)
 
 
-class TasksAPI(ModelViewSet):
-    serializer_class = TaskSerializer
+class TaskTemplatesAPI(ModelViewSet):
+    serializer_class = TaskTemplateSerializer
     filter_fields = ('id', 'name', 'author', 'is_local')
-    queryset = Task.objects.order_by('-created_at')
+    queryset = TaskTemplate.objects.order_by('-created_at')
 
 
 class Pagination(PageNumberPagination):

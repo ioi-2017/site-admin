@@ -3,7 +3,7 @@ import logging
 from rest_framework import serializers
 from rest_framework.exceptions import APIException
 
-from task_admin.models import Task, TaskRunSet, TaskRun
+from task_admin.models import TaskTemplate, TaskRunSet, TaskRun
 from task_admin.task_render import render_task
 from task_admin.tasks import execute_task
 from visualization.models import Node
@@ -16,9 +16,9 @@ class BadRequest(APIException):
     status_code = 400
 
 
-class TaskSerializer(serializers.ModelSerializer):
+class TaskTemplateSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Task
+        model = TaskTemplate
         fields = ('id', 'name', 'author', 'code', 'is_local', 'timeout', 'username')
 
 

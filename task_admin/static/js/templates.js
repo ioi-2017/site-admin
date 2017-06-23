@@ -1,10 +1,10 @@
-app.controller('tasksController', function ($scope, $rootScope, $http, $location, $mdDialog, API, taskRunSetCreator) {
+app.controller('templatesController', function ($scope, $rootScope, $http, $location, $mdDialog, API) {
 
     $scope.results = [];
 
     $scope.selected = [];
 
-    $scope.showTaskCreate = function (ev, task) {
+    $scope.showTemplateCreate = function (ev, template) {
         $mdDialog.show({
                 controller: function DialogController($scope, $timeout, $http, $mdDialog, $mdToast) {
                     $scope.var_helps = [];
@@ -13,18 +13,18 @@ app.controller('tasksController', function ($scope, $rootScope, $http, $location
                     });
 
 
-                    $scope.task_name = '';
+                    $scope.template_name = '';
                     $scope.timeout = 10;
                     $scope.username = '';
                     $scope.template_code = '';
                     $scope.is_local = true;
                     $scope.edit_mode = false;
-                    if (task) {
-                        $scope.task_name = task.name;
-                        $scope.template_code = task.code;
-                        $scope.is_local = task.is_local;
-                        $scope.timeout = task.timeout;
-                        $scope.username = task.username;
+                    if (template) {
+                        $scope.template_name = template.name;
+                        $scope.template_code = template.code;
+                        $scope.is_local = template.is_local;
+                        $scope.timeout = template.timeout;
+                        $scope.username = template.username;
                         $scope.edit_mode = true;
                     }
                     $scope.$watch('template_code', function () {
@@ -41,8 +41,8 @@ app.controller('tasksController', function ($scope, $rootScope, $http, $location
 
                     $scope.create = function () {
                         if ($scope.edit_mode) {
-                            $http.put('/api/tasks/' + task.id + '/', {
-                                name: $scope.task_name,
+                            $http.put('/api/templates/' + template.id + '/', {
+                                name: $scope.template_name,
                                 code: $scope.template_code,
                                 is_local: $scope.is_local,
                                 timeout: $scope.timeout,
@@ -52,15 +52,15 @@ app.controller('tasksController', function ($scope, $rootScope, $http, $location
                                 $mdDialog.hide();
                                 $mdToast.show(
                                     $mdToast.simple()
-                                        .textContent('Task Saved')
+                                        .textContent('Template Saved')
                                         .position('top right')
                                         .hideDelay(6000)
                                 );
                             });
                         }
                         else {
-                            $http.post('/api/tasks/', {
-                                name: $scope.task_name,
+                            $http.post('/api/templates/', {
+                                name: $scope.template_name,
                                 code: $scope.template_code,
                                 is_local: $scope.is_local,
                                 timeout: $scope.timeout,
@@ -70,7 +70,7 @@ app.controller('tasksController', function ($scope, $rootScope, $http, $location
                                 $mdDialog.hide();
                                 $mdToast.show(
                                     $mdToast.simple()
-                                        .textContent('Task Created')
+                                        .textContent('Template Created')
                                         .position('top right')
                                         .hideDelay(6000)
                                 );
@@ -79,7 +79,7 @@ app.controller('tasksController', function ($scope, $rootScope, $http, $location
                     };
 
                 },
-                templateUrl: _static('templates/create-task.tmpl.html'),
+                templateUrl: _static('templates/create-template.tmpl.html'),
                 parent: angular.element(document.body),
                 targetEvent: ev,
                 clickOutsideToClose: true
@@ -93,16 +93,16 @@ app.controller('tasksController', function ($scope, $rootScope, $http, $location
 
     $scope.deleteSelected = function (ev) {
         var confirm = $mdDialog.confirm()
-            .title('Are you sure you want to delete ' + $scope.selected.length + ' tasks?')
-            .textContent('You can\'t create task run sets with these tasks anymore')
-            .ariaLabel('TaskDelete confirm')
+            .title('Are you sure you want to delete ' + $scope.selected.length + ' templates?')
+            .textContent('You can\'t create task with these templates anymore')
+            .ariaLabel('TemplateDelete confirm')
             .targetEvent(ev)
             .ok('Delete')
             .cancel('Cancel');
 
         $mdDialog.show(confirm).then(function () {
             angular.forEach($scope.selected, function (item) {
-                $http.delete('/api/tasks/' + item.id + '/', {}).then(function () {
+                $http.delete('/api/templates/' + item.id + '/', {}).then(function () {
                     updatePage(true);
                 });
             });
@@ -112,8 +112,8 @@ app.controller('tasksController', function ($scope, $rootScope, $http, $location
 
     function updatePage() {
         $scope.selected = [];
-        API.Task.query({}, function (tasks) {
-            $scope.results = tasks;
+        API.Template.query({}, function (templates) {
+            $scope.results = templates;
         });
     }
 

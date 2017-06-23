@@ -15,38 +15,38 @@ app.service('taskRunSetCreator', function ($mdDialog) {
 
                     $scope.task_templates = [];
                     $scope.all_nodes = [];
-                    $scope.queryTaskSearch = function (query) {
+                    $scope.queryTemplateSearch = function (query) {
                         return query ? $scope.task_templates.filter(createFilterFor(query)) : $scope.task_templates;
                     };
 
-                    $scope.selectedTaskItemChange = function (task) {
-                        if (task) {
-                            $scope.template_code = task.code;
-                            $scope.is_local = task.is_local;
-                            $scope.timeout = task.timeout;
-                            $scope.username = task.username;
+                    $scope.selectedTemplateItemChange = function (template) {
+                        if (template) {
+                            $scope.template_code = template.code;
+                            $scope.is_local = template.is_local;
+                            $scope.timeout = template.timeout;
+                            $scope.username = template.username;
                             if ($scope.run_set_name == '')
-                                $scope.run_set_name = task.display
+                                $scope.run_set_name = template.display;
                         }
                     };
 
-                    function updateTasks() {
-                        $http.get('/api/tasks/').then(function (response) {
-                            var tasks = response.data;
-                            $scope.task_templates = tasks.map(function (task) {
+                    function updateTemplates() {
+                        $http.get('/api/templates/').then(function (response) {
+                            var templates = response.data;
+                            $scope.task_templates = templates.map(function (template) {
                                 return {
-                                    value: task.name.toLowerCase(),
-                                    display: task.name,
-                                    code: task.code,
-                                    is_local: task.is_local,
-                                    timeout: task.timeout,
-                                    username: task.username
+                                    value: template.name.toLowerCase(),
+                                    display: template.name,
+                                    code: template.code,
+                                    is_local: template.is_local,
+                                    timeout: template.timeout,
+                                    username: template.username
                                 };
                             });
                         });
                     }
 
-                    updateTasks();
+                    updateTemplates();
 
                     $http.get('/api/nodegroups/').then(function (response) {
                         $scope.nodes_filter = response.data[0].name; //Key of the first filter
@@ -122,19 +122,19 @@ app.service('taskRunSetCreator', function ($mdDialog) {
                         });
                     };
 
-                    $scope.createTaskTemplate = function (task_name) {
-                        $scope.searchTaskText = '';
-                        $http.post('/api/tasks/', {
-                            name: task_name,
+                    $scope.createTaskTemplate = function (template_name) {
+                        $scope.searchTemplateText = '';
+                        $http.post('/api/templates/', {
+                            name: template_name,
                             code: $scope.template_code,
                             is_local: $scope.is_local,
                             timeout: $scope.timeout,
                             username: $scope.username,
                             author: 1
                         }).then(function () {
-                            updateTasks();
+                            updateTemplates();
                             $timeout(function () {
-                                $scope.searchTaskText = task_name;
+                                $scope.searchTemplateText = template_name;
                             }, 1000)
                         });
                     };

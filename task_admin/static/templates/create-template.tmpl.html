@@ -1,8 +1,8 @@
-<md-dialog aria-label="Create Task" class="flex-60">
+<md-dialog aria-label="Create Task Template" class="flex-60">
     <form ng-cloak ng-submit="create()">
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2>{{ edit_mode? 'Edit':'Create' }} Task</h2>
+                <h2>{{ edit_mode? 'Edit':'Create' }} Template</h2>
             </div>
         </md-toolbar>
 
@@ -12,8 +12,8 @@
                     <div flex>
                         <div layout="row" layout-align="space-between center">
                             <md-input-container flex>
-                                <label>Task Name</label>
-                                <input ng-model="task_name" required>
+                                <label>Template Name</label>
+                                <input ng-model="template_name" required>
                             </md-input-container>
                             <md-input-container class="md-block">
                                 <md-checkbox name="tos" ng-model="is_local">

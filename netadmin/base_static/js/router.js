@@ -57,8 +57,8 @@ app.config(function ($stateProvider, $urlRouterProvider, $locationProvider, $qPr
             url: 'templates',
             views: {
                 'content@': {
-                    templateUrl: templateUrl('tasks.tmpl.html'),
-                    controller: 'tasksController'
+                    templateUrl: templateUrl('templates.tmpl.html'),
+                    controller: 'templatesController'
                 }
             }
         })

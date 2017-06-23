@@ -26,8 +26,8 @@ app.constant('MODELS', {
         url: '/api/taskruns/:id/',
         paginated: true
     },
-    'Task': {
-        url: '/api/tasks/:id/'
+    'Template': {
+        url: '/api/templates/:id/'
     }
 });
 

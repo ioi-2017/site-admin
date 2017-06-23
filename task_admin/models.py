@@ -9,7 +9,7 @@ from django.contrib.postgres.fields import JSONField
 from visualization.models import Desk, Node, Contestant
 
 
-class Task(models.Model):
+class TaskTemplate(models.Model):
     is_local = models.BooleanField()
     timeout = models.FloatField()
     username = models.CharField(max_length=20, blank=True, null=True)
