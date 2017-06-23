@@ -2,6 +2,7 @@ app.controller('taskRunsController', function ($stateParams, $state, $scope, $ti
     $scope.results = [];
     $scope.selected = [];
     $scope.hovered = null;
+    $scope.hovered_row = null;
 
     $scope.filters = {
         status: 'ALL',
@@ -13,7 +14,7 @@ app.controller('taskRunsController', function ($stateParams, $state, $scope, $ti
 
     angular.extend($scope.filters, $stateParams);
 
-    $scope.filter = function(field) {
+    $scope.filter = function (field) {
         var query = {};
         query[field] = $scope.filters[field];
         $state.go('na.taskruns', query);
@@ -27,7 +28,11 @@ app.controller('taskRunsController', function ($stateParams, $state, $scope, $ti
         });
     };
 
-    $scope.changeHovered = function (item) {
+    $scope.changeHovered = function (event, item) {
+        if ($scope.hovered_row)
+            angular.element($scope.hovered_row).parent().parent().removeClass('show-info');
+        $scope.hovered_row = event.target;
+        angular.element($scope.hovered_row).parent().parent().addClass('show-info');
         $scope.hovered = item
     };
 
@@ -50,10 +55,24 @@ app.controller('taskRunsController', function ($stateParams, $state, $scope, $ti
     };
 
     var assignResults = function (results) {
+        var color_dict = {
+            'PENDING': 'blueGrey',
+            'RUNNING': 'yellow',
+            'SUCCESS': 'green',
+            'ABORTED': 'brown',
+            'FAILED': 'red'
+        };
+        var icon_dict = {
+            'PENDING': 'schedule',
+            'RUNNING': 'sync',
+            'SUCCESS': 'done',
+            'ABORTED': 'pan_tool',
+            'FAILED': 'clear'
+        };
         for (var i = 0; i < results.length; i++) {
-            results[i].trimmed_code = (results[i].rendered_code.length>10 ? results[i].rendered_code.substr(0, 10) +
-                            '...' : results[i].rendered_code);
             results[i].is_local_icon = results[i].is_local ? 'done' : 'clear';
+            results[i].status_color = color_dict[results[i].status];
+            results[i].icon = icon_dict[results[i].status];
         }
         $scope.results = results;
     };

@@ -51,7 +51,7 @@ class Task(models.Model):
         return [task_run.status for task_run in self.taskruns.all()]
 
     def number_of_nodes(self):
-        return self.taskruns.count()
+        return sum(self.summary.values())
 
     def __str__(self):
         return '[%s] on %d nodes' % (textwrap.shorten(self.code, 20), self.number_of_nodes())
@@ -75,6 +75,9 @@ class TaskRun(models.Model):
     desk = models.ForeignKey(Desk, null=True)
     contestant = models.ForeignKey(Contestant, null=True)
     node = models.ForeignKey(Node)
+
+    def task_name(self):
+        return self.task.name
 
     def get_execution_dict(self):
         """

@@ -31,14 +31,14 @@ class TaskTemplatesAPI(ModelViewSet):
 
 
 class Pagination(PageNumberPagination):
-    page_size = 20
+    page_size = 400
     page_size_query_param = 'page_size'
 
 
 class TaskRunsAPI(ReadOnlyModelViewSet, mixins.ListModelMixin):
     serializer_class = TaskRunSerializer
     filter_fields = ('desk', 'contestant', 'node', 'task', 'status')
-    queryset = TaskRun.objects.select_related('task', 'contestant', 'node', 'desk').filter(
+    queryset = TaskRun.objects.select_related('task', 'contestant', 'node', 'desk', 'node__last_task').filter(
         task__deleted=False).order_by(
         '-created_at')
     pagination_class = Pagination
