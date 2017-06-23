@@ -72,7 +72,6 @@ class TaskTest(TestCase):
         self.remove_tmp_files()
         self.assertEqual(client.post('/api/tasks/', task_data).status_code, 201)
         taskruns = client.get('/api/taskruns/').json()
-        print(taskruns)
         self.assertEqual(int(taskruns['count']), 2)
         self.assertTrue(os.path.isfile('/tmp/TurkishContestant-1'))
         self.assertTrue(os.path.isfile('/tmp/TurkishContestant-2'))
