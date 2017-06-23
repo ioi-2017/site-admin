@@ -1,4 +1,4 @@
-app.controller('taskRunsController', function ($stateParams, $state, $scope, $http, API, taskCreator) {
+app.controller('taskRunsController', function ($stateParams, $state, $scope, $timeout, $http, API, $mdToast, taskCreator) {
     $scope.results = [];
     $scope.selected = [];
     $scope.hovered = null;
@@ -32,7 +32,21 @@ app.controller('taskRunsController', function ($stateParams, $state, $scope, $ht
     };
 
     $scope.stopTaskrun = function (item) {
-        $http.post('/api/taskruns/' + item.id + "/stop/", {});
+        $http.post('/api/taskruns/' + item.id + "/stop/", {}).then(function () {
+            $mdToast.show(
+                $mdToast.simple()
+                    .textContent('Taskrun Aborted')
+                    .position('top right')
+                    .hideDelay(6000)
+            )
+        }, function () {
+            $mdToast.show(
+                $mdToast.simple()
+                    .textContent('Taskrun Failed to abort!')
+                    .position('top right')
+                    .hideDelay(6000)
+            )
+        });
     };
 
     var assignResults = function (results) {
@@ -52,7 +66,7 @@ app.controller('taskRunsController', function ($stateParams, $state, $scope, $ht
     }
 
     var updatePageSoft = function(next) {
-        API.Taskrun.query(remove_all($scope.params), function (taskruns) {
+        API.Taskrun.query(remove_all($stateParams), function (taskruns) {
             if (taskruns.length != $scope.results.length) {
                 assignResults(taskruns);
                 return;

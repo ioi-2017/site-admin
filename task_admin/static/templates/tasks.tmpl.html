@@ -52,7 +52,7 @@
                         {{ result.summary.PENDING }}
                         <md-tooltip
                                 md-direction="left">
-                            Pending Tasks
+                            Pending
                         </md-tooltip>
                     </md-button>
                     <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'yellow-700'}"
@@ -60,7 +60,7 @@
                         {{ result.summary.RUNNING }}
                         <md-tooltip
                                 md-direction="top">
-                            Started Tasks
+                            Running
                         </md-tooltip>
                     </md-button>
                     <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'green-700'}"
@@ -68,7 +68,7 @@
                         {{ result.summary.SUCCESS }}
                         <md-tooltip
                                 md-direction="top">
-                            Succeeded Tasks
+                            Successful
                         </md-tooltip>
                     </md-button>
                     <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'red-700'}"
@@ -76,7 +76,7 @@
                         {{ result.summary.FAILED }}
                         <md-tooltip
                                 md-direction="top">
-                            Failed Tasks
+                            Failed
                         </md-tooltip>
                     </md-button>
                     <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'brown-700'}"
@@ -84,7 +84,7 @@
                         {{ result.summary.ABORTED }}
                         <md-tooltip
                                 md-direction="right">
-                            Aborted Tasks
+                            Aborted
                         </md-tooltip>
                     </md-button>
                 </td>
@@ -99,7 +99,7 @@
                                  class="material-icons step">pause
                         </md-icon>
                     </md-button>
-                    <md-button class="md-fab md-mini" aria-label="Stop"
+                    <md-button class="md-fab md-mini" aria-label="More"
                                ui-sref="na.taskruns({task:{{ ::result.id }}})">
                         <md-icon aria-label="backup"
                                  class="material-icons step">more_horiz

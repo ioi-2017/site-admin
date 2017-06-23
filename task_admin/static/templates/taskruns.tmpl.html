@@ -71,20 +71,20 @@
                                 Successful
                             </md-tooltip>
                         </md-button>
+                        <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'red-700'}"
+                                   ng-if="result.status=='FAILED'">
+                            <md-icon class="material-icons step">clear</md-icon>
+                            <md-tooltip
+                                    md-direction="left">
+                                Failed
+                            </md-tooltip>
+                        </md-button>
                         <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'brown-700'}"
                                    ng-if="result.status=='ABORTED'">
                             <md-icon class="material-icons step">pan_tool</md-icon>
                             <md-tooltip
                                     md-direction="left">
                                 Aborted
-                            </md-tooltip>
-                        </md-button>
-                        <md-button class="md-fab md-mini" md-colors="::{backgroundColor: 'red-700'}"
-                                   ng-if="result.status=='FAILED'">
-                            <md-icon class="material-icons step">clear</md-icon>
-                            <md-tooltip
-                                    md-direction="left">
-                                Internal Error
                             </md-tooltip>
                         </md-button>
                     </td>
