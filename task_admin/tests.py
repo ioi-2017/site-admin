@@ -3,6 +3,8 @@ import os.path
 from django.test import Client
 from django.test import TestCase
 
+from visualization.models import Desk, Node
+
 
 class TemplateTest(TestCase):
     fixtures = ["templates.json", "admin.json"]
@@ -53,6 +55,32 @@ class TemplateTest(TestCase):
         delete_response = client.delete('/api/templates/2/')
         self.assertEqual(delete_response.status_code, 204)
         self.assertEqual(client.get('/api/templates/2/').status_code, 404)
+
+
+class NodeGroupTest(TestCase):
+    fixtures = ['nodes.json']
+
+    def test_nodegroup(self):
+        client = Client()
+        data = {
+            'name': 'all',
+            'expression': 'True'
+        }
+        self.assertEqual(client.post('/api/nodegroups/', data).status_code, 201)
+        nodegroups = client.get('/api/nodegroups/').json()
+        self.assertEqual(len(nodegroups), 1)
+        self.assertEqual(len(nodegroups[0]['nodes']), Node.objects.count())
+
+    def test_expressions(self):
+        client = Client()
+        data = {
+            'name': 'all',
+            'expression': "node.ip[-2:] in ['.2','.5','.0'] or node.ip.endswith('6')"
+        }
+        self.assertEqual(client.post('/api/nodegroups/', data).status_code, 201)
+        nodegroups = client.get('/api/nodegroups/').json()
+        self.assertEqual(len(nodegroups), 1)
+        self.assertEqual(len(nodegroups[0]['nodes']), 4)
 
 
 class TaskTest(TestCase):
@@ -126,6 +154,76 @@ class TaskTest(TestCase):
         }
         self.assertEqual(client.post('/api/tasks/', task_data).status_code, 400)
 
+    def test_stdout(self):
+        client = Client()
+        desk = Desk.objects.get(pk=5)
+        ip = desk.active_node.ip
+        task_data = {
+            'name': 'desk',
+            'code': 'expr {desk.id} + {contestant.id}',
+            'is_local': True,
+            'timeout': 1,
+            'username': '',
+            'owner': 1,
+            'ips': json.dumps([ip])
+        }
+        task_id = client.post('/api/tasks/', task_data).json()['id']
+        task_run = client.get('/api/taskruns/?task=%d' % task_id).json()['results'][0]
+        self.assertEqual(task_run['stdout'], '%d\n' % (desk.id + desk.contestant_id))
+
+    def test_return_code(self):
+        client = Client()
+        desk = Desk.objects.get(pk=5)
+        ip = desk.active_node.ip
+        task_data = {
+            'name': 'desk',
+            'code': 'z',
+            'is_local': True,
+            'timeout': 1,
+            'username': '',
+            'owner': 1,
+            'ips': json.dumps([ip])
+        }
+        task_id = client.post('/api/tasks/', task_data).json()['id']
+        task_run = client.get('/api/taskruns/?task=%d' % task_id).json()['results'][0]
+        self.assertTrue('not found' in task_run['stderr'])
+        self.assertEqual(task_run['return_code'], 127)
+
+    def test_template_rendering(self):
+        client = Client()
+
+        desk = Desk.objects.get(pk=10)
+        ip = desk.active_node.ip
+        desk.active_node = None
+        desk.save()
+        task_data = {
+            'name': 'no desk',
+            'code': '{desk.id}',
+            'is_local': True,
+            'timeout': 1,
+            'username': '',
+            'owner': 1,
+            'ips': json.dumps([ip])
+        }
+        self.assertEqual(client.post('/api/tasks/', task_data).status_code, 400)
+
+        desk = Desk.objects.get(pk=9)
+        ip = desk.active_node.ip
+        desk.contestant = None
+        desk.save()
+        task_data = {
+            'name': 'no desk',
+            'code': '{desk.id}{contestant.name}',
+            'is_local': True,
+            'timeout': 1,
+            'username': '',
+            'owner': 1,
+            'ips': json.dumps([ip])
+        }
+        self.assertEqual(client.post('/api/tasks/', task_data).status_code, 400)
+        task_data['code'] = 'echo {desk.id}'
+        self.assertEqual(client.post('/api/tasks/', task_data).status_code, 201)
+
 
 class CompleteTest(TestCase):
     fixtures = ['admin.json']
@@ -133,7 +231,7 @@ class CompleteTest(TestCase):
     def create_templates(self):
         client = Client()
         template_data = {'name': 'touch', 'author': 1, 'code': 'touch /tmp/{contestant.first_name}', 'is_local': True,
-                     'timeout': 7.0, 'username': ''}
+                         'timeout': 7.0, 'username': ''}
         client.post('/api/templates/', template_data)
         node_data = {
             'ip': '192.168.1.1',
