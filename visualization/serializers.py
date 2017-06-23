@@ -29,4 +29,4 @@ class ContestantSerializer(serializers.ModelSerializer):
 class ZoneSerializer(serializers.ModelSerializer):
     class Meta:
         model = Zone
-        fields = ('id', 'name',)
+        fields = ('id', 'name', 'width', 'height', 'desk_width', 'desk_height',)

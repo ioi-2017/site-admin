@@ -7,6 +7,10 @@ from django.utils.translation import ugettext_lazy as _
 
 class Zone(models.Model):
     name = models.CharField(max_length=40, unique=True)
+    width = models.FloatField(default=640)
+    height = models.FloatField(default=480)
+    desk_width = models.FloatField(default=40)
+    desk_height = models.FloatField(default=20)
 
     def __str__(self):
         return self.name

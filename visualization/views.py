@@ -100,7 +100,7 @@ class ContestantsAPI(ModelViewSet):
 class ZonesAPI(ModelViewSet):
     serializer_class = ZoneSerializer
     filter_fields = ('name',)
-    queryset = Zone.objects.all()
+    queryset = Zone.objects.order_by('id')
 
     @staticmethod
     def get_zone_data(zone):
