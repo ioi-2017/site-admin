@@ -1,0 +1,17 @@
+[
+{
+  "model": "auth.group",
+  "pk": 1,
+  "fields": {
+    "name": "Technical Staff",
+    "permissions": [
+      25,
+      26,
+      27,
+      52,
+      28,
+      53
+    ]
+  }
+}
+]

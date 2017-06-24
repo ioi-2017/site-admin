@@ -21,6 +21,7 @@ from django.views.generic import TemplateView
 urlpatterns = [
     url(r'^silk/', include('silk.urls', namespace='silk')),
     url(r'^api/', include('visualization.urls', namespace='visualization')),
+    url(r'^login/$', TemplateView.as_view(template_name='netadmin/login.html'), name='home'),
     url(r'^api/', include('task_admin.urls', namespace='task_admin')),
     url(r'^api/', include('ping.urls', namespace='ping')),
     url(r'^admin/', admin.site.urls),
