@@ -38,6 +38,10 @@ class Desk(models.Model):
     class Meta:
         unique_together = ('zone', 'number')
 
+    @property
+    def identifier(self):
+        return "%s%s" % (self.zone.name, self.number)
+
     def position_data(self):
         return {
             'x': self.x,

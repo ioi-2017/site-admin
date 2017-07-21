@@ -1,7 +1,7 @@
 import svgwrite
 from django.http import HttpResponse
 from django.http import JsonResponse
-from django.template import Context,Template
+from django.template import Context, Template
 from django.urls import reverse
 from django.views import View
 from rest_framework.generics import get_object_or_404
@@ -62,19 +62,22 @@ class RetrieveIPView(View):
                 'zone': desk.zone.name,
                 'number': desk.number,
                 'map': reverse('visualization:node-map', kwargs={'ip': ip}),
+                'id': desk.identifier,
             },
         }, safe=False)
 
 
 class RetrieveDeskMap(View):
     def get(self, request, ip):
-        image = svgwrite.Drawing(size=("600px", "480px"))
         desk = Node.objects.get(ip=ip).desk
+        desk_width, desk_height = desk.zone.desk_width, desk.zone.desk_height
+        image = svgwrite.Drawing(size=("%dpx" % desk.zone.width, "%dpx" % desk.zone.height))
 
         for other_desk in desk.zone.desk_set.all():
-            x, y, angle = other_desk.x * 600, other_desk.y * 480, other_desk.angle
-            image.add(image.rect((x - 20, y - 10), (40, 20), fill='black' if other_desk.id == desk.id else 'white',
-                                 rx=2, ry=2, stroke='black'))
+            x, y, angle = other_desk.x * desk.zone.width, other_desk.y * desk.zone.height, other_desk.angle
+            image.add(image.rect((x - desk_width / 2, y - desk_height / 2), (desk_width, desk_height),
+                                 fill='#666666' if other_desk.id == desk.id else 'white', stroke='#666666',
+                                 transform='rotate(%d %f %f)' % (angle, x, y)))
 
         return HttpResponse(image.tostring(), content_type="image/svg+xml")
 

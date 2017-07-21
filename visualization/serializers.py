@@ -17,7 +17,7 @@ class NodeGroupSerializer(serializers.ModelSerializer):
 class DeskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Desk
-        fields = ('id', 'contestant', 'active_node', 'zone', 'x', 'y', 'angle',)
+        fields = ('id', 'contestant', 'active_node', 'zone', 'x', 'y', 'angle', 'number', 'identifier',)
 
 
 class ContestantSerializer(serializers.ModelSerializer):
