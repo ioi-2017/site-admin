@@ -65,9 +65,10 @@ class Command(BaseCommand):
         while True:
             all_threads = []
             for node in Node.objects.all():
-                thread = StoppableThread(target=self.ping_node, args=(node.ip, node.connected))
-                thread.start()
-                all_threads.append(thread)
+                if node.ip is not None:
+                    thread = StoppableThread(target=self.ping_node, args=(node.ip, node.connected))
+                    thread.start()
+                    all_threads.append(thread)
             time.sleep(DB_REFRESH_RATE)
             for thread in all_threads:
                 thread.stop()
