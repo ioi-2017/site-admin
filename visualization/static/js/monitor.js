@@ -81,7 +81,9 @@ app.controller('monitorController', function ($scope, $stateParams, $http, $time
                 style.push('selected');
                 deskElement.attr('class', style.join(' '));
             };
-            $scope.desks[node.ip] = deskElement;
+            if (node.ip != null) {
+                $scope.desks[node.ip] = deskElement;
+            }
         });
     }
 

@@ -116,7 +116,7 @@ class Node(models.Model):
         return self.mac_address.lower().replace(':', '-')
 
     def __str__(self):
-        return self.ip
+        return self.property_id
 
 
 class NodeGroup(models.Model):
