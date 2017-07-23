@@ -93,7 +93,7 @@ class Contestant(models.Model):
 
 class Node(models.Model):
     mac_address = models.CharField(max_length=20, unique=True)
-    ip = models.GenericIPAddressField()
+    ip = models.GenericIPAddressField(null=True)
     username = models.CharField(max_length=20)
     property_id = models.CharField(max_length=20, unique=True, blank=True)
     connected = models.BooleanField(default=False)
