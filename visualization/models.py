@@ -54,20 +54,34 @@ class Desk(models.Model):
         return "%s - %s" % (self.contestant.identifier if self.contestant else 'No contestant', self.active_node)
 
 
+class Team(models.Model):
+    name = models.CharField(max_length=100, blank=True, null=True)
+    country = CountryField(null=True)
+    country_code = models.CharField(max_length=3, null=True, blank=True)
+
+    def __str__(self):
+        return self.country_code
+
+
 class Contestant(models.Model):
     first_name = models.CharField(max_length=100, blank=True, null=True)
     last_name = models.CharField(max_length=100, blank=True, null=True)
     gender = models.CharField(max_length=1, choices={'F': 'Female', 'M': 'Male'}.items(), blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
     country = CountryField(null=True)
+    team = models.ForeignKey('Team', null=True, on_delete=models.CASCADE)
     number = models.IntegerField(default=1)
 
     class Meta:
-        unique_together = ('country', 'number')
+        unique_together = ('team', 'number')
+
+    @property
+    def team_code(self):
+        return self.team.country_code
 
     @property
     def identifier(self):
-        return self.country.alpha3 + str(self.number)
+        return self.team_code + str(self.number)
 
     @property
     def name(self):
@@ -96,6 +110,10 @@ class Node(models.Model):
     def update_last_task(self):
         self.last_task = self.taskrun_set.filter(task__deleted=False).order_by('-created_at').first()
         self.save()
+
+    @property
+    def mac_dash_separated(self):
+        return self.mac_address.lower().replace(':', '-')
 
     def __str__(self):
         return self.ip

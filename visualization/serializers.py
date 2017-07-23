@@ -23,7 +23,7 @@ class DeskSerializer(serializers.ModelSerializer):
 class ContestantSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contestant
-        fields = ('id', 'name', 'first_name', 'last_name', 'gender', 'email', 'country', 'number',)
+        fields = ('id', 'name', 'first_name', 'last_name', 'gender', 'email', 'country', 'team_code', 'number',)
 
 
 class ZoneSerializer(serializers.ModelSerializer):

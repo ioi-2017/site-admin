@@ -10,7 +10,7 @@ app.controller('exportController', function ($scope, $rootScope, $http) {
         'node.username': 'user2',
         'contestant.name': 'Kian',
         'contestant.country': 'IR',
-        'contestant.country.alpha3': 'IRN',
+        'contestant.team_code': 'IRN',
         'contestant.number': '1',
         'desk.contestant': 'Refers to desk contestant',
         'desk.active_node': 'Refers to desk active node',
