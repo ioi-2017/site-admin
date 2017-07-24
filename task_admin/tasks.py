@@ -44,8 +44,9 @@ def execute_task(task_run_id, is_local, ip, username, rendered_code, timeout):
                                        stdout=subprocess.PIPE,
                                        stderr=subprocess.PIPE, universal_newlines=True)
             stdout, stderr = process.communicate()
+
             result = {'stdout': str(stdout),
-                      'stderr': 'Execution timeout' if process.returncode == TIMEOUT_EXIT_CODE else str(stderr),
+                      'stderr': 'Execution timeout : %s' % stderr if process.returncode == TIMEOUT_EXIT_CODE else str(stderr),
                       'return_code': process.returncode,
                       }
         except Exception as e:
