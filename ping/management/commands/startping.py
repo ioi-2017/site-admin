@@ -37,29 +37,28 @@ class Command(BaseCommand):
 
     @staticmethod
     def ping_node(node_ip, node_status):
-        while True:
-            p = subprocess.Popen(['ping', '-c', '1', '-i', '0.2', node_ip], stdout=subprocess.PIPE)
-            time.sleep(0.4)
-            returncode = p.poll()
-            if returncode is None:  # Ping not finished yet,
-                p.kill()
-                returncode = -1
-            success = returncode == 0
-            if node_status != success:
-                node_status = success
-                node = Node.objects.get(ip=node_ip)
-                node.connected = success
-                PingLog.objects.create(node=node, connected=success)
-                node.save(update_fields=['connected'])
-                if success:
-                    logger.info('Node %s connected' % node.ip)
-                else:
-                    logger.info('Node %s disconnected' % node.ip)
-            if threading.current_thread().stopped():
-                from django.db import connections
-                for conn in connections.all():
-                    conn.close()
-                return
+        p = subprocess.Popen(['ping', '-c', '1', '-i', '0.2', node_ip], stdout=subprocess.PIPE)
+        time.sleep(0.4)
+        returncode = p.poll()
+        if returncode is None:  # Ping not finished yet,
+            p.kill()
+            returncode = -1
+        success = returncode == 0
+        if node_status != success:
+            node_status = success
+            node = Node.objects.get(ip=node_ip)
+            node.connected = success
+            PingLog.objects.create(node=node, connected=success)
+            node.save(update_fields=['connected'])
+            if success:
+                logger.info('Node %s connected' % node.ip)
+            else:
+                logger.info('Node %s disconnected' % node.ip)
+        if threading.current_thread().stopped():
+            from django.db import connections
+            for conn in connections.all():
+                conn.close()
+            return
 
     def handle(self, *args, **options):
         while True:
