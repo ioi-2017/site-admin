@@ -98,6 +98,7 @@ app.service('taskCreator', function ($mdDialog) {
                     };
 
                     $scope.create = function () {
+                        $mdDialog.hide();
                         $http.post('/api/tasks/', {
                             code: $scope.template_code,
                             is_local: $scope.is_local,

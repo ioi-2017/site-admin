@@ -29,9 +29,16 @@ class NodeGroupsViewAPI(ModelViewSet):
 
     def list(self, request, **kwargs):
         results = []
+        nodes = list(Node.objects.prefetch_related('desk', 'desk__zone'))
+
         for group in NodeGroup.objects.order_by('id').all():
+            group_nodes = []
+            expression_as_func = eval("lambda node: " + group.expression)
+            for node in nodes:
+                if expression_as_func(node):
+                    group_nodes.append(node)
             results.append({'id': group.id, 'name': group.name, 'expression': group.expression,
-                            'nodes': [NodeSerializer(node).data for node in group.nodes()]})
+                            'nodes': [NodeSerializer(node).data for node in group_nodes]})
         return JsonResponse(results, safe=False)
 
 
