@@ -36,36 +36,43 @@ class Command(BaseCommand):
         return 0
 
     @staticmethod
-    def ping_node(node_ip, node_status):
-        p = subprocess.Popen(['ping', '-c', '1', '-i', '0.2', node_ip], stdout=subprocess.PIPE)
-        time.sleep(0.4)
-        returncode = p.poll()
-        if returncode is None:  # Ping not finished yet,
-            p.kill()
-            returncode = -1
-        success = returncode == 0
-        if node_status != success:
-            node_status = success
-            node = Node.objects.get(ip=node_ip)
-            node.connected = success
-            PingLog.objects.create(node=node, connected=success)
-            node.save(update_fields=['connected'])
-            if success:
-                logger.info('Node %s connected' % node.ip)
-            else:
-                logger.info('Node %s disconnected' % node.ip)
-        if threading.current_thread().stopped():
-            from django.db import connections
-            for conn in connections.all():
-                conn.close()
-            return
+    def ping_node(node_ip, node_status, count):
+        for idx in range(count):
+            p = subprocess.Popen(['ping', '-c', '1', '-i', '0.2', node_ip], stdout=subprocess.PIPE)
+            time.sleep(0.4)
+            returncode = p.poll()
+            if returncode is None:  # Ping not finished yet,
+                p.kill()
+                returncode = -1
+            success = returncode == 0
+            if node_status != success:
+                node_status = success
+                node = Node.objects.get(ip=node_ip)
+                node.connected = success
+                PingLog.objects.create(node=node, connected=success)
+                node.save(update_fields=['connected'])
+                if success:
+                    logger.info('Node %s connected' % node.ip)
+                else:
+                    logger.info('Node %s disconnected' % node.ip)
+            if threading.current_thread().stopped():
+                from django.db import connections
+                for conn in connections.all():
+                    conn.close()
+                return
+            time.sleep(DB_REFRESH_RATE/count)
+
+    def add_arguments(self, parser):
+        parser.add_argument('pings_per_minute', type=int)
 
     def handle(self, *args, **options):
+        count = options['pings_per_minute']
+
         while True:
             all_threads = []
             for node in Node.objects.all():
                 if node.ip is not None:
-                    thread = StoppableThread(target=self.ping_node, args=(node.ip, node.connected))
+                    thread = StoppableThread(target=self.ping_node, args=(node.ip, node.connected, count))
                     thread.start()
                     all_threads.append(thread)
             time.sleep(DB_REFRESH_RATE)
