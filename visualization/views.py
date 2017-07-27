@@ -19,7 +19,7 @@ class ExportView(View):
         context = Context({"Nodes": Node.objects.all(),
                            "Desks": Desk.objects.all(),
                            "Contestants": Contestant.objects.all(),
-                           })
+                           "Zones": Zone.objects.all()})
         return HttpResponse(template.render(context))
 
 
