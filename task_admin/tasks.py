@@ -19,7 +19,7 @@ django.setup()
 
 from task_admin.models import TaskRun
 
-SSH_CONNECTION_TIMEOUT = 1
+SSH_CONNECTION_TIMEOUT = 5
 
 
 @app.task
@@ -57,24 +57,36 @@ def execute_task(task_run_id, is_local, ip, username, rendered_code, timeout):
 
 
     else:
+        err = ''
         try:
             client = SSHClient()
             client.load_system_host_keys()
             client.set_missing_host_key_policy(AutoAddPolicy())
             client.connect(ip, username=username, timeout=SSH_CONNECTION_TIMEOUT)
+            err += "Connected to the remote client.\n"
             sftp = client.open_sftp()
             script_remote_path = '/tmp/.taskrun%d.sh' % task_run_id
             sftp.put(script.name, script_remote_path)
-            stdin, stdout, stderr = client.exec_command('bash -lc "timeout %s bash %s"' % (timeout, script_remote_path),
+            err += "Transferred the script.\n"
+            stdin, stdout, stderr = client.exec_command('chmod +x %s' % script_remote_path)
+            exit_status = stdout.channel.recv_exit_status()
+            if exit_status != 0:
+                raise Exception("Failed to chmod +x the remote script (Exit code: %d)" % exit_status)
+            err += "Successfully chmod +x the remote script"
+            stdin, stdout, stderr = client.exec_command('bash -lc "timeout %s %s"' % (timeout, script_remote_path),
                                                         timeout=SSH_CONNECTION_TIMEOUT)
+            err += "Execution done."
             result = {'stdout': stdout.read().decode('utf-8'),
                       'stderr': stderr.read().decode('utf-8'),
                       'return_code': stdout.channel.recv_exit_status(),
                       }
+            err += "Fetched the results."
             sftp.remove(script_remote_path)
+            err += "Removed remote the remote script"
+            client.close()
         except Exception as e:
             result = {'stdout': '',
-                      'stderr': str(e),
+                      'stderr': err + str(e),
                       'return_code': -1,
                       }
     with transaction.atomic():
