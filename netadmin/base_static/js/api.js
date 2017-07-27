@@ -3,6 +3,9 @@
  */
 
 app.constant('MODELS', {
+    'Floor': {
+        url: '/api/floors/:id/'
+    },
     'Zone': {
         url: '/api/zones/:id/'
     },

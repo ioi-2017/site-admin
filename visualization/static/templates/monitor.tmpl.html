@@ -1,11 +1,11 @@
 <div layout="row" layout-fill>
-    <div flex id="zones_wrapper" class="flex-60" layout="column">
-        <md-card ng-repeat="zone in zones">
-            <div class="zone" id="container-{{ zone.id }}">
+    <div flex id="floors_wrapper" class="flex-60" layout="column">
+        <md-card ng-repeat="floor in floors_data">
+            <div class="zone" id="container-{{ floor.id }}">
 
             </div>
             <md-card-actions layout="row" layout-align="end center">
-                {{ zone.name | uppercase }}
+                {{ floor.name | uppercase }}
             </md-card-actions>
         </md-card>
     </div>

@@ -1,6 +1,6 @@
 from django.conf.urls import url, include
 from visualization.views import NodesAPI, DesksAPI, ZonesAPI, ContestantsAPI, RetrieveIPView, RetrieveDeskMap, \
-    NodeGroupsViewAPI, NodeGroupsRenderView, ExportView
+    NodeGroupsViewAPI, NodeGroupsRenderView, ExportView, FloorsAPI
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
@@ -8,6 +8,7 @@ router.register(r'nodes', NodesAPI)
 router.register(r'nodegroups', NodeGroupsViewAPI)
 router.register(r'desks', DesksAPI)
 router.register(r'zones', ZonesAPI)
+router.register(r'floors', FloorsAPI)
 router.register(r'contestants', ContestantsAPI)
 
 urlpatterns = [

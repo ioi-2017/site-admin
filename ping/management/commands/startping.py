@@ -3,6 +3,8 @@ import subprocess
 import threading
 import time
 from django.core.management.base import BaseCommand
+from django.db import DatabaseError
+
 from ping.models import PingLog
 from visualization.models import Node
 
@@ -70,13 +72,16 @@ class Command(BaseCommand):
 
         while True:
             all_threads = []
-            for node in Node.objects.all():
-                if node.ip is not None:
-                    thread = StoppableThread(target=self.ping_node, args=(node.ip, node.connected, count))
-                    thread.start()
-                    all_threads.append(thread)
-            time.sleep(DB_REFRESH_RATE)
-            for thread in all_threads:
-                thread.stop()
-            for thread in all_threads:
-                thread.join()
+            try:
+                for node in Node.objects.all():
+                    if node.ip is not None:
+                        thread = StoppableThread(target=self.ping_node, args=(node.ip, node.connected, count))
+                        thread.start()
+                        all_threads.append(thread)
+                time.sleep(DB_REFRESH_RATE)
+                for thread in all_threads:
+                    thread.stop()
+                for thread in all_threads:
+                    thread.join()
+            except DatabaseError as e:
+                print(e)

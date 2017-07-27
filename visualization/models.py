@@ -5,10 +5,22 @@ from django_countries.fields import CountryField
 from django.utils.translation import ugettext_lazy as _
 
 
-class Zone(models.Model):
-    name = models.CharField(max_length=40, unique=True)
+class Floor(models.Model):
     width = models.FloatField(default=640)
     height = models.FloatField(default=480)
+    name = models.CharField(max_length=40, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Zone(models.Model):
+    floor = models.ForeignKey('Floor', on_delete=models.CASCADE, null=True)
+    name = models.CharField(max_length=40, unique=True)
+    x = models.FloatField(default=0, null=True)
+    y = models.FloatField(default=0, null=True)
+    width = models.FloatField(default=320)
+    height = models.FloatField(default=240)
     desk_width = models.FloatField(default=40)
     desk_height = models.FloatField(default=20)
 

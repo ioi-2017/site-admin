@@ -10,7 +10,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from visualization.models import Zone, Node, Desk, Contestant, NodeGroup
 from visualization.serializers import NodeSerializer, DeskSerializer, ContestantSerializer, ZoneSerializer, \
-    NodeGroupSerializer
+    NodeGroupSerializer, FloorSerializer
 
 
 class ExportView(View):
@@ -105,6 +105,12 @@ class ContestantsAPI(ModelViewSet):
     serializer_class = ContestantSerializer
     filter_fields = ('country', 'number',)
     queryset = Contestant.objects.all()
+
+
+class FloorsAPI(ModelViewSet):
+    serializer_class = FloorSerializer
+    filter_fields = ('name',)
+    queryset = Zone.objects.order_by('id')
 
 
 class ZonesAPI(ModelViewSet):

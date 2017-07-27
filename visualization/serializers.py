@@ -26,7 +26,15 @@ class ContestantSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'first_name', 'last_name', 'gender', 'email', 'country', 'team_code', 'number',)
 
 
-class ZoneSerializer(serializers.ModelSerializer):
+class FloorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Zone
-        fields = ('id', 'name', 'width', 'height', 'desk_width', 'desk_height',)
+        fields = ('id', 'name', 'width', 'height',)
+
+
+class ZoneSerializer(serializers.ModelSerializer):
+    floor = FloorSerializer(read_only=True)
+
+    class Meta:
+        model = Zone
+        fields = ('id', 'name', 'floor', 'width', 'height', 'x', 'y', 'desk_width', 'desk_height',)
