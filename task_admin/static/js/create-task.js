@@ -98,7 +98,7 @@ app.service('taskCreator', function ($mdDialog) {
                     };
 
                     $scope.create = function () {
-                        $mdDialog.hide();
+                        $("md-dialog").css("display", "none");
                         $http.post('/api/tasks/', {
                             code: $scope.template_code,
                             is_local: $scope.is_local,
@@ -118,6 +118,7 @@ app.service('taskCreator', function ($mdDialog) {
                                     .hideDelay(6000)
                             );
                         }, function (response) {
+                            $("md-dialog").css("display", "flex");
                             $scope.error_message = response.data['detail'];
                         });
                     };
