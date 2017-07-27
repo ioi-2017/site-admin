@@ -1,5 +1,6 @@
 import logging
 
+from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.http.response import JsonResponse
 from django.views.generic import View
@@ -10,7 +11,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet, GenericViewSet
 
 from task_admin.models import Task, TaskTemplate, TaskRun
-from task_admin.serializers import TaskSerializer, TaskTemplateSerializer, TaskRunSerializer
+from task_admin.serializers import TaskSerializer, TaskTemplateSerializer, TaskRunSerializer, create_task
 from task_admin.task_render import get_all_possible_vars_sample
 
 logger = logging.getLogger(__name__)
@@ -112,3 +113,18 @@ class TasksAPI(mixins.CreateModelMixin,
             taskrun.stop()
         logger.info('Task #%d (%s) has stopped' % (task.id, task.name))
         return HttpResponse('', status=204)
+
+    @detail_route(methods=['post'])
+    def clone(self, request, pk):
+        old_task = self.get_object()
+        data = {
+            'code': old_task.code,
+            'is_local': old_task.is_local,
+            'timeout': old_task.timeout,
+            'username': old_task.username,
+            'owner': User.objects.get(id=1),
+            'ips': [taskrun.node.ip for taskrun in old_task.taskruns.all()],
+            'name': old_task.name,
+        }
+        create_task(data)
+        return HttpResponse('', status=200)

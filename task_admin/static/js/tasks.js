@@ -38,6 +38,24 @@ app.controller('tasksController', function ($stateParams, $state, $scope, $timeo
         });
     };
 
+    $scope.cloneTask = function (task) {
+        $http.post('/api/tasks/' + task.id + "/clone/", {}).then(function () {
+            $mdToast.show(
+                $mdToast.simple()
+                    .textContent('Task cloned')
+                    .position('top right')
+                    .hideDelay(6000)
+            )
+        }, function (response) {
+            $mdToast.show(
+                $mdToast.simple()
+                    .textContent('Task Failed to clone: ' + response.data['detail'])
+                    .position('top right')
+                    .hideDelay(6000)
+            )
+        });
+    };
+
     $scope.deleteSelected = function (ev) {
         var confirm = $mdDialog.confirm()
             .title('Are you sure you want to delete ' + $scope.selected.length + ' tasks?')

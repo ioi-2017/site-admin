@@ -16,6 +16,55 @@ class BadRequest(APIException):
     status_code = 400
 
 
+def create_task(data):
+    for ip in data['ips']:
+        try:
+            node = Node.objects.get(ip=ip)
+        except Node.DoesNotExist:
+            raise Exception(detail=(u"Ip {0:s} doesn't exist".format(ip)), code=400)
+        render_task(data['code'], node)
+
+    task = Task(
+        code=data['code'],
+        is_local=data['is_local'],
+        timeout=data['timeout'],
+        username=data['username'],
+        owner=data['owner'],
+        name=data['name'],
+        summary={'PENDING': len(data['ips']),
+                 'SUCCESS': 0,
+                 'ABORTED': 0,
+                 'FAILED': 0,
+                 'RUNNING': 0}
+    )
+    task.save()  # TODO: Task should not be created unless all taskruns created successfully
+    logger.info('Task #%d (%s) is going to be created' % (task.id, task.name))
+    for ip in data['ips']:
+        node = Node.objects.get(ip=ip)
+        rendered_code = render_task(data['code'], node)
+        taskrun = TaskRun(
+            task=task,
+            node=node,
+            desk=node.desk if hasattr(node, 'desk') else None,
+            contestant=node.desk.contestant if hasattr(node, 'desk') and hasattr(node.desk, 'contestant') else None,
+            rendered_code=rendered_code,
+            is_local=data['is_local'],
+            timeout=data['timeout'],
+            username=data['username']
+        )
+        taskrun.save()
+
+        node.last_task = taskrun
+        node.save()
+
+        taskrun.celery_task = execute_task.apply_async(
+            queue='local_queue' if data['is_local'] else 'remote_queue'
+            , kwargs=taskrun.get_execution_dict()).id
+        taskrun.save(update_fields=['celery_task'])
+    logger.info('Task #%d (%s) has created' % (task.id, task.name))
+    return task
+
+
 class TaskTemplateSerializer(serializers.ModelSerializer):
     class Meta:
         model = TaskTemplate
@@ -33,54 +82,10 @@ class TaskSerializer(serializers.ModelSerializer):
     name = serializers.CharField(required=True)
 
     def create(self, data):
-        for ip in data['ips']:
-            try:
-                node = Node.objects.get(ip=ip)
-            except Node.DoesNotExist:
-                raise BadRequest(detail=(u"Ip {0:s} doesn't exist".format(ip)), code=400)
-            try:
-                render_task(data['code'], node)
-            except Exception as e:
-                raise BadRequest(detail=str(e))
-
-        task = Task(
-            code=data['code'],
-            is_local=data['is_local'],
-            timeout=data['timeout'],
-            username=data['username'],
-            owner=data['owner'],
-            name=data['name'],
-            summary={'PENDING': len(data['ips']),
-                     'SUCCESS': 0,
-                     'ABORTED': 0,
-                     'FAILED': 0,
-                     'RUNNING': 0}
-        )
-        task.save()  # TODO: Task should not be created unless all taskruns created successfully
-        logger.info('Task #%d (%s) is going to be created' % (task.id, task.name))
-        for ip in data['ips']:
-            node = Node.objects.get(ip=ip)
-            rendered_code = render_task(data['code'], node)
-            taskrun = TaskRun(
-                task=task,
-                node=node,
-                desk=node.desk if hasattr(node, 'desk') else None,
-                contestant=node.desk.contestant if hasattr(node, 'desk') and hasattr(node.desk, 'contestant') else None,
-                rendered_code=rendered_code,
-                is_local=data['is_local'],
-                timeout=data['timeout'],
-                username=data['username']
-            )
-            taskrun.save()
-
-            node.last_task = taskrun
-            node.save()
-
-            taskrun.celery_task = execute_task.apply_async(
-                queue='local_queue' if data['is_local'] else 'remote_queue'
-                , kwargs=taskrun.get_execution_dict()).id
-            taskrun.save(update_fields=['celery_task'])
-        logger.info('Task #%d (%s) has created' % (task.id, task.name))
+        try:
+            task = create_task(data)
+        except Exception as e:
+            raise BadRequest(detail=str(e))
         return task
 
     class Meta:
