@@ -61,9 +61,9 @@ class RetrieveIPView(View):
             },
             'contestant': {
                 'name': contestant.name,
-                'country': contestant.country.name,
+                'country': contestant.team_code,
                 'number': contestant.number,
-                'id': contestant.identifier,
+                'id': contestant.dashed_identifier,
             },
             'desk': {
                 'zone': desk.zone.name,

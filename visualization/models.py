@@ -84,6 +84,10 @@ class Contestant(models.Model):
         return self.team_code + str(self.number)
 
     @property
+    def dashed_identifier(self):
+        return self.team_code + '-' + str(self.number)
+
+    @property
     def name(self):
         return '%s %s' % (self.first_name, self.last_name)
 
