@@ -65,10 +65,7 @@ def execute_task(task_run_id, is_local, ip, username, rendered_code, timeout):
             sftp = client.open_sftp()
             script_remote_path = '/tmp/.taskrun%d.sh' % task_run_id
             sftp.put(script.name, script_remote_path)
-            stdin, stdout, stderr = client.exec_command('chmod +x %s' % script_remote_path)
-            exit_status = stdout.channel.recv_exit_status()
-            assert (exit_status == 0)
-            stdin, stdout, stderr = client.exec_command('bash -lc "timeout %s %s"' % (timeout, script_remote_path),
+            stdin, stdout, stderr = client.exec_command('bash -lc "timeout %s bash %s"' % (timeout, script_remote_path),
                                                         timeout=SSH_CONNECTION_TIMEOUT)
             result = {'stdout': stdout.read().decode('utf-8'),
                       'stderr': stderr.read().decode('utf-8'),
