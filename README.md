@@ -73,6 +73,10 @@ Import fixtures if necessary:
 ### `Floor`
  Represent an entire floor of the competition hall. This is used for visualization purposes.
 
+## Screenshots
+ ![Monitor Page](https://raw.githubusercontent.com/ioi-2017/net-admin/master/docs/screenshots/monitor.png)
+ See more screenshots [here](https://github.com/ioi-2017/net-admin/tree/master/docs/screenshots).
+
 ## Development
 
 Right now we are using celery for scheduling, redis for the broker backend and postgres for result backend.
