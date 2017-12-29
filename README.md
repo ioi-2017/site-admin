@@ -1,7 +1,21 @@
-# Net Admin
-IOI Net administration tasks
+IOI Site Administration System
+==============================
 
-## Setup
+The IOI Site Administration System provides a web interface for visualizing the 
+contest site, and executing various commands on the contestants and judging machines.
+The system has been developed and first used in the IOI 2017 in Tehran, Iran.
+
+Features
+--------
+
+* Visualize the contest site 
+* Execute commands on the contest machines remotely
+* Select machines to execute commands via filter expressions
+* Define contest zones and floors
+* Provide a data hub for other systems via RESTful APIs
+
+Setup
+-----
 
 Install docker for starting redis and postgres:
 ```
@@ -14,7 +28,7 @@ Install npm and bower for downloading js dependencies:
 bower install
 ```
 
-Net Admin has only been tested with python3 and **will not work with python2**.   
+Site Admin has only been tested with python3 and **will not work with python2**.   
 Install the required python modules:
 ```
 pip install -r requirements.txt # Install required python packages
@@ -38,7 +52,8 @@ Import fixtures if necessary:
 ```
 
 
-## Concepts
+Concepts
+--------
 
 ### `TaskTemplate`
   A single command that can be used to create Tasks, for example "locking the keyboards".
@@ -73,10 +88,13 @@ Import fixtures if necessary:
 ### `Floor`
  Represent an entire floor of the competition hall. This is used for visualization purposes.
 
-## Screenshots
- ![Monitor Page](https://raw.githubusercontent.com/ioi-2017/net-admin/master/docs/screenshots/monitor.png)
- See more screenshots [here](https://github.com/ioi-2017/net-admin/tree/master/docs/screenshots).
+Screenshots
+-----------
 
-## Development
+![Monitor Page](https://raw.githubusercontent.com/ioi-2017/site-admin/master/docs/screenshots/monitor.png)
+See more screenshots [here](https://github.com/ioi-2017/site-admin/tree/master/docs/screenshots).
+
+Development
+-----------
 
 Right now we are using celery for scheduling, redis for the broker backend and postgres for result backend.
