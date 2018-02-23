@@ -1,7 +1,7 @@
 {
   "name": "net-admin",
-  "description": "IOI Net administration tasks",
-  "homepage": "https://github.com/m30m/net-admin",
+  "description": "IOI Site administration tasks",
+  "homepage": "https://github.com/ioi-2017/site-admin",
   "authors": [
     "Mohammad Amin Khashkhashi Moghaddam <amin.moghaddamV@gmail.com>",
     "Mohammad Nasirifar <far.nasiri.m@gmail.com>",
