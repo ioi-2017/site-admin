@@ -1,6 +1,6 @@
 {
-  "name": "net-admin",
-  "description": "IOI Site administration tasks",
+  "name": "site-admin",
+  "description": "IOI Site Administration System",
   "homepage": "https://github.com/ioi-2017/site-admin",
   "authors": [
     "Mohammad Amin Khashkhashi Moghaddam <amin.moghaddamV@gmail.com>",
